@@ -2445,7 +2445,18 @@ function simulatePost() {
   toast("Vista Social posted brief " + next[0]);
   renderMain();
 }
-
+// Live wiring — fetch real Vista Social data on load
+async function fetchVistaData() {
+  try {
+    const res = await fetch('/api/vista');
+    const data = await res.json();
+    console.log('Vista Social live data:', data);
+    // Once we confirm the data shape, we'll map it to PLATFORMS here
+  } catch (err) {
+    console.warn('Vista Social fetch failed, using mock data:', err);
+  }
+}
+fetchVistaData();
 </script>
 </body>
 </html>
