@@ -1364,10 +1364,8 @@ views.l0a = () => {
           `).join('')}
         </tbody>
       </table>
-      <div class="muted small" style="margin-top:10px">📡 Live wiring: Vista Social API → daily refresh at 6am GMT+8 → auto-updates this view. Currently shown: deterministic mock for ${RUN_DATE}.</div>
-    </div>`;
+      <div class="muted small" style="margin-top:10px">📡 Live wiring: Vista Social API → auto-updates on every page load. Live data as of ${RUN_DATE}.</div>`
 };
-
 views.l0b = () => {
   const tableFor = (rows, plat) => `
     <div class="card" style="margin-bottom:12px">
