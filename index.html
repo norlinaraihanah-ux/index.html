@@ -1755,6 +1755,22 @@ function defaultScript(slot, idea) {
       lines.push("[HOST]  Drops the open loop or surprising twist that earns the follow.");
       lines.push("[CTA]   " + (idea.cta || "Follow for next Thursday's drop."));
     }
+  } else if (slot.pillar === "Informative") {
+    const trendingTopic = TRENDS.trending_titles && TRENDS.trending_titles[0] ? TRENDS.trending_titles[0].title : "this week's big release";
+    const isBackAndForth = Math.random() > 0.5;
+    if (isBackAndForth) {
+      lines.push("[HOST 1] 'Okay so — did you know that [surprising fact about " + trendingTopic + "]?'");
+      lines.push("[HOST 2] 'Wait, seriously? Because everyone I know thinks it's the opposite.'");
+      lines.push("[HOST 1] 'That's exactly the point. Here's why...' — delivers the reframe in 2 punchy sentences.");
+      lines.push("[HOST 2] 'So what you're saying is...' — lands the takeaway cleanly.");
+      lines.push("[BOTH]   " + (idea.cta || "Drop your take below. See you next Thursday."));
+    } else {
+      lines.push("[HOST]   'Nobody's talking about this — but they should be.' — opens on the hook.");
+      lines.push("[HOST]   Delivers the Did You Know fact or hot take in 2-3 conversational sentences. No jargon. Talks like a friend.");
+      lines.push("[HOST]   'And here's the part that actually matters for you as a gamer...' — bridges to relevant angle.");
+      lines.push("[HOST]   Drops the open loop or surprising twist that earns the follow.");
+      lines.push("[CTA]    " + (idea.cta || "Follow for next Thursday's drop."));
+    }
   } else {
     lines.push("[V/O]   Core message in 2 sentences.");
     lines.push("[V/O]   Reinforce why this matters now.");
