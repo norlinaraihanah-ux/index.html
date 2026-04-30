@@ -1813,7 +1813,7 @@ async function generateAIScript(briefId) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
+        max_tokens: 2000,
         tools: [{ type: "web_search_20250305", name: "web_search" }],
         system: `You are a social media video script writer for gaming brands. 
 You write complete, punchy scripts for 60-90 second social media videos.
