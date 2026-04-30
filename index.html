@@ -1794,6 +1794,92 @@ function defaultScript(slot, idea) {
   }
   return lines.join("\n");
 }
+function generateTimestampTable(b) {
+  const pillar = b.pillar || "Informative";
+  const trendingTopic = TRENDS.trending_titles && TRENDS.trending_titles[0] ? TRENDS.trending_titles[0].title : "this week's big release";
+  const isBackAndForth = pillar === "Informative" && Math.random() > 0.5;
+  const scenes = [];
+  if (pillar === "Informative") {
+    scenes.push({ ts: "0:00–0:03", scene: "Hook — host opens strong",
+      script: isBackAndForth ? `[HOST 1] 'Okay so — did you know that [surprising fact about ${trendingTopic}]?'` : `[HOST] 'Nobody's talking about this — but they should be.'`,
+      prompt: "ECU host face, rack focus reveal, calm-authoritative tone. Subtle push-in 1.0→1.05x. Warm key light. No music yet — let the silence land the hook." });
+    scenes.push({ ts: "0:03–0:20", scene: "Deliver the fact",
+      script: isBackAndForth ? `[HOST 2] 'Wait, seriously? Because everyone I know thinks it's the opposite.'\n[HOST 1] 'That's exactly the point. Here's why...'` : `[HOST] Delivers the Did You Know fact in 2-3 conversational sentences. No jargon.`,
+      prompt: `Medium 2-shot or single MCU. Data overlay lower-third animates in. Cross-cut b-roll of ${trendingTopic}. UI graphic wipes on. Pacing: deliberate, 1 cut per 4-5s.` });
+    scenes.push({ ts: "0:20–0:40", scene: "Twist / Did You Know moment",
+      script: isBackAndForth ? `[HOST 2] 'So what you're saying is...' — lands the takeaway.\n[HOST 1] 'Exactly. And most people miss this because...'` : `[HOST] 'And here's the part that actually matters for you as a gamer...' — drops the surprising twist.`,
+      prompt: "Push-in on host at twist moment. Light bloom flash on the key stat. Animated text overlay of the surprising number. Score swells subtly. Camera holds." });
+    scenes.push({ ts: "0:40–0:55", scene: "Payoff + brand moment",
+      script: isBackAndForth ? `[HOST 1] 'Bottom line — [one sentence takeaway tied to ${trendingTopic}].'\n[HOST 2] 'If you're a gamer and you didn't know this, now you do.'` : `[HOST] Drops the open loop — teases next week or asks for the viewer's take.`,
+      prompt: "Pull back to wider shot. Brand lower-third fades in. Clean composition. Logo sting at end of sentence. Warm grade." });
+    scenes.push({ ts: "0:55–1:00", scene: "CTA card",
+      script: isBackAndForth ? `[BOTH] '${b.cta || "Drop your take below. See you next Thursday."}'` : `[HOST] '${b.cta || "Follow for next Thursday's drop."}'`,
+      prompt: "Static brand card. Logo centred. CTA text animates in. Hold 4s. Fade out. No music tail — clean cut to black." });
+  } else if (pillar === "Entertainment") {
+    scenes.push({ ts: "0:00–0:02", scene: "Cold open — hook",
+      script: `[V/O] ${b.hook || "Opens on the relatable scenario."}`,
+      prompt: "Whip-pan entry, dutch angle ~25°. Speed ramp deceleration + heavy motion blur. Explosive entry." });
+    scenes.push({ ts: "0:02–0:08", scene: "Setup — relatable scenario",
+      script: "[V/O] Setup beat — the situation every gamer recognises.",
+      prompt: "Handheld POV, low angle. Digital zoom pump 1.0→1.25x. Fast cut every 1.4s. Saturated grade, neon highlights." });
+    scenes.push({ ts: "0:08–0:18", scene: "Escalation — twist",
+      script: "[V/O] Escalation — each beat 1 step funnier or more relatable than the last.",
+      prompt: "Speed ramp acceleration. Reaction beat with jitter. Multi-exposure clone moment at peak energy." });
+    scenes.push({ ts: "0:18–0:25", scene: "Punchline — payoff",
+      script: "[V/O] Punchline lands. Visual flip or freeze on the reaction.",
+      prompt: "Speed ramp deceleration + light streak. Freeze-frame to title. Tracking dolly slows to 25% across 0.8s." });
+    scenes.push({ ts: "0:25–0:30", scene: "CTA",
+      script: `[CTA] ${b.cta || "Tag a friend who's been here."}`,
+      prompt: "Logo reveal + clean fade. Centred composition. Brand card hold 3s. Fade out." });
+  } else if (pillar === "Educational") {
+    scenes.push({ ts: "0:00–0:03", scene: "Problem hook",
+      script: `[V/O] ${b.hook || "Opens on the problem most people face."}`,
+      prompt: "Smash-cut text overlay. Medium shot frustrated reaction. Hard cut to demo setup." });
+    scenes.push({ ts: "0:03–0:12", scene: "Step-by-step demo",
+      script: "[V/O] 'Here's what most people miss.' — Step 1, Step 2, Step 3.",
+      prompt: "Top-down lock-off overhead. UI annotation overlay + arrow pointer. Screen-record insert with push-in. Graphic wipe between steps." });
+    scenes.push({ ts: "0:12–0:22", scene: "Payoff — the fix",
+      script: "[V/O] 'That's the difference between a $40 win and a $300 mistake.'",
+      prompt: "Slow-motion payoff success state. Pull-back from detail to subject reaction. Freeze on smile. Split-screen before/after." });
+    scenes.push({ ts: "0:22–0:30", scene: "Recap + CTA",
+      script: `[CTA] ${b.cta || "Save this. Share with the squad."}`,
+      prompt: "Bullet text animation 3 lines. Static graphic frame. Brand card + URL stamp. Hold + fade." });
+  } else if (pillar === "Promotional") {
+    scenes.push({ ts: "0:00–0:02", scene: "Price stamp open",
+      script: `[V/O] ${b.hook || "Deal opens with impact."}`,
+      prompt: "Hard zoom-in + impact frame flash. Static product centre, 1.0→1.4x in 0.3s. Smash cut." });
+    scenes.push({ ts: "0:02–0:08", scene: "Product hero",
+      script: `[V/O] '${b.product || "Product"} — here's what you get.'`,
+      prompt: "360° turntable + soft bloom. Orbit dolly around product. Big-type kinetic text price + %. Fade through brand colour." });
+    scenes.push({ ts: "0:08–0:15", scene: "Urgency + social proof",
+      script: "[V/O] 'Limited time. Here's why this matters right now.'",
+      prompt: "Countdown overlay + scanline. Subject + ticker composite. Quick cut montage 3 reactions. Ticker slams off-screen." });
+    scenes.push({ ts: "0:15–0:20", scene: "CTA stamp",
+      script: `[CTA] ${b.cta || "Link in bio. Ends tonight."}`,
+      prompt: "Logo + button graphic + price seal. Centred lock-off. Hold for read. Brand card hold + fade." });
+  } else {
+    scenes.push({ ts: "0:00–0:03", scene: "Hook",
+      script: `[V/O] ${b.hook || "Opens strong."}`,
+      prompt: "Strong visual entry. Camera movement establishes tone. Hook lands in first 2s." });
+    scenes.push({ ts: "0:03–0:20", scene: "Core delivery",
+      script: "[V/O] Core message delivered in 2-3 punchy sentences.",
+      prompt: "Medium shot, deliberate pacing. B-roll cutaways. Clean cuts every 3-4s." });
+    scenes.push({ ts: "0:20–0:28", scene: "Payoff",
+      script: "[V/O] The takeaway that earns the save or share.",
+      prompt: "Push-in on key moment. Text overlay reinforces the point. Score swell." });
+    scenes.push({ ts: "0:28–0:30", scene: "CTA",
+      script: `[CTA] ${b.cta || "Drive to site."}`,
+      prompt: "Brand card. Logo + URL. Hold 3s. Fade out." });
+  }
+  return scenes.map(s => `
+    <tr>
+      <td style="color:var(--accent-2);font-family:'IBM Plex Mono',monospace;font-size:11px;white-space:nowrap">${s.ts}</td>
+      <td style="font-weight:600;font-size:12px">${s.scene}</td>
+      <td style="font-size:12px;color:var(--text-2)"><pre style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;white-space:pre-wrap;background:var(--bg-3);padding:6px 8px;border-radius:4px">${s.script}</pre></td>
+      <td style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace"><pre style="margin:0;white-space:pre-wrap;background:rgba(94,220,192,.05);padding:6px 8px;border-radius:4px;border:1px solid rgba(94,220,192,.12)">${s.prompt}</pre></td>
+    </tr>`).join('');
+}
+
 views.l3 = () => {
   if (!state.gate1Submitted) {
     return pageHeader("Brief Generation", "Locked — submit Gate 1 first") + `<div class="empty">Gate 1 not submitted. <a onclick="nav('g1')">Go to Gate 1</a></div>`;
@@ -1847,8 +1933,27 @@ views.l3 = () => {
           <div class="brief-field" style="margin-top:14px"><div class="label">📜 Detailed screenplay — Episode ${b.gleoArc.current_arc.detailed_episode}</div><div class="value"><pre style="margin:4px 0;font-family:'JetBrains Mono','SF Mono',monospace;font-size:11.5px;line-height:1.55;white-space:pre-wrap;background:var(--bg-3);padding:12px 14px;border-radius:6px;max-height:520px;overflow-y:auto">${b.gleoArc.current_arc.screenplay}</pre></div></div>
           <div class="row" style="margin-top:10px"><span class="muted small">Past arcs:</span>${b.gleoArc.past_arcs.map(a => `<span class="pill muted small">#${a.num} ${a.name}</span>`).join('')}<span class="spacer"></span><span class="pill ok small">Current arc · Ep ${b.gleoArc.current_arc.detailed_episode} of 4</span></div>
         </div>` : ''}
+        ${b.format === 'Video' ? `
+        <div class="brief-field" style="grid-column:1/-1">
+          <div class="label">Production Timeline</div>
+          <div class="value">
+            <table style="width:100%;margin-top:8px;font-size:12px">
+              <thead>
+                <tr>
+                  <th style="width:100px">Timestamp</th>
+                  <th style="width:180px">Scene</th>
+                  <th>Script</th>
+                  <th>Seedance / Higgsfield Prompt</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${generateTimestampTable(b)}
+              </tbody>
+            </table>
+          </div>
+        </div>` : `
         <div class="brief-field" style="grid-column:1/-1"><div class="label">Storyline (act structure)</div><div class="value"><pre style="margin:4px 0;font-family:inherit;white-space:pre-wrap">${b.storyline || '—'}</pre></div></div>
-        <div class="brief-field" style="grid-column:1/-1"><div class="label">Script (V/O beats)</div><div class="value"><pre style="margin:4px 0;font-family:'JetBrains Mono','SF Mono',monospace;font-size:12px;white-space:pre-wrap;background:var(--bg-3);padding:8px 10px;border-radius:6px">${b.script || '—'}</pre></div></div>
+        <div class="brief-field" style="grid-column:1/-1"><div class="label">Script (V/O beats)</div><div class="value"><pre style="margin:4px 0;font-family:'JetBrains Mono','SF Mono',monospace;font-size:12px;white-space:pre-wrap;background:var(--bg-3);padding:8px 10px;border-radius:6px">${b.script || '—'}</pre></div></div>`}
       </div>
     </div>
   `).join("");
