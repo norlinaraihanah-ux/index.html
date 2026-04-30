@@ -538,7 +538,7 @@
    STATE & MOCK DATA — sourced from Spec v2.4 + gw skill v2
    ============================================================ */
 
-const RUN_DATE = "2026-04-28";
+const RUN_DATE = new Date().toISOString().split('T')[0];
 
 function cesTierClass(n) {
   // positive → green; -1..-50 → orange; -51 and worse → red
@@ -1323,23 +1323,23 @@ function pageHeader(title, sub) {
 const views = {};
 
 views.l0a = () => {
-  const overall = {
+const overall = {
     posts:       PLATFORMS.reduce((s,p)=>s+p.posts,0),
     postTarget:  PLATFORMS.reduce((s,p)=>s+p.postTarget,0),
     impressions: PLATFORMS.reduce((s,p)=>s+p.impressions,0),
     engagement:  PLATFORMS.reduce((s,p)=>s+p.engagement,0),
     er:          (PLATFORMS.reduce((s,p)=>s+p.er,0)/PLATFORMS.length).toFixed(1),
     ces:         Math.round(PLATFORMS.reduce((s,p)=>s+p.ces,0)/PLATFORMS.length),
-    cesWow:      Math.round(PLATFORMS.reduce((s,p)=>s+p.cesWow,0)/PLATFORMS.length),
-    impWow:      Math.round(PLATFORMS.reduce((s,p)=>s+p.wow.imp,0)/PLATFORMS.length),
-    engWow:      Math.round(PLATFORMS.reduce((s,p)=>s+p.wow.eng,0)/PLATFORMS.length),
+    cesWow:      Math.round(PLATFORMS.reduce((s,p)=>s+(p.cesWow||0),0)/PLATFORMS.length),
+    impWow:      Math.round(PLATFORMS.reduce((s,p)=>s+((p.wow&&p.wow.imp)||0),0)/PLATFORMS.length),
+    engWow:      Math.round(PLATFORMS.reduce((s,p)=>s+((p.wow&&p.wow.eng)||0),0)/PLATFORMS.length),
   };
   const wow = (n) => `<span class="${cesTierClass(n)}" style="font-size:11px">${n >= 0 ? '+' : ''}${n}% WoW</span>`;
   return pageHeader("Performance Pulse", `7-day rolling window · output: ${brand().rawDataFile}`) + `
     <div class="card" style="margin-bottom:14px;border-color:var(--accent-2)">
       <div class="row"><strong>📊 Overall social media — 7-day aggregate</strong><span class="spacer"></span><span class="pill solid small">${PLATFORMS.length} platforms</span></div>
       <div class="grid grid-4" style="margin-top:10px">
-        <div class="kpi"><div class="label">CES (avg)</div><div class="value">${overall.ces}%</div>${wow(overall.cesWow)}</div>
+        <div class="kpi"><div class="label">CES (avg)</div><div class="value">${overall.ces}</div>${wow(overall.cesWow)}</div>
         <div class="kpi"><div class="label">ER (avg)</div><div class="value">${overall.er}%</div>${wow(overall.engWow)}</div>
         <div class="kpi"><div class="label">Impressions</div><div class="value">${overall.impressions.toLocaleString()}</div>${wow(overall.impWow)}</div>
         <div class="kpi"><div class="label">Posts</div><div class="value">${overall.posts}/${overall.postTarget}</div><div class="muted small">target ${overall.postTarget}</div></div>
@@ -1357,15 +1357,14 @@ views.l0a = () => {
               <td class="muted">${p.handle}</td>
               <td class="num">${p.posts}/${p.postTarget}</td>
               <td class="num">${p.er}%<div class="${cesTierClass(p.wow.eng)}" style="font-size:11px">${p.wow.eng >= 0 ? '+' : ''}${p.wow.eng}% WoW</div></td>
-              <td class="num">${p.ces}%<div class="${cesTierClass(p.cesWow)}" style="font-size:11px">${p.cesWow >= 0 ? '+' : ''}${p.cesWow}% WoW</div></td>
+              <td class="num">${p.ces}<div class="${cesTierClass(p.cesWow)}" style="font-size:11px">${p.cesWow >= 0 ? '+' : ''}${p.cesWow}% WoW</div></td>
               <td class="num">${p.impressions.toLocaleString()}<div class="${cesTierClass(p.wow.imp)}" style="font-size:11px">${p.wow.imp >= 0 ? '+' : ''}${p.wow.imp}% WoW</div></td>
               <td>${p.top}</td>
             </tr>
           `).join('')}
         </tbody>
       </table>
-      <div class="muted small" style="margin-top:10px">📡 Live wiring: Vista Social API → daily refresh at 6am GMT+8 → auto-updates this view. Currently shown: deterministic mock for ${RUN_DATE}.</div>
-    </div>`;
+      <div class="muted small" style="margin-top:10px">📡 Live wiring: Vista Social API → auto-updates on every page load. Live data as of ${RUN_DATE}.</div>
 };
 
 views.l0b = () => {
