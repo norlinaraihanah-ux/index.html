@@ -1572,7 +1572,7 @@ views.g1 = () => {
   }).join("");
   const submitDisabled = state.gate1Submitted ? "disabled" : "";
   const banner = state.gate1Submitted
-    ? `<div class="gate-banner"><div class="icon">✅</div><div class="text"><strong>Gate 1 submitted.</strong><small>${picked} picks recorded · briefs generated in Layer 3</small></div><button class="btn" onclick="nav('l3')">Go to Layer 3 →</button></div>`
+    ? `<div class="gate-banner"><div class="icon">✅</div><div class="text"><strong>Gate 1 submitted.</strong><small>${picked} picks recorded · briefs generated in Layer 3</small></div><button class="btn" onclick="nav('l3')">Go to Layer 3 →</button><button class="btn reject" onclick="state.gate1Submitted=false;setStatus('g1','progress');setStatus('l3','locked');renderSidebar();renderMain();">↺ Reset Gate 1</button></div>`
     : `<div class="gate-banner"><div class="icon">🟢</div><div class="text"><strong>Gate 1 — In-site approval (canonical, v2.5)</strong><small>Pick one idea per slot. Click a card to select. Skip slots you want to defer. Submit when done.</small></div></div>`;
   return pageHeader("Gate 1 — Pick 1 of 3 per slot", `${picked} of ${total} slots picked`) + banner + `
     <div class="card" style="margin-bottom:16px">
