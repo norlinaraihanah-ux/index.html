@@ -5,13 +5,14 @@ export default async function handler(req, res) {
     `https://vistasocial.com/api/integration/mcp?api_key=${apiKey}`,
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         jsonrpc: "2.0",
-        method: "tools/list",
-        params: {},
+        method: "tools/call",
+        params: {
+          name: "getPublishedPostPerformance",
+          arguments: {}
+        },
         id: 1
       })
     }
