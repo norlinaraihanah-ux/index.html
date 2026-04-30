@@ -1836,7 +1836,6 @@ views.l3 = () => {
 <div class="brief-field" style="grid-column:1/-1"><div class="label">Storyline (act structure)</div><div class="value"><pre style="margin:4px 0;font-family:inherit;white-space:pre-wrap">${b.storyline || '—'}</pre></div></div>
 <div class="brief-field" style="grid-column:1/-1"><div class="label">Script (V/O beats)</div><div class="value"><pre style="margin:4px 0;font-family:'JetBrains Mono','SF Mono',monospace;font-size:12px;white-space:pre-wrap;background:var(--bg-3);padding:8px 10px;border-radius:6px">${b.script || '—'}</pre></div></div>`}
       </div>
-    </div>
   `).join("");
   return pageHeader("Brief Generation", `${briefs.length} briefs generated · 6-field structure (Topic / Audience / Hook / Retention / KPI / CTA)`) + cards + `
     <div class="card"><div class="row"><div>Briefs ready for review.</div><div class="spacer"></div><button class="btn primary" onclick="setStatus('g2','progress'); renderSidebar(); nav('g2')">Open Gate 2 →</button></div></div>`;
