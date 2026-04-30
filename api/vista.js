@@ -10,11 +10,8 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         jsonrpc: "2.0",
-        method: "tools/call",
-        params: {
-          name: "getProfiles",
-          arguments: {}
-        },
+        method: "tools/list",
+        params: {},
         id: 1
       })
     }
