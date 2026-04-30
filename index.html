@@ -1594,7 +1594,11 @@ function attachGate1Handlers() {
     el.onclick = () => {
       if (state.gate1Submitted) return;
       const slot = el.dataset.slot, idea = el.dataset.idea;
-      state.picks[slot] = idea;
+      if (state.picks[slot] === idea) {
+        delete state.picks[slot];
+      } else {
+        state.picks[slot] = idea;
+      }
       renderMain();
     };
   });
