@@ -2,12 +2,11 @@ export default async function handler(req, res) {
   const apiKey = process.env.VISTA_SOCIAL_API_KEY;
 
   const response = await fetch(
-    "https://vistasocial.com/api/integration/mcp",
+    `https://vistasocial.com/api/integration/mcp?api_key=${apiKey}`,
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         jsonrpc: "2.0",
