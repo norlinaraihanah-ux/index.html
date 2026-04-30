@@ -1673,7 +1673,8 @@ function defaultAudience(slot) {
 function defaultRetention(slot, idea) {
   if (idea.mia) return "Mia's recurring presence builds episode-to-episode loyalty; viewers stay for the payoff card.";
   if (slot.pillar === "Promotional") return "STATIC — single visual scan, urgency-led copy, clear price reduction.";
-  if (slot.format === "Video") return "0–3s hook → 3–8s setup → 8–25s payoff → CTA card. Cut every 1.4s avg.";
+  if (slot.format === "Video" && slot.pillar === "Informative") return "Hook with a surprising fact or bold claim in first 3s. Conversational delivery — feels like overhearing two smart people talk. Payoff must land before 60s. End on a question or tease next week.";
+if (slot.format === "Video") return "0–3s hook → 3–8s setup → 8–25s payoff → CTA card. Cut every 1.4s avg.";
   return "Tight pacing, single visual idea per second, clear payoff before CTA.";
 }
 
