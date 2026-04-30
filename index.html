@@ -538,7 +538,7 @@
    STATE & MOCK DATA — sourced from Spec v2.4 + gw skill v2
    ============================================================ */
 
-const RUN_DATE = "2026-04-28";
+const RUN_DATE = new Date().toISOString().split('T')[0];
 
 function cesTierClass(n) {
   // positive → green; -1..-50 → orange; -51 and worse → red
