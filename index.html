@@ -1700,6 +1700,10 @@ function defaultStoryline(slot, idea) {
     acts.push("Act 2 (3-18s) — STORY: introduce the conflict / character moment that builds attachment.");
     acts.push("Act 3 (18-28s) — RESOLUTION: payoff that earns rewatch + community pride.");
     acts.push("Act 4 (28-32s) — CTA: " + (idea.cta || "Tap to follow for next episode."));
+ } else if (slot.pillar === "Informative") {
+    acts.push("Act 2 (3-30s) — DELIVER: conversational breakdown. Either solo host unpacking the topic with personality, or 2-host back-and-forth where one argues, one pushes back. Use the week's trending game/patch/news as the anchor.");
+    acts.push("Act 3 (30-50s) — TWIST or 'DID YOU KNOW': drop the surprising fact, stat, or angle that reframes everything.");
+    acts.push("Act 4 (50-60s) — OPEN LOOP CTA: " + (idea.cta || "Leave them wanting more — tease next week or ask for their take."));
   } else {
     acts.push("Act 2 (3-15s) — DELIVER: core idea, fast cuts.");
     acts.push("Act 3 (15-25s) — PAYOFF + CTA: " + (idea.cta || "Drive to site."));
