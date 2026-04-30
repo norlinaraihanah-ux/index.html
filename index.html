@@ -1339,7 +1339,7 @@ views.l0a = () => {
     <div class="card" style="margin-bottom:14px;border-color:var(--accent-2)">
       <div class="row"><strong>📊 Overall social media — 7-day aggregate</strong><span class="spacer"></span><span class="pill solid small">${PLATFORMS.length} platforms</span></div>
       <div class="grid grid-4" style="margin-top:10px">
-        <div class="kpi"><div class="label">CES (avg)</div><div class="value">${overall.ces}%</div>${wow(overall.cesWow)}</div>
+        <div class="kpi"><div class="label">CES (avg)</div><div class="value">${overall.ces}</div>${wow(overall.cesWow)}</div>
         <div class="kpi"><div class="label">ER (avg)</div><div class="value">${overall.er}%</div>${wow(overall.engWow)}</div>
         <div class="kpi"><div class="label">Impressions</div><div class="value">${overall.impressions.toLocaleString()}</div>${wow(overall.impWow)}</div>
         <div class="kpi"><div class="label">Posts</div><div class="value">${overall.posts}/${overall.postTarget}</div><div class="muted small">target ${overall.postTarget}</div></div>
