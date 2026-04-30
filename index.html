@@ -1760,7 +1760,8 @@ function defaultScript(slot, idea) {
     lines.push("[V/O]   Reinforce why this matters now.");
     lines.push("[CTA]   " + (idea.cta || "Drive to site."));
   }
-
+return lines.join("\n");
+}
 views.l3 = () => {
   if (!state.gate1Submitted) {
     return pageHeader("Brief Generation", "Locked — submit Gate 1 first") + `<div class="empty">Gate 1 not submitted. <a onclick="nav('g1')">Go to Gate 1</a></div>`;
