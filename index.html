@@ -897,12 +897,12 @@ const _IDEAS_G2G = {
       hook:"Three boxes open in unison. Standard / Deluxe / Ultimate.", kpi:"clicks", cta:"Use code TIER22 for 22% off" },
   ],
   THU_2: [
-    { id:"THU2-A", title:"Did you know? The wildest gaming fact tied to this week's biggest release",
-      hook:"'Most people don't know this about [trending game] — but it changes everything.' Host leans in.", kpi:"saves", cta:"Follow for next week's drop — every Thursday" },
-    { id:"THU2-B", title:"Hot take: Is [trending topic] actually bad for gamers? We argue both sides",
-      hook:"Host 1: 'Hear me out.' Host 2: 'No. Absolutely not.' — 60 seconds of the best argument you'll hear today.", kpi:"comments", cta:"Drop your take in the comments" },
-    { id:"THU2-C", title:"The real reason [trending game/patch] blew up this week — and what nobody's saying",
-      hook:"'Everyone's talking about [topic]. Nobody's talking about why it actually happened.' — calm, curious open.", kpi:"completion", cta:"Save this + tag a friend who needs to hear it" },
+    { id:"THU2-A", title:"Podcast: Inside G2G — how a CDKey actually moves",
+      hook:"'You buy at 11:42pm. Here's where the key goes for 9 seconds.'", kpi:"completion", cta:"Full episode in bio" },
+    { id:"THU2-B", title:"Podcast: Why marketplace prices swing 40% in a day",
+      hook:"Price chart spikes — host points: 'this is the moment.'", kpi:"saves", cta:"Subscribe — episodes every Thu" },
+    { id:"THU2-C", title:"Podcast: We hear you — listener questions only",
+      hook:"Stack of DM screenshots, host: 'these are the real ones this week.'", kpi:"comments", cta:"Drop your Q for next week" },
   ],
   FRI_1: [
     { id:"FRI1-A", title:"When the boss fight ends and you forgot to save",
@@ -1673,7 +1673,6 @@ function defaultAudience(slot) {
 function defaultRetention(slot, idea) {
   if (idea.mia) return "Mia's recurring presence builds episode-to-episode loyalty; viewers stay for the payoff card.";
   if (slot.pillar === "Promotional") return "STATIC — single visual scan, urgency-led copy, clear price reduction.";
-  if (slot.format === "Video" && slot.pillar === "Informative") return "Hook with a surprising fact or bold claim in first 3s. Conversational delivery — feels like overhearing two smart people talk. Payoff must land before 60s. End on a question or tease next week.";
   if (slot.format === "Video") return "0–3s hook → 3–8s setup → 8–25s payoff → CTA card. Cut every 1.4s avg.";
   return "Tight pacing, single visual idea per second, clear payoff before CTA.";
 }
@@ -1700,14 +1699,8 @@ function defaultStoryline(slot, idea) {
     acts.push("Act 2 (3-18s) — STORY: introduce the conflict / character moment that builds attachment.");
     acts.push("Act 3 (18-28s) — RESOLUTION: payoff that earns rewatch + community pride.");
     acts.push("Act 4 (28-32s) — CTA: " + (idea.cta || "Tap to follow for next episode."));
-   } else if (slot.pillar === "Informative") {
-    acts.push("Act 2 (3-30s) — DELIVER: conversational breakdown. Either solo host unpacking the topic with personality, or 2-host back-and-forth where one argues, one pushes back. Use the week's trending game/patch/news as the anchor.");
-    acts.push("Act 3 (30-50s) — TWIST or 'DID YOU KNOW': drop the surprising fact, stat, or angle that reframes everything.");
-    acts.push("Act 4 (50-60s) — OPEN LOOP CTA: " + (idea.cta || "Leave them wanting more — tease next week or ask for their take."));
   } else {
     acts.push("Act 2 (3-15s) — DELIVER: core idea, fast cuts.");
-    acts.push("Act 3 (15-25s) — PAYOFF + CTA: " + (idea.cta || "Drive to site."));
-  }
     acts.push("Act 3 (15-25s) — PAYOFF + CTA: " + (idea.cta || "Drive to site."));
   }
   return acts.join("\n");
@@ -1741,22 +1734,6 @@ function defaultScript(slot, idea) {
     lines.push("[V/O]   Escalation — twist or exaggeration.");
     lines.push("[V/O]   Punchline — payoff card or visual flip.");
     lines.push("[CTA]   " + (idea.cta || "Tag a friend."));
-  } else if (slot.pillar === "Informative") {
-    const trendingTopic = TRENDS.trending_titles && TRENDS.trending_titles[0] ? TRENDS.trending_titles[0].title : "this week's big release";
-    const isBackAndForth = Math.random() > 0.5;
-    if (isBackAndForth) {
-      lines.push("[HOST 1] 'Okay so — did you know that [surprising fact about " + trendingTopic + "]?'");
-      lines.push("[HOST 2] 'Wait, seriously? Because everyone I know thinks it's the opposite.'");
-      lines.push("[HOST 1] 'That's exactly the point. Here's why...' — delivers the reframe in 2 punchy sentences.");
-      lines.push("[HOST 2] 'So what you're saying is...' — lands the takeaway cleanly.");
-      lines.push("[BOTH / HOST 1] " + (idea.cta || "Drop your take below. See you next Thursday."));
-    } else {
-      lines.push("[HOST]  'Nobody's talking about this — but they should be.' — opens on the hook.");
-      lines.push("[HOST]  Delivers the Did You Know fact or hot take in 2-3 conversational sentences. No jargon. Talks like a friend.");
-      lines.push("[HOST]  'And here's the part that actually matters for you as a gamer...' — bridges to the relevant angle.");
-      lines.push("[HOST]  Drops the open loop or surprising twist that earns the follow.");
-      lines.push("[CTA]   " + (idea.cta || "Follow for next Thursday's drop."));
-    }
   } else {
     lines.push("[V/O]   Core message in 2 sentences.");
     lines.push("[V/O]   Reinforce why this matters now.");
