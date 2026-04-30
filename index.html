@@ -1814,8 +1814,27 @@ views.l3 = () => {
           <div class="brief-field" style="margin-top:14px"><div class="label">📜 Detailed screenplay — Episode ${b.gleoArc.current_arc.detailed_episode}</div><div class="value"><pre style="margin:4px 0;font-family:'JetBrains Mono','SF Mono',monospace;font-size:11.5px;line-height:1.55;white-space:pre-wrap;background:var(--bg-3);padding:12px 14px;border-radius:6px;max-height:520px;overflow-y:auto">${b.gleoArc.current_arc.screenplay}</pre></div></div>
           <div class="row" style="margin-top:10px"><span class="muted small">Past arcs:</span>${b.gleoArc.past_arcs.map(a => `<span class="pill muted small">#${a.num} ${a.name}</span>`).join('')}<span class="spacer"></span><span class="pill ok small">Current arc · Ep ${b.gleoArc.current_arc.detailed_episode} of 4</span></div>
         </div>` : ''}
-        <div class="brief-field" style="grid-column:1/-1"><div class="label">Storyline (act structure)</div><div class="value"><pre style="margin:4px 0;font-family:inherit;white-space:pre-wrap">${b.storyline || '—'}</pre></div></div>
-        <div class="brief-field" style="grid-column:1/-1"><div class="label">Script (V/O beats)</div><div class="value"><pre style="margin:4px 0;font-family:'JetBrains Mono','SF Mono',monospace;font-size:12px;white-space:pre-wrap;background:var(--bg-3);padding:8px 10px;border-radius:6px">${b.script || '—'}</pre></div></div>
+        ${b.format === 'Video' ? `
+<div class="brief-field" style="grid-column:1/-1">
+  <div class="label">Production Timeline</div>
+  <div class="value">
+    <table style="width:100%;margin-top:8px;font-size:12px">
+      <thead>
+        <tr>
+          <th style="width:100px">Timestamp</th>
+          <th style="width:180px">Scene</th>
+          <th>Script</th>
+          <th>Seedance / Higgsfield Prompt</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${generateTimestampTable(b)}
+      </tbody>
+    </table>
+  </div>
+</div>` : `
+<div class="brief-field" style="grid-column:1/-1"><div class="label">Storyline (act structure)</div><div class="value"><pre style="margin:4px 0;font-family:inherit;white-space:pre-wrap">${b.storyline || '—'}</pre></div></div>
+<div class="brief-field" style="grid-column:1/-1"><div class="label">Script (V/O beats)</div><div class="value"><pre style="margin:4px 0;font-family:'JetBrains Mono','SF Mono',monospace;font-size:12px;white-space:pre-wrap;background:var(--bg-3);padding:8px 10px;border-radius:6px">${b.script || '—'}</pre></div></div>`}
       </div>
     </div>
   `).join("");
