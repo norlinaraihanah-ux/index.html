@@ -30,25 +30,34 @@ export default async function handler(req, res) {
 
   const raw = await response.json();
 
-  // Parse the text content into JSON
   let posts = [];
+  let columns = [];
   try {
     const text = raw.result.content[0].text;
     const parsed = JSON.parse(text);
+    columns = parsed.columns || [];
     posts = parsed.rows || [];
   } catch(e) {
     return res.status(200).json({ error: "parse_failed", raw });
   }
 
-  // Aggregate by profile
+  // Find column indexes dynamically
+  const idx = (name) => columns.indexOf(name);
+  const iImp  = idx("impressions");
+  const iEng  = idx("engagement");
+  const iNet  = idx("network");
+  const iPgid = idx("profile_gid");
+
+  // Aggregate by profile_gid
   const stats = {};
   for (const post of posts) {
-    const [impressions, engagement, , , , , , source, , , , profile_gid, network] = post;
-    if (!stats[profile_gid]) stats[profile_gid] = { impressions: 0, engagement: 0, posts: 0, network };
-    stats[profile_gid].impressions += impressions || 0;
-    stats[profile_gid].engagement  += engagement  || 0;
-    stats[profile_gid].posts       += 1;
+    const pgid = post[iPgid];
+    const net  = post[iNet];
+    if (!stats[pgid]) stats[pgid] = { impressions: 0, engagement: 0, posts: 0, network: net };
+    stats[pgid].impressions += Number(post[iImp]) || 0;
+    stats[pgid].engagement  += Number(post[iEng]) || 0;
+    stats[pgid].posts       += 1;
   }
 
-  res.status(200).json({ date_from, date_to, stats, G2G_PROFILES, OFFGAMERS_PROFILES });
+  res.status(200).json({ date_from, date_to, columns, stats, G2G_PROFILES, OFFGAMERS_PROFILES });
 }
