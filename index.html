@@ -2463,6 +2463,8 @@ async function fetchVistaData() {
       p.engagement  = s.engagement;
       p.posts       = s.posts;
       p.er          = parseFloat(er(s.engagement, s.impressions));
+      p.wow         = { imp: s.wow_impressions || 0, eng: s.wow_engagement || 0 };
+      p.cesWow      = s.wow_engagement || 0;
     });
 
     _PLATFORMS_OG.forEach(p => {
@@ -2474,11 +2476,13 @@ async function fetchVistaData() {
       p.engagement  = s.engagement;
       p.posts       = s.posts;
       p.er          = parseFloat(er(s.engagement, s.impressions));
+      p.wow         = { imp: s.wow_impressions || 0, eng: s.wow_engagement || 0 };
+      p.cesWow      = s.wow_engagement || 0;
     });
 
     PLATFORMS = CURRENT_BRAND === 'g2g' ? _PLATFORMS_G2G : _PLATFORMS_OG;
     renderMain();
-    console.log('✅ Dashboard updated with live Vista Social data!');
+    console.log('✅ Dashboard updated with live Vista Social data + WoW!');
   } catch (err) {
     console.warn('Vista Social fetch failed, using mock data:', err);
   }
