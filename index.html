@@ -1803,27 +1803,17 @@ async function generateAIScript(briefId) {
   const brief = state.briefs[briefId];
   if (!brief) return;
 
-  // Show loading state
   const btn = document.querySelector(`[data-ai-script="${briefId}"]`);
   if (btn) { btn.textContent = '⏳ Generating...'; btn.disabled = true; }
 
   try {
-    const response = await fetch("/api/claude", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-5",
-        max_tokens: 2000,
-        tools: [{ type: "web_search_20250305", name: "web_search" }],
-        system: `You are a social media video script writer for gaming brands. 
-You write complete, punchy scripts for 60-90 second social media videos.
-Your scripts are conversational, specific, and engaging — never generic.
-Always search for real, current facts about the topic before writing.
-Respond ONLY with a JSON object, no markdown, no backticks.`,
-        messages: [{
-          role: "user",
-          content: `Write a complete production script for this social media video brief:
-
+    const payload = {
+      model: "claude-sonnet-4-5",
+      max_tokens: 2000,
+      system: "You are a social media video script writer for gaming brands. Write complete, punchy scripts for 60-90 second social media videos. Respond ONLY with a valid JSON object, no markdown, no backticks, no extra text.",
+      messages: [{
+        role: "user",
+        content: `Write a production script for this brief:
 BRAND: ${CURRENT_BRAND === 'g2g' ? 'G2G (game key marketplace)' : 'OffGamers (gaming top-up store)'}
 TOPIC: ${brief.topic}
 HOOK: ${brief.hook}
@@ -1831,36 +1821,31 @@ PILLAR: ${brief.pillar}
 CTA: ${brief.cta}
 KPI: ${brief.kpi}
 
-First search the web for 2-3 real, specific, surprising facts about "${brief.topic}" that would make great content.
+Return ONLY this JSON with no other text:
+{"facts":["fact 1","fact 2","fact 3"],"scenes":[{"ts":"0:00-0:03","scene":"scene name","script":"complete dialogue here","prompt":"detailed Higgsfield prompt here"}]}`
+      }]
+    };
 
-Then write a complete scene-by-scene script. Return ONLY this JSON:
-{
-  "facts": ["fact 1", "fact 2", "fact 3"],
-  "scenes": [
-    {
-      "ts": "0:00-0:03",
-      "scene": "scene name",
-      "script": "complete word-for-word dialogue here",
-      "prompt": "detailed Higgsfield/Seedance prompt including: shot type, camera movement, lighting, the exact dialogue being spoken, on-screen graphics, music cue, transition"
-    }
-  ]
-}`
-        }]
-      })
+    console.log('Payload:', JSON.stringify(payload));
+
+    const response = await fetch("/api/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
 
+    console.log('Response status:', response.status);
     const data = await response.json();
+    console.log('Response data:', JSON.stringify(data));
 
-    // Extract text from response
     const textContent = data.content.filter(c => c.type === 'text').map(c => c.text).join('');
     const clean = textContent.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
 
-    // Store in state
     state.aiScripts = state.aiScripts || {};
     state.aiScripts[briefId] = parsed;
 
-    toast('✅ AI script generated with real facts!', 'ok');
+    toast('✅ AI script generated!', 'ok');
     renderMain();
 
   } catch (err) {
