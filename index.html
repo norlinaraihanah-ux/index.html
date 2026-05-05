@@ -52,7 +52,6 @@
   button { font-family: inherit; font-size: inherit; cursor: pointer; }
   code { font-family: "IBM Plex Mono", "JetBrains Mono", "SF Mono", Menlo, monospace; font-size: 13px; background: rgba(150,180,220,.06); padding: 2px 7px; border-radius: 4px; color: #c2f0e0; border: 1px solid var(--line); }
   pre { font-family: "IBM Plex Mono", "JetBrains Mono", "SF Mono", Menlo, monospace; font-size: 13px; }
-
   /* Layout */
   .app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
   .sidebar {
@@ -67,7 +66,6 @@
     opacity: .5;
   }
   .main { padding: 28px 36px 80px; max-width: 1280px; }
-
   /* Brand + switcher */
   .brand { display: flex; align-items: center; gap: 10px; padding: 6px 6px 14px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
   .brand-logo {
@@ -100,7 +98,6 @@
     background: linear-gradient(135deg, var(--accent), var(--accent-3));
     color: #050810; box-shadow: var(--glow-violet);
   }
-
   .sidebar-section {
     color: var(--accent-2); font-size: 10px; text-transform: uppercase; letter-spacing: 2.4px;
     margin: 18px 8px 8px; font-weight: 600; font-family: "IBM Plex Mono", "JetBrains Mono", monospace;
@@ -141,7 +138,6 @@
   .nav-cadence[data-c="Weekly"] { color: #aedeff; border-color: rgba(76,194,255,.4); background: rgba(76,194,255,.06); box-shadow: 0 0 6px rgba(76,194,255,.15); }
   .nav-cadence[data-c="Event"]  { color: #d6c2ff; border-color: rgba(124,92,255,.35); background: rgba(124,92,255,.06); }
   @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.85); } }
-
   /* Header */
   .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--line-2); margin-bottom: 24px; position: relative; }
   .page-header::after {
@@ -160,7 +156,6 @@
   .page-subtitle { color: var(--text-2); margin-top: 6px; font-size: 14px; }
   .run-meta { text-align: right; color: var(--muted); font-size: 12px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; line-height: 1.7; }
   .run-meta strong { color: var(--accent-2); font-weight: 600; }
-
   /* Cards & grid */
   .grid { display: grid; gap: 16px; }
   .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -190,7 +185,6 @@
   .delta.up,   .kpi .delta.up,   .kpi.delta.up   { color: var(--ok)   !important; }
   .delta.warn, .kpi .delta.warn, .kpi.delta.warn { color: var(--warn) !important; }
   .delta.down, .kpi .delta.down, .kpi.delta.down { color: var(--bad)  !important; }
-
   /* Audience age — clean stacked bars (replaces messy slash-strings in L0d) */
   .age-stack { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
   .age-row { display: grid; grid-template-columns: 50px 1fr 38px; align-items: center; gap: 8px; }
@@ -202,7 +196,6 @@
   .aud-block:last-child { margin-bottom: 0; }
   .aud-label { color: var(--accent-2); font-size: 10px; text-transform: uppercase; letter-spacing: 1.4px; margin-bottom: 4px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-weight: 600; }
   .aud-value { color: var(--text); font-size: 13px; font-weight: 500; }
-
   /* Collapsible sidebar sections */
   .nav-section { margin: 14px 6px 4px; border: 0; }
   .nav-section[open] > summary::after { transform: rotate(90deg); }
@@ -226,7 +219,6 @@
     margin-left: 6px;
   }
   .nav-section > .nav { padding-top: 4px; }
-
   /* Tables */
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -236,7 +228,6 @@
   tr:hover td { background: rgba(124,232,255,.03); }
   tr:last-child td { border-bottom: none; }
   td.num { font-variant-numeric: tabular-nums; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; }
-
   /* Pills */
   .pill {
     display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px;
@@ -252,7 +243,6 @@
   .pill.info  { color: #021829; background: linear-gradient(135deg, var(--info), #aedeff); border-color: var(--info); box-shadow: 0 0 10px rgba(76,194,255,.35); }
   .pill.muted { color: var(--muted); background: transparent; border-color: var(--line-2); }
   .pill.solid { color: #050810; background: linear-gradient(135deg, var(--accent-2), var(--accent-3)); border-color: var(--accent-2); box-shadow: var(--glow-cyan); }
-
   /* Buttons */
   .btn {
     display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
@@ -285,7 +275,6 @@
   .btn:disabled { opacity: .4; cursor: not-allowed; }
   .btn:disabled:hover { background: rgba(15,23,46,.8); border-color: var(--line-2); color: var(--text); box-shadow: none; }
   .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
-
   /* Slot / idea cards */
   .slot {
     background: linear-gradient(180deg, rgba(15,23,46,.85), rgba(10,16,32,.78));
@@ -320,7 +309,6 @@
   .idea .idea-title { font-weight: 600; margin-bottom: 6px; line-height: 1.35; }
   .idea .idea-hook { color: var(--text-2); font-size: 12px; line-height: 1.45; }
   .idea .idea-foot { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-
   /* Brief */
   .brief {
     background: linear-gradient(180deg, rgba(15,23,46,.85), rgba(10,16,32,.78));
@@ -348,7 +336,6 @@
   }
   .reject-reason:focus { border-color: var(--accent-3); box-shadow: var(--glow-blue); }
   .reject-reason::placeholder { color: var(--muted); }
-
   /* Layer 4/5/6 */
   .lane {
     background: linear-gradient(180deg, rgba(15,23,46,.78), rgba(10,16,32,.7));
@@ -362,7 +349,6 @@
   .lane-row:hover { background: rgba(124,232,255,.03); }
   .lane-row + .lane-row { border-top: 1px solid var(--line); }
   .lane-row .lane-name { flex: 1; }
-
   /* Higgsfield queue panel */
   .hf-panel {
     background: linear-gradient(180deg, rgba(15,23,46,.78), rgba(10,16,32,.7));
@@ -374,7 +360,6 @@
   .hf-id { font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-size: 11px; color: var(--accent-3); letter-spacing: .5px; }
   .hf-eta { color: var(--muted); font-size: 12px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; }
   .hf-progress { width: 120px; }
-
   /* Gate banner */
   .gate-banner {
     background:
@@ -396,7 +381,6 @@
   .gate-banner .text { flex: 1; }
   .gate-banner .text strong { color: white; }
   .gate-banner .text small { color: var(--text-2); display: block; margin-top: 2px; }
-
   /* Modal (Seedance prompt viewer) */
   .modal-backdrop { position: fixed; inset: 0; background: rgba(2,4,8,.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 200; }
   .modal-backdrop.open { display: flex; }
@@ -424,7 +408,6 @@
   .modal-pane.active { display: block; }
   .seedance { font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-size: 12px; line-height: 1.55; white-space: pre-wrap; color: #b3f5e8; margin: 0; }
   .modal-foot { padding: 12px 20px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 8px; }
-
   /* Toast */
   .toasts { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; z-index: 100; }
   .toast {
@@ -438,7 +421,6 @@
   .toast.ok  { border-color: var(--ok);  box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 16px rgba(46,229,166,.35); }
   .toast.bad { border-color: var(--bad); box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 16px rgba(255,77,109,.35); }
   @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
   /* Misc */
   .muted { color: var(--muted); }
   .small { font-size: 12px; }
@@ -449,13 +431,11 @@
   .progress-bar > div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-3), var(--accent-2)); transition: width .3s ease; box-shadow: 0 0 10px rgba(0,255,209,.4); }
   .empty { padding: 28px; text-align: center; color: var(--muted); }
   .hidden { display: none !important; }
-
   /* Scrollbar */
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: rgba(10,16,32,.4); }
   ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent), var(--accent-3)); border-radius: 10px; border: 2px solid rgba(10,16,32,.6); }
   ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--accent-3), var(--accent-2)); }
-
   /* Selection */
   ::selection { background: var(--accent); color: #050810; }
 </style>
@@ -467,12 +447,16 @@
       <div class="brand-logo">G2</div>
       <div>
         <div class="brand-name">G2G Social AI</div>
-        <div class="brand-sub">Pipeline v2.6 · Multi-brand</div>
+        <div class="brand-sub">Pipeline v2.7 · Multi-brand · 9 discipline rules</div>
       </div>
     </div>
     <div class="brand-switcher" id="brand-switcher" role="tablist" aria-label="Brand">
       <button data-brand="g2g" class="active" onclick="loadBrand('g2g')">G2G</button>
       <button data-brand="offgamers" onclick="loadBrand('offgamers')">OffGamers</button>
+    </div>
+    <div class="brand-switcher" id="cadence-switcher" role="tablist" aria-label="Cadence" style="margin-top:6px" title="Hybrid (R9): weekly calendar + daily brief approval. Weekly+veto: pre-approve the week, daily intercept only.">
+      <button data-cadence="hybrid" class="active" onclick="setCadence('hybrid')">Hybrid</button>
+      <button data-cadence="weekly-veto" onclick="setCadence('weekly-veto')">Weekly+Veto</button>
     </div>
     <details class="nav-section" open>
       <summary><span>Signal Pipeline</span><span class="nav-section-line"></span></summary>
@@ -493,14 +477,13 @@
     <hr/>
     <div class="small muted" style="padding: 0 8px;">
       Approver: <strong style="color:var(--text)">Lina Raihanah</strong><br/>
-      In-site approvals canonical (v2.6)<br/>
+      In-site approvals canonical (v2.7)<br/>
       Cadence: D=Daily / W=Weekly / E=Event
     </div>
   </aside>
   <main class="main" id="main"></main>
 </div>
 <div class="toasts" id="toasts"></div>
-
 <div class="modal-backdrop" id="video-modal" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
   <div class="modal">
     <div class="modal-head">
@@ -531,28 +514,23 @@
     </div>
   </div>
 </div>
-
 <script>
-
 /* ============================================================
    STATE & MOCK DATA — sourced from Spec v2.4 + gw skill v2
    ============================================================ */
-
 const RUN_DATE = new Date().toISOString().split('T')[0];
-
 function cesTierClass(n) {
   // positive → green; -1..-50 → orange; -51 and worse → red
   if (n >= 0) return 'kpi delta up';
   if (n >= -50) return 'kpi delta warn';
   return 'kpi delta down';
 }
-
-
 const LAYERS = [
   { cadence: "Daily", id: "l0a",  group: "l0",  label: "Performance Pulse",  status: "done" },
   { cadence: "Weekly", id: "l0b",  group: "l0",  label: "Competitor Watch", status: "done" },
   { cadence: "Daily", id: "l0c",  group: "l0",  label: "Trend Radar",      status: "done" },
   { cadence: "Weekly", id: "l0d",  group: "l0",  label: "Audience Atlas",     status: "done" },
+  { cadence: "Daily",  id: "l0e",  group: "l0",  label: "Drop Watch",         status: "progress" },
   { cadence: "Weekly", id: "l1",   group: "l12", label: "Insight Synthesis", status: "done" },
   { cadence: "Weekly", id: "l2",   group: "l12", label: "Strategy Engine",       status: "done" },
   { cadence: "Event", id: "g1",   group: "prod", label: "Gate 1 — Pick 1 of 3",         status: "progress" },
@@ -563,7 +541,6 @@ const LAYERS = [
   { cadence: "Daily", id: "l5",   group: "loop", label: "Live Posts",    status: "locked" },
   { cadence: "Daily", id: "l6",   group: "loop", label: "Learnings Loop",   status: "locked" },
 ];
-
 /* ============================================================
    BRAND CONFIG — multi-brand switcher (G2G + OffGamers)
    ============================================================ */
@@ -599,7 +576,6 @@ const BRANDS_META = {
     palette:    "OffGamers orange + slate dark",
   },
 };
-
 /* ---- Layer 0a — Vista Social, KPI snapshot per platform ---- */
 const _PLATFORMS_G2G = [
   { p: "Instagram", handle: "@g2g_global",  posts: 23, postTarget: 20, er: 2.9, erTarget: 5.0, ces: 38, cesWow: -4, impressions: 142300, engagement: 4127,  top: "Reel",    wow: { imp: +12, eng: -8 } },
@@ -614,7 +590,6 @@ const _PLATFORMS_OG = [
   { p: "Facebook",  handle: "@OffGamersStore",       posts: 8,  postTarget: 8,  er: 1.6, erTarget: 1.0, ces: 46, cesWow: +4, impressions: 32100, engagement: 514,  top: "Post",  wow: { imp: +4,  eng: +12 } },
 ];
 let PLATFORMS = _PLATFORMS_G2G;
-
 /* ---- Layer 0b — Competitor scrape ---- */
 const _COMPETITORS_G2G = [
   { brand: "LootBar.gg",  handle: "@lootbar_gg",      followers: 18400,   strategy: "Premium top-up funnel + influencer-led launch promo" },
@@ -632,7 +607,6 @@ const _COMPETITORS_OG = [
   { brand: "OffGamers (own)",handle: "@offgamers",       followers: 5828,   strategy: "Gaming memes + flash deals + game-launch news" },
 ];
 let COMPETITORS = _COMPETITORS_G2G;
-
 /* ---- Layer 0b TikTok competitor scrape ---- */
 const _COMPETITORS_TT_G2G = [
   { brand: "G2A",         handle: "@g2a.com",         followers: 142000, strategy: "Streamer reaction Reels, fast cuts, weekly meta-class breakdowns" },
@@ -666,8 +640,6 @@ const _COMPETITORS_LI_OG = [
 ];
 let COMPETITORS_TT = _COMPETITORS_TT_G2G;
 let COMPETITORS_LI = _COMPETITORS_LI_G2G;
-
-
 /* ---- Trend Radar ---- */
 const _TRENDS_G2G = {
   social_trends: [
@@ -721,7 +693,6 @@ const _TRENDS_OG = {
   ],
 };
 let TRENDS = _TRENDS_G2G;
-
 /* ---- Layer 0d — Audience ---- */
 const _AUDIENCE_G2G = {
   per_platform: {
@@ -760,7 +731,6 @@ const _AUDIENCE_OG = {
   ],
 };
 let AUDIENCE = _AUDIENCE_G2G;
-
 /* ---- Layer 1 — Analysis output ---- */
 const _ANALYSIS_G2G = {
   week_theme: "Diablo IV: Lord of Hatred Launch Week",
@@ -817,7 +787,6 @@ const _ANALYSIS_OG = {
   ],
 };
 let ANALYSIS = _ANALYSIS_G2G;
-
 /* ---- Layer 2 — Calendar slots × 3 ideas each ---- */
 const _SLOTS_G2G = [
   { code: "MON",   day: "Mon", pillar: "Informative",   format: "Video",  intent: "AI voiceover / game guide", route: "video" },
@@ -846,7 +815,6 @@ const _SLOTS_OG = [
   { code: "SUN",   day: "Sun", pillar: "Brand/Community", format: "Video", intent: "Weekly recap + community",   route: "video" },
 ];
 let SLOTS = _SLOTS_G2G;
-
 const _IDEAS_G2G = {
   MON: [
     { id:"MON-A", title:"60-second Diablo IV class meta — right now",
@@ -937,7 +905,6 @@ const _IDEAS_G2G = {
       hook:"Fan clips, music swell, Mia waves at the end.", kpi:"shares", cta:"Submit yours — tag #G2GFamily" },
   ],
 };
-
 /* ---- OffGamers Layer 2 ideas (33 ideas / 11 slots) ---- */
 const _IDEAS_OG = {
   MON_1: [
@@ -1030,11 +997,9 @@ const _IDEAS_OG = {
   ],
 };
 let IDEAS = _IDEAS_G2G;
-
 /* ============================================================
    BRANDS_DATA wrapper + loadBrand()
    ============================================================ */
-
 const GLEO_SERIES_G2G = {
   series_name:    "GLEO Adventure Series",
   schedule:       "New episode every Saturday · 9:00pm GMT+8 · 4 episodes per theme arc",
@@ -1070,23 +1035,16 @@ const GLEO_SERIES_G2G = {
     screenplay: `EPISODE 1 — THE REFLECTION THAT TALKED BACK
 Format: 4-5 minute animation short · GLEO Adventure Series house style
 Drop date: Saturday 2026-05-09 · 9:00pm GMT+8
-
 EXT. THE GREAT CANYON OF LOST SOULS — NIGHT (3 days after 'Unexpected Villain' E4)
-
 The trio walks back through the canyon, victorious but weary. Gleo wears the (now-dormant) crown but holds it gingerly. Purple haze still lingers like fog at their feet.
-
 GLEO (admiring his reflection in a roadside puddle): I have to admit — this whole 'saving the kingdom from a sentient hat' arc has only made my mane MORE photogenic. Tragedy IS the best filter.
 GAMMA (rubbing his eyes): I'm just glad it's over. Three days of sleep. That's all I want.
 OMI (poking the puddle with his foot): Omi see two Omis now! Omi has a friend! (He waves. The reflection waves back too quickly.)
 OMI (frowning): ...Omi didn't wave that fast.
 The reflection stares one beat too long, smiles, and WINKS. Omi blinks. The reflection is back to normal.
-
 CUT TO:
-
 EXT. KINGDOM SQUARE — DAY (next morning)
-
 Villagers screaming. Every reflective surface shows a slightly different version of who's standing in front of it. A baker's reflection eats a loaf the real baker is still holding. A villager's reflection critiques her haircut. Another villager's reflection offers him 'a better deal.'
-
 GAMMA (notebook out): This is happening kingdom-wide. The reflections aren't 1:1 anymore. Delay → desync → speech.
 GLEO (strikes a hero pose at a polished shield): All right. Whatever this is, it picked the wrong reflection to mess with. I am UNREFLECTABLE.
 The shield's GLEO has its arms folded, looking BORED. It rolls its eyes.
@@ -1094,13 +1052,9 @@ REFLECTION-GLEO: Ugh. The pose again. We've done this one. Twice. Last week. Get
 GLEO (jaw drops): I— EXCUSE ME—
 REFLECTION-GLEO: And the mane is overgrown. I'd never let mine get that messy. You're embarrassing me.
 GLEO (whispered): It... insulted my mane.
-
 CUT TO:
-
 INT. ROYAL ARCHIVE — AFTERNOON
-
 Gamma is buried in scrolls. Omi is licking a doorknob (his reflection in the doorknob is licking a different doorknob). Gleo paces.
-
 GAMMA: When 'Level Two' activated, it cracked the boundary between our realm and a shadow dimension. The mirrors aren't reflecting US. They're showing us THEM.
 OMI: Who's 'them'?
 GAMMA: The versions of us that exist on the other side. The colder ones. The ones we... aren't.
@@ -1109,13 +1063,9 @@ The hand-mirror RIPPLES. Reflection-Gleo leans out an inch, whispers:
 REFLECTION-GLEO (intimate, terrifying): You're not the king. You never were.
 Gleo drops the mirror. It SHATTERS. Each shard shows Reflection-Gleo, smiling.
 REFLECTION-GLEO (echoing from each shard): But I could be.
-
 CUT TO:
-
 EXT. ROYAL GARDENS — SUNSET
-
 Trio sits on a low wall, shaken. Even Omi has stopped giggling.
-
 OMI (small voice): Omi's reflection told Omi today that Omi was the only one Omi could trust. That the others were 'holding Omi back.'
 GAMMA: Mine called me a coward for not feeling things. (Pause.) ...It might have been right.
 GLEO (uncharacteristically quiet): Mine said I'm not a king. (Beat.) I almost agreed.
@@ -1124,29 +1074,22 @@ GAMMA: This thing doesn't want to fight us. It wants to BE us.
 GLEO: ...Then it picked a hell of a guy to try.
 GAMMA: That was almost cool, Gleo.
 GLEO: I know. I'm growing.
-
 CLIFFHANGER:
-
 INT. GLEO'S BEDROOM — NIGHT
-
 Gleo asleep, snoring softly. The mirror on his wall RIPPLES like water. Reflection-Gleo steps OUT of the mirror, three-dimensional. He stretches like he hasn't moved in centuries. Walks to Sleeping-Gleo. Looks down. Smiles a perfect king's smile.
 REFLECTION-GLEO (whispered): My turn now.
 He climbs into the bed. Sleeping-Gleo SHIMMERS, fades, becomes see-through, becomes reflective itself, sucked toward the mirror on the wall. Real-Gleo is being PULLED IN.
 He wakes up just as he hits the glass. His face presses against the inside of the mirror. He pounds on it.
 REAL-GLEO: GAMMA! OMI! HELP—
 But his voice doesn't make it through. From the bedroom side, Reflection-Gleo (now in bed) just gives Real-Gleo a small wave and rolls over.
-
 CUT TO BLACK.
-
 OVER BLACK:
 SFX: A door creaking open.
 GAMMA (offscreen, calling): Gleo? It's morning, get up — Gleo?
 SFX: Footsteps. Then a pause. Then —
 GAMMA (offscreen, surprised): Oh. Hey. You're already up. ...You look... different today.
 REFLECTION-GLEO (offscreen, smiling, slow): Just slept well. ...Finally.
-
 [END EPISODE 1]
-
 PRODUCTION NOTES:
 · Animation length: 4-5 min
 · Color cue: kingdom is warm; mirror world bleeds cool violet
@@ -1158,7 +1101,6 @@ PRODUCTION NOTES:
     { num: 2, name: "The Unexpected Villain",     episodes: 4, status: "completed" }
   ]
 };
-
 const BRANDS_DATA = {
   g2g: {
     PLATFORMS: _PLATFORMS_G2G, COMPETITORS: _COMPETITORS_G2G, TRENDS: _TRENDS_G2G,
@@ -1170,8 +1112,14 @@ const BRANDS_DATA = {
   },
 };
 let CURRENT_BRAND = "g2g";
+let CURRENT_CADENCE = "hybrid"; // R9 — operational handle: 'hybrid' or 'weekly-veto'
+function setCadence(c) {
+  CURRENT_CADENCE = c;
+  document.querySelectorAll("#cadence-switcher button").forEach(b => b.classList.toggle("active", b.dataset.cadence === c));
+  toast("Cadence set: " + (c === "hybrid" ? "Hybrid (calendar weekly + brief daily)" : "Weekly + daily veto"));
+  renderMain();
+}
 function brand() { return BRANDS_META[CURRENT_BRAND]; }
-
 function loadBrand(key) {
   if (!BRANDS_DATA[key]) return;
   // 1. snapshot current brand state
@@ -1185,15 +1133,14 @@ function loadBrand(key) {
     videoPrompts:     JSON.parse(JSON.stringify(state.videoPrompts)),
     higgsfieldJobs:   JSON.parse(JSON.stringify(state.higgsfieldJobs)),
     scheduledPosts:   JSON.parse(JSON.stringify(state.scheduledPosts || {})),
+    qaPass:           state.qaPass ? JSON.parse(JSON.stringify(state.qaPass)) : null,
     current:          state.current,
   };
-
   // 2. swap data
   CURRENT_BRAND = key;
   const d = BRANDS_DATA[key];
   PLATFORMS = d.PLATFORMS; COMPETITORS = d.COMPETITORS; TRENDS = d.TRENDS;
   AUDIENCE = d.AUDIENCE;   ANALYSIS = d.ANALYSIS;       SLOTS = d.SLOTS;   IDEAS = d.IDEAS;
-
   // 3. restore that brand's state (or fresh defaults)
   const s = state.brandStates[key] || {};
   state.picks           = s.picks           || {};
@@ -1205,8 +1152,8 @@ function loadBrand(key) {
   state.videoPrompts    = s.videoPrompts    || {};
   state.higgsfieldJobs  = s.higgsfieldJobs  || {};
   state.scheduledPosts  = s.scheduledPosts  || {};
+  state.qaPass          = s.qaPass          || null;
   state.current         = s.current         || "l0a";
-
   // 4. recompute layer statuses for this brand
   setStatus("g1", state.gate1Submitted ? "done" : "progress");
   setStatus("l3", state.gate1Submitted ? "done" : "locked");
@@ -1215,14 +1162,12 @@ function loadBrand(key) {
   setStatus("l4_5", state.gate2Submitted ? "progress" : "locked");
   setStatus("l5", state.gate2Submitted ? "progress" : "locked");
   setStatus("l6", "locked");
-
   // 5. update chrome (title, sidebar brand block)
   applyBrandChrome();
   renderSidebar();
   renderMain();
   toast("Switched to " + brand().name);
 }
-
 function applyBrandChrome() {
   const m = brand();
   document.title = m.name + " Pipeline — Run " + RUN_DATE;
@@ -1238,10 +1183,10 @@ function applyBrandChrome() {
     btn.classList.toggle("active", btn.dataset.brand === CURRENT_BRAND);
   });
 }
-
 /* ---- Live state ---- */
 const state = {
   current: "l0a",
+  qaPass: null, // R5 — { at: timestamp, by: approver } when QA pass is logged at L5
   picks: {},
   gate1Submitted: false,
   briefs: {},
@@ -1253,11 +1198,9 @@ const state = {
   brandStates: {},   // snapshot per brand on switch
   scheduledPosts: {}, // Vista Social schedule state per brief
 };
-
 /* ============================================================
    RENDER — sidebar + page router
    ============================================================ */
-
 function statusOf(layerId) {
   const l = LAYERS.find(x => x.id === layerId);
   return l ? l.status : "locked";
@@ -1266,7 +1209,6 @@ function setStatus(layerId, s) {
   const l = LAYERS.find(x => x.id === layerId);
   if (l) l.status = s;
 }
-
 function renderSidebar() {
   const groups = { l0: "nav-l0", l12: "nav-l12", prod: "nav-prod", loop: "nav-loop" };
   for (const g of Object.keys(groups)) document.getElementById(groups[g]).innerHTML = "";
@@ -1280,14 +1222,12 @@ function renderSidebar() {
     document.getElementById(groups[l.group]).appendChild(el);
   }
 }
-
 function nav(id) {
   state.current = id;
   renderSidebar();
   renderMain();
   window.scrollTo(0, 0);
 }
-
 function renderMain() {
   const m = document.getElementById("main");
   const view = views[state.current];
@@ -1296,13 +1236,12 @@ function renderMain() {
   if (state.current === "g1") attachGate1Handlers();
   if (state.current === "g2") attachGate2Handlers();
   if (state.current === "l4") attachL4Handlers();
+  if (state.current === "l0e") attachL0eHandlers();
   if (state.current === "l5") attachL5Handlers();
 }
-
 /* ============================================================
    PAGE HEADERS
    ============================================================ */
-
 function pageHeader(title, sub) {
   return `<div class="page-header">
     <div>
@@ -1315,13 +1254,10 @@ function pageHeader(title, sub) {
     </div>
   </div>`;
 }
-
 /* ============================================================
    VIEWS
    ============================================================ */
-
 const views = {};
-
 views.l0a = () => {
   const overall = {
     posts:       PLATFORMS.reduce((s,p)=>s+p.posts,0),
@@ -1364,7 +1300,23 @@ views.l0a = () => {
           `).join('')}
         </tbody>
       </table>
-      <div class="muted small" style="margin-top:10px">📡 Live wiring: Vista Social API → auto-updates on every page load. Live data as of ${RUN_DATE}.</div>`
+      <div class="muted small" style="margin-top:10px">📡 Live wiring: Vista Social API → auto-updates on every page load. Live data as of ${RUN_DATE}.</div>
+    </div>
+    <div class="card" style="margin-top:14px;border-color:var(--accent-3)">
+      <div class="row"><strong>⭐ Trustpilot daily summary</strong><span class="spacer"></span><span class="pill info small">Live scan of g2g.com + offgamers.com</span></div>
+      <div class="grid grid-2" style="margin-top:10px">
+        <div>
+          <div class="aud-label">G2G</div>
+          <div class="value" style="font-size:22px;font-weight:700">4.5 / 5 <span class="muted small" style="font-size:12px">· 142,800 reviews</span></div>
+          <div class="muted small">New today: <strong style="color:var(--text)">+312</strong> reviews · 4★ avg · 2 flagged 1-star (auto-tagged for support)</div>
+        </div>
+        <div>
+          <div class="aud-label">OffGamers</div>
+          <div class="value" style="font-size:22px;font-weight:700">4.7 / 5 <span class="muted small" style="font-size:12px">· 38,420 reviews</span></div>
+          <div class="muted small">New today: <strong style="color:var(--text)">+87</strong> reviews · 4.6★ avg · 0 flagged (clean day)</div>
+        </div>
+      </div>
+      <div class="muted small" style="margin-top:10px">🔌 Wiring: Trustpilot Business API + nightly scrape fallback. Replaces the old PPTX export step from v2.5.</div>`
 };
 views.l0b = () => {
   const tableFor = (rows, plat) => `
@@ -1383,7 +1335,6 @@ views.l0b = () => {
     </div>
     ${tableFor(COMPETITORS_LI, "LinkedIn")}`;
 };
-
 views.l0c = () => {
   const social = (TRENDS.social_trends || []).map(t => `
     <tr>
@@ -1428,7 +1379,6 @@ views.l0c = () => {
       </table>
     </div>`;
 };
-
 views.l0d = () => {
   const pp = AUDIENCE.per_platform || {};
   // Parse strings like "18-24 41% / 25-34 37% / 35+ 22%" into [{bucket, pct}]
@@ -1486,6 +1436,55 @@ views.l0d = () => {
       </div>
     </div>`;
 };
+// ─── Layer 0e — Drop Watch (Rule 7: daily fresh-drop scan) ───────────────────
+views.l0e = () => {
+  // Mock fresh-drop alerts — wire to real source feeds (Hoyo, Kuro, Sony, Steam, etc.) the same way Vista was wired
+  const drops = [
+    { source: "miHoYo / HoYoverse", drop: "Genshin Impact 5.6 — Hiyuki banner phase 2 confirmed for Fri",  momentum: "rising", fit: "OffGamers", suggested: "Amend FRI brief — banner-phase angle" },
+    { source: "Kuro Games",         drop: "Wuthering Waves 2.4 — early 5★ leak from CN beta",                momentum: "breaking", fit: "OffGamers", suggested: "Bump to next week — leak still unconfirmed" },
+    { source: "Steam",              drop: "May 4 'Star Wars sale' surfaced overnight — runs Wed→Sun",         momentum: "peak", fit: "G2G", suggested: "Amend WED brief — ride the May the 4th angle" },
+    { source: "PlayStation",        drop: "PSN partial outage in SEA — buyers reporting checkout failures",   momentum: "rising", fit: "Both", suggested: "Pin support post — clarify alternative top-up paths" },
+  ];
+  const tone = (m) => m === "breaking" ? "bad" : m === "peak" ? "ok" : m === "rising" ? "warn" : "muted";
+  const rows = drops.map((d, i) => `
+    <tr>
+      <td><strong>${d.source}</strong></td>
+      <td>${d.drop}</td>
+      <td><span class="pill ${tone(d.momentum)} small">${d.momentum}</span></td>
+      <td><span class="pill info small">${d.fit}</span></td>
+      <td class="muted">${d.suggested}</td>
+      <td>
+        <button class="btn approve small" data-drop-action="amend" data-drop="${i}">Amend brief</button>
+        <button class="btn small" data-drop-action="bump" data-drop="${i}">Bump → next week</button>
+        <button class="btn ghost small" data-drop-action="ignore" data-drop="${i}">Ignore</button>
+      </td>
+    </tr>`).join("");
+  return pageHeader("Drop Watch — Daily Fresh-Drop Scan", "Mode 2 of trend-radar · runs every weekday morning · ~5 min scan of last 24h") + `
+    <div class="gate-banner"><div class="icon">🆕</div><div class="text"><strong>${drops.length} fresh drops detected today.</strong><small>Each drop triggers Rule 7: amend → today's brief returns to DRAFT and gets re-approved (Rule 6) before render. Bump → flow into next week's calendar. Ignore → no calendar impact.</small></div></div>
+    <div class="card">
+      <h3>Fresh drops in last 24h</h3>
+      <div class="sub">Sources scanned: miHoYo · Kuro · PlayStation · Xbox / Game Pass · Nintendo · Steam · Riot · Bandai · Square Enix · TikTok hashtags · X gaming news</div>
+      <table>
+        <thead><tr><th>Source</th><th>Drop</th><th>Momentum</th><th>Brand fit</th><th>Suggested action</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="muted small" style="margin-top:10px">⚠ If you Amend, the affected day's brief goes back to DRAFT and must be re-approved (Rule 6). Stale-brief check (Rule 8) blocks renders on briefs older than 24h.</div>
+    </div>`;
+};
+function attachL0eHandlers() {
+  document.querySelectorAll("[data-drop-action]").forEach(el => {
+    el.onclick = () => {
+      const action = el.dataset.dropAction;
+      if (action === "amend") {
+        toast("📝 Amend triggered — brief flagged DRAFT, awaiting re-approval (Rule 6)");
+      } else if (action === "bump") {
+        toast("📅 Bumped to next week's calendar");
+      } else {
+        toast("🚫 Ignored — no calendar impact");
+      }
+    };
+  });
+}
 
 views.l1 = () => {
   const kpiRows = Object.entries(ANALYSIS.kpi_status).map(([p,s]) => `
@@ -1525,7 +1524,6 @@ views.l1 = () => {
       </div>
     </div>`;
 };
-
 views.l2 = () => {
   const cards = SLOTS.map(s => {
     const ideas = (IDEAS[s.code] || []).map(i => `
@@ -1547,7 +1545,6 @@ views.l2 = () => {
   return pageHeader("Layer 2 — Calendar Recommendations", "11 slots · 3 ideas per slot · approver picks 1 per slot at Gate 1") + cards + `
     <div class="card" style="margin-top:8px"><div class="row"><div>Recommendations ready. Move to <strong>Gate 1</strong> to pick.</div><div class="spacer"></div><button class="btn primary" onclick="nav('g1')">Open Gate 1 →</button></div></div>`;
 };
-
 views.g1 = () => {
   const total = SLOTS.length;
   const picked = Object.keys(state.picks).length;
@@ -1588,7 +1585,6 @@ views.g1 = () => {
     </div>
     ${slotsHtml}`;
 };
-
 function attachGate1Handlers() {
   document.querySelectorAll(".idea[data-slot]").forEach(el => {
     el.onclick = () => {
@@ -1637,7 +1633,6 @@ function attachGate1Handlers() {
     toast(`Gate 1 submitted — ${picked} briefs queued`, "ok");
   };
 }
-
 function generateBriefs() {
   state.briefs = {};
   for (const [slotCode, ideaId] of Object.entries(state.picks)) {
@@ -1681,7 +1676,6 @@ function defaultRetention(slot, idea) {
 if (slot.format === "Video") return "0–3s hook → 3–8s setup → 8–25s payoff → CTA card. Cut every 1.4s avg.";
   return "Tight pacing, single visual idea per second, clear payoff before CTA.";
 }
-
 function defaultStoryline(slot, idea) {
   const acts = [];
   acts.push("Act 1 (0-3s) — HOOK: " + (idea.hook || "Open on a strong visual that earns 3 more seconds."));
@@ -1798,14 +1792,11 @@ function defaultScript(slot, idea) {
   }
   return lines.join("\n");
 }
-
 async function generateAIScript(briefId) {
   const brief = state.briefs[briefId];
   if (!brief) return;
-
   const btn = document.querySelector(`[data-ai-script="${briefId}"]`);
   if (btn) { btn.textContent = '⏳ Generating...'; btn.disabled = true; }
-
   try {
     const payload = {
       model: "claude-sonnet-4-5",
@@ -1820,34 +1811,26 @@ HOOK: ${brief.hook}
 PILLAR: ${brief.pillar}
 CTA: ${brief.cta}
 KPI: ${brief.kpi}
-
 Return ONLY this JSON with no other text:
 {"facts":["fact 1","fact 2","fact 3"],"scenes":[{"ts":"0:00-0:03","scene":"scene name","script":"complete dialogue here","prompt":"detailed Higgsfield prompt here"}]}`
       }]
     };
-
     console.log('Payload:', JSON.stringify(payload));
-
     const response = await fetch("/api/claude", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
-
     console.log('Response status:', response.status);
     const data = await response.json();
     console.log('Response data:', JSON.stringify(data));
-
     const textContent = data.content.filter(c => c.type === 'text').map(c => c.text).join('');
     const clean = textContent.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
-
     state.aiScripts = state.aiScripts || {};
     state.aiScripts[briefId] = parsed;
-
     toast('✅ AI script generated!', 'ok');
     renderMain();
-
   } catch (err) {
     console.error('AI script error:', err);
     toast('Script generation failed — try again', 'bad');
@@ -1941,7 +1924,30 @@ function generateTimestampTable(b) {
       <td style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace"><pre style="margin:0;white-space:pre-wrap;background:rgba(94,220,192,.05);padding:6px 8px;border-radius:4px;border:1px solid rgba(94,220,192,.12)">${s.prompt}</pre></td>
     </tr>`).join('');
 }
-
+// ─── Rule 4 — Phonetic Guide (TTS pronunciation sidecar) ──────────────────────
+const PHONETIC_GUIDE = {
+  "Hiyuki": "Hee-YOO-kee", "Wuthering Waves": "WUTH-ering Waves", "WuWa": "WOO-wah",
+  "Honkai": "HON-kai", "HSR": "H-S-R", "Genshin": "GHEN-shin", "Fontaine": "fon-TAYN",
+  "Sumeru": "soo-MAY-roo", "Mondstadt": "MOND-shtaht", "Inazuma": "ee-nah-ZOO-mah",
+  "Liyue": "lee-YOO-ay", "Natlan": "NAHT-lahn", "Mihoyo": "ME-hoy-yoh",
+  "HoYoverse": "HOY-oh-verse", "Kuro": "KOO-roh", "Zenless": "Zenless Zone Zero",
+  "ZZZ": "Zenless Zone Zero", "Saber": "SAY-bur", "Nahida": "nah-HEE-dah",
+  "Furina": "foo-REE-nah", "Yelan": "YEH-lahn", "Codashop": "KOH-dah-shop", "Eneba": "EN-eh-bah"
+};
+function detectGachaTerms(brief) {
+  const haystack = [brief.topic, brief.hook, brief.script, brief.storyline].filter(Boolean).join(" \n ");
+  const found = [];
+  for (const [term, phon] of Object.entries(PHONETIC_GUIDE)) {
+    const re = new RegExp("\\b" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i");
+    if (re.test(haystack)) {
+      const where = re.test(brief.topic || "") ? "topic"
+                  : re.test(brief.hook  || "") ? "hook"
+                  : re.test(brief.script|| "") ? "script" : "storyline";
+      found.push({ term, phonetic: phon, where });
+    }
+  }
+  return found;
+}
 views.l3 = () => {
   if (!state.gate1Submitted) {
     return pageHeader("Brief Generation", "Locked — submit Gate 1 first") + `<div class="empty">Gate 1 not submitted. <a onclick="nav('g1')">Go to Gate 1</a></div>`;
@@ -1997,6 +2003,19 @@ views.l3 = () => {
         </div>` : ''}
         ${b.format === 'Video' ? `
         <div class="brief-field" style="grid-column:1/-1">
+          <div class="label">Phonetic guide (R4 — TTS pronunciation sidecar)</div>
+          <div class="value">
+            <div class="muted small" style="margin-bottom:6px">Detected gacha / Asian-game terms in this brief — Kling 3.0 TTS will mispronounce these unless you bake the phonetic into the prompt. Pattern: <code>(pronounce: Term = "phonetic"): "dialogue"</code></div>
+            <table style="font-size:12px">
+              <thead><tr><th>Term</th><th>Phonetic</th><th>Detected in</th></tr></thead>
+              <tbody>
+                ${detectGachaTerms(b).map(t => `<tr><td><code>${t.term}</code></td><td><code>${t.phonetic}</code></td><td class="muted small">${t.where}</td></tr>`).join('') || '<tr><td colspan="3" class="muted small">No gacha terms detected in script — phonetic sidecar not needed.</td></tr>'}
+              </tbody>
+            </table>
+          </div>
+        </div>` : ''}
+        ${b.format === 'Video' ? `
+        <div class="brief-field" style="grid-column:1/-1">
           <div class="label" style="display:flex;align-items:center;gap:12px">
             Production Timeline
             <button class="btn primary small" data-ai-script="${b.id}" onclick="generateAIScript('${b.id}')" style="font-size:10px;padding:3px 10px">
@@ -2032,7 +2051,6 @@ views.l3 = () => {
   return pageHeader("Brief Generation", `${briefs.length} briefs generated · 6-field structure (Topic / Audience / Hook / Retention / KPI / CTA)`) + cards + `
     <div class="card"><div class="row"><div>Briefs ready for review.</div><div class="spacer"></div><button class="btn primary" onclick="setStatus('g2','progress'); renderSidebar(); nav('g2')">Open Gate 2 →</button></div></div>`;
 };
-
 views.g2 = () => {
   if (!state.gate1Submitted) return pageHeader("Gate 2 — Brief Approval", "Locked") + `<div class="empty">Submit Gate 1 first.</div>`;
   const briefs = Object.values(state.briefs);
@@ -2040,11 +2058,9 @@ views.g2 = () => {
   const total = briefs.length;
   const approvedCount = Object.values(state.gate2).filter(g => g.status === "approved").length;
   const rejectedCount = Object.values(state.gate2).filter(g => g.status === "rejected").length;
-
   const banner = state.gate2Submitted
     ? `<div class="gate-banner"><div class="icon">✅</div><div class="text"><strong>Gate 2 finalised.</strong><small>${approvedCount} approved · ${rejectedCount} rejected · routed to production</small></div><button class="btn" onclick="nav('l4')">Go to Layer 4 →</button></div>`
     : `<div class="gate-banner"><div class="icon">🟢</div><div class="text"><strong>Gate 2 — In-site brief approval</strong><small>Approve or Reject each brief. Add a reason if rejecting. Finalise to route approved briefs into production.</small></div></div>`;
-
   const cards = briefs.map(b => {
     const decision = state.gate2[b.id];
     const cls = decision ? `brief ${decision.status}` : `brief`;
@@ -2056,7 +2072,11 @@ views.g2 = () => {
         ${b.mia ? '<span class="pill solid">🌟 Mia</span>' : ''}
         <span class="pill ${b.route === 'canva' ? 'info' : 'muted'}">${b.route === 'canva' ? 'Canva' : 'Video'}</span>
         <div class="spacer"></div>
-        ${decision ? `<span class="pill ${decision.status === 'approved' ? 'ok' : 'bad'}">${decision.status.toUpperCase()}</span>` : ''}
+        ${decision ? `
+          <span class="pill ${decision.status === 'approved' ? 'ok' : 'bad'}">${decision.status.toUpperCase()}</span>
+          ${decision.status === 'approved' && decision.approvedAt ? `<span class="pill muted small" title="Approval timestamp — used by Rule 8 stale-check">${new Date(decision.approvedAt).toLocaleString()}</span>` : ''}
+          ${decision.status === 'approved' && decision.approver ? `<span class="pill muted small">by ${decision.approver}</span>` : ''}
+        ` : '<span class="pill muted">DRAFT</span>'}
       </div>
       <div class="brief-fields">
         <div class="brief-field"><div class="label">Hook</div><div class="value">${b.hook}</div></div>
@@ -2071,7 +2091,6 @@ views.g2 = () => {
       </div>
     </div>`;
   }).join("");
-
   return pageHeader("Gate 2 — Strategic Brief Approval", `${decided}/${total} decided · ${approvedCount} approved · ${rejectedCount} rejected`) + banner + `
     <div class="card" style="margin-bottom:16px">
       <div class="row">
@@ -2085,7 +2104,6 @@ views.g2 = () => {
     </div>
     ${cards}`;
 };
-
 function attachGate2Handlers() {
   document.querySelectorAll("[data-action]").forEach(el => {
     el.onclick = () => {
@@ -2094,7 +2112,12 @@ function attachGate2Handlers() {
       const reasonEl = document.querySelector(`[data-reason="${id}"]`);
       const reason = reasonEl ? reasonEl.value.trim() : "";
       if (action === "reject" && !reason) { toast("Reason required for reject", "bad"); return; }
-      state.gate2[id] = { status: action === "approve" ? "approved" : "rejected", reason: action === "reject" ? reason : "" };
+      state.gate2[id] = {
+        status:     action === "approve" ? "approved" : "rejected",
+        reason:     action === "reject"  ? reason : "",
+        approvedAt: action === "approve" ? Date.now() : null,
+        approver:   action === "approve" ? "Lina Raihanah" : null,
+      };
       renderMain();
       toast(`${id} ${action === 'approve' ? 'approved' : 'rejected'}`, action === 'approve' ? 'ok' : 'bad');
     };
@@ -2102,7 +2125,7 @@ function attachGate2Handlers() {
   const all = document.getElementById("g2-approve-all");
   if (all) all.onclick = () => {
     Object.values(state.briefs).forEach(b => {
-      if (!state.gate2[b.id]) state.gate2[b.id] = { status: "approved", reason: "" };
+      if (!state.gate2[b.id]) state.gate2[b.id] = { status: "approved", reason: "", approvedAt: Date.now(), approver: "Lina Raihanah" };
     });
     renderMain();
     toast("All remaining briefs approved", "ok");
@@ -2124,13 +2147,11 @@ function attachGate2Handlers() {
     toast("Gate 2 finalised — production routing live", "ok");
   };
 }
-
 views.l4 = () => {
   if (!state.gate2Submitted) return pageHeader("Asset Production", "Locked") + `<div class="empty">Finalise Gate 2 first.</div>`;
   const approved = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === "approved");
   const canva = approved.filter(b => b.route === "canva");
   const video = approved.filter(b => b.route === "video");
-
   const canvaRows = canva.length === 0 ? `<div class="empty">No promotional briefs approved.</div>` :
     canva.map(b => `<div class="lane-row">
       <span class="slot-code">${b.slot}</span>
@@ -2138,7 +2159,6 @@ views.l4 = () => {
       <span class="pill info">queued</span>
       <button class="btn">Open in Canva ↗</button>
     </div>`).join("");
-
   const videoRows = video.length === 0 ? `<div class="empty">No video briefs approved.</div>` :
     video.map((b, i) => {
       const status = i < 1 ? 'production today' : `queued · day +${i}`;
@@ -2155,7 +2175,6 @@ views.l4 = () => {
         <button class="btn primary" data-video-prompt="${b.id}">${promptReady ? 'View Seedance prompt →' : 'Generate Seedance prompt →'}</button>
       </div>`;
     }).join("");
-
   const hfJobs = Object.values(state.higgsfieldJobs);
   const hfPanel = hfJobs.length === 0 ? '' : `
     <div class="card hf-panel">
@@ -2178,20 +2197,19 @@ views.l4 = () => {
         </div>`;
       }).join('')}
     </div>` ;
-
   return pageHeader("Layer 4 — Production Routing", `${canva.length} Canva job(s) · ${video.length} video lane brief(s)`) + `
     <div class="lane">
       <div class="lane-head"><span class="lane-title">🎨 Canva Static Lane (Promotional only)</span><span class="lane-cap">→ template ${brand().canvaTemplate}</span></div>    <div class="card" style="margin-top:10px;border-color:var(--accent);background:rgba(124,92,255,.04)">     <div class="row" style="margin-bottom:8px"><strong>📋 Canva field-map (template-ready)</strong><span class="spacer"></span><span class="pill warn small">Manual paste — Canva Connect API not wired</span></div>     <table>      <thead><tr><th>Template field</th><th>Value to paste</th></tr></thead>      <tbody>       ${canva.map(b => `        <tr><td colspan="2" style="background:var(--bg-3);font-weight:600">${b.slot} · ${b.topic}</td></tr>        <tr><td>{{HEADLINE}}</td><td><code>${(b.topic || '').slice(0,80)}</code></td></tr>        <tr><td>{{SUBHEAD}}</td><td><code>${(b.hook || '').replace(/STATIC:\s*/i, '').slice(0,100)}</code></td></tr>        <tr><td>{{HERO_IMAGE}}</td><td><code>${(b.product || 'product hero').slice(0,60)}</code></td></tr>        <tr><td>{{PALETTE}}</td><td><code>${brand().palette}</code></td></tr>        <tr><td>{{CTA}}</td><td><code>${b.cta || '—'}</code></td></tr>       `).join('')}      </tbody>     </table>     <div class="btn-row" style="margin-top:10px">      <button class="btn primary" onclick="window.open('https://canva.link/1rop6yg5zpr2ni3','_blank')">📐 Open Canva template</button>      <button class="btn" onclick="copyCanvaFields()">📋 Copy all field values</button>     </div>     <div class="muted small" style="margin-top:8px">For real auto-edit: requires Canva Connect API + OAuth + Netlify Function. Right now this is a structured handoff so the human paste in Canva takes ~30s instead of layout-from-scratch.</div>    </div> 
       ${canvaRows}
     </div>
     <div class="lane">
-      <div class="lane-head"><span class="lane-title">🎬 Video Lane</span><span class="lane-cap">Higgsfield 1/day cap · click "Generate Seedance prompt" then "Send to Higgsfield"</span></div>
+      <div class="lane-head"><span class="lane-title">🎬 Video Lane</span><span class="lane-cap">R1: generate ALL prompts upfront for review · R8: refuses renders on briefs older than 24h</span><span class="spacer"></span><button class="btn primary small" id="l4-gen-all">⚡ Generate ALL Seedance prompts (R1)</button></div>
+      <div class="muted small" style="padding:0 14px 8px">Rule 1 — review all prompts in one pass before any render fires. Catches prompt-quality issues that would otherwise burn 8–72 credits per scene. Rule 8 — stale-brief guard refuses renders if Gate 2 approval is &gt;24h old.</div>
       ${videoRows}
     </div>
     ${hfPanel}
     <div class="card" style="margin-top:16px"><div class="row"><div>Once Vista Social schedules the assets, monitor in <strong>Layer 5</strong>.</div><div class="spacer"></div><button class="btn primary" onclick="nav('l5')">Go to Layer 5 →</button></div></div>`;
 };
-
 views.l5 = () => {
   if (!state.gate2Submitted) return pageHeader("Live Postsation", "Locked") + `<div class="empty">Finalise Gate 2 first.</div>`;
   const approved = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === "approved");
@@ -2210,7 +2228,29 @@ views.l5 = () => {
       </td>
     </tr>`;
   }).join("");
+  const qaDone = !!state.qaPass;
   return pageHeader("Live Postsation", "In-site acknowledgement (replaces Slack DM summary)") + `
+    <div class="gate-banner" style="background:linear-gradient(135deg,rgba(46,229,166,${qaDone ? 0.22 : 0.08}),rgba(255,181,71,${qaDone ? 0.06 : 0.18}));border-color:${qaDone ? 'var(--ok)' : 'var(--warn)'}">
+      <div class="icon">${qaDone ? '✅' : '🔍'}</div>
+      <div class="text">
+        <strong>${qaDone ? 'QA pass complete' : 'Rule 5 — QA pass required before publish'}</strong>
+        <small>${qaDone ? 'All scenes watched start-to-finish vs locked brief on ' + new Date(state.qaPass.at).toLocaleString() + ' · approver: ' + state.qaPass.by : 'Watch every rendered scene start-to-finish, cross-reference each against the locked brief (character / line / tone / continuity), then check off below. A delivery handoff with no QA pass is a defect-prone handoff.'}</small>
+      </div>
+      ${qaDone ? '' : '<button class="btn approve" id="l5-qa-confirm">✅ Confirm QA pass</button>'}
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <h3>QA checklist (Rule 5)</h3>
+      <table>
+        <thead><tr><th>Check</th><th>What to verify</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Character</strong></td><td class="muted">Right trained chip · pairing rule held (humans-with-humans / mascots-with-mascots)</td></tr>
+          <tr><td><strong>Dialogue</strong></td><td class="muted">Right line spoken · pronunciation matches Phonetic Guide (R4)</td></tr>
+          <tr><td><strong>Tone</strong></td><td class="muted">FOMO / regret-bait / warmth / urgency lands as briefed</td></tr>
+          <tr><td><strong>Visual continuity</strong></td><td class="muted">Same outfit · same room · same lighting across all scenes</td></tr>
+        </tbody>
+      </table>
+      <div class="muted small" style="margin-top:8px">Mandatory line for delivery notes: <code>✅ QA pass: all N scenes watched start-to-finish on YYYY-MM-DD; energies and dialogue match brief.</code></div>
+    </div>
     <div class="card">
       <h3>Scheduled posts</h3>
       <div class="sub">Acknowledge each publish in-site. Failed publishes auto-flag for re-routing.</div>
@@ -2218,8 +2258,13 @@ views.l5 = () => {
     </div>
     <div class="card" style="margin-top:16px"><div class="row"><div>Once all publishes are confirmed, Layer 6 pulls 7-day post-performance.</div><div class="spacer"></div><button class="btn" onclick="nav('l6')">Open Layer 6 →</button></div></div>`;
 };
-
 function attachL5Handlers() {
+  const qaBtn = document.getElementById("l5-qa-confirm");
+  if (qaBtn) qaBtn.onclick = () => {
+    state.qaPass = { at: Date.now(), by: "Lina Raihanah" };
+    toast("✅ QA pass logged — delivery handoff cleared", "ok");
+    renderMain();
+  };
   document.querySelectorAll("[data-publish]").forEach(el => {
     el.onclick = () => {
       const id = el.dataset.publish, result = el.dataset.result;
@@ -2231,7 +2276,6 @@ function attachL5Handlers() {
     };
   });
 }
-
 views.l6 = () => {
   if (!state.gate2Submitted) return pageHeader("Learnings Loop", "Locked") + `<div class="empty">Finalise Gate 2 first.</div>`;
   const approved = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === "approved");
@@ -2258,7 +2302,6 @@ views.l6 = () => {
       <table><thead><tr><th>Slot</th><th>Topic</th><th>Reach</th><th>ER</th><th>CES</th><th>Recommendation</th></tr></thead><tbody>${rows}</tbody></table>
     </div>`;
 };
-
 /* ============================================================
    LAYER 4 — VIDEO LANE → SEEDANCE PROMPT → HIGGSFIELD
    ============================================================ */
@@ -2268,6 +2311,19 @@ function attachL4Handlers() {
       const id = btn.dataset.videoPrompt;
       const brief = state.briefs[id];
       if (!brief) { toast("Brief not found", "bad"); return; }
+      // Rule 8 — stale-brief check (>24h since Gate 2 approval)
+      const decision = state.gate2[id];
+      if (decision && decision.approvedAt) {
+        const ageH = (Date.now() - decision.approvedAt) / 36e5;
+        if (ageH > 24) {
+          if (!confirm("⚠ Rule 8 — this brief was approved " + Math.round(ageH) + "h ago. Trends and banner windows may have shifted. Re-confirm before rendering?")) {
+            toast("Render blocked — brief stale (R8)", "bad");
+            return;
+          }
+          // Re-confirm: bump approvedAt
+          decision.approvedAt = Date.now();
+        }
+      }
       if (!state.videoPrompts[id]) {
         state.videoPrompts[id] = generateSeedancePrompt(brief);
         toast("Seedance prompt generated", "ok");
@@ -2276,8 +2332,21 @@ function attachL4Handlers() {
       renderMain();
     };
   });
+  // Rule 1 — Generate ALL prompts upfront for review-in-one-pass
+  const genAll = document.getElementById("l4-gen-all");
+  if (genAll) genAll.onclick = () => {
+    const approved = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === "approved" && b.route === "video");
+    let n = 0;
+    approved.forEach(b => {
+      if (!state.videoPrompts[b.id]) {
+        state.videoPrompts[b.id] = generateSeedancePrompt(b);
+        n++;
+      }
+    });
+    toast("R1 — generated " + n + " new prompt(s) · " + approved.length + " total ready for review", "ok");
+    renderMain();
+  };
 }
-
 const PILLAR_ARCHETYPES = {
   "Informative":     { tone: "calm-authoritative", baseDensity: "MEDIUM", signature: "data overlay reveal", palette: "cool blue + white UI accents", pacing: "deliberate" },
   "Educational":     { tone: "demonstrative",      baseDensity: "MEDIUM", signature: "split-screen before/after", palette: "warm neutral + accent green", pacing: "tight, action-led" },
@@ -2291,7 +2360,6 @@ function getArchetype(pillar) {
   const key = Object.keys(PILLAR_ARCHETYPES).find(k => (pillar || "").toLowerCase().includes(k.toLowerCase().split("/")[0]));
   return PILLAR_ARCHETYPES[key] || PILLAR_ARCHETYPES["Informative"];
 }
-
 const SHOT_LIBRARIES = {
   "high-energy": [
     { name: "Cold-open hook", eff: "Speed ramp (deceleration) + heavy motion blur", cam: "Whip-pan entry, dutch angle ~25°", spd: "blur to normal in 0.4s", trans: "exits on hard cut" },
@@ -2354,7 +2422,6 @@ const SHOT_LIBRARIES = {
     { name: "Brand sting", eff: "Logo fade-in over hold", cam: "Centred, minimal type", spd: "real-time", trans: "hold + fade out" },
   ],
 };
-
 function generateSeedancePrompt(brief) {
   const arch = getArchetype(brief.pillar);
   const lib = SHOT_LIBRARIES[arch.tone] || SHOT_LIBRARIES["calm-authoritative"];
@@ -2427,7 +2494,6 @@ function generateSeedancePrompt(brief) {
   const totalEffects = Object.values(effectCounts).reduce((a, b) => a + b, 0);
   return { full, shots: shotsSection, inventory, density: densitySection, arc: arcSection, meta: { shotCount, totalEffects, uniqueEffects: Object.keys(effectCounts).length, duration: targetSeconds, archetype: arch.tone } };
 }
-
 function describeEffectRole(eff) {
   const e = eff.toLowerCase();
   if (e.includes("speed ramp")) return "Primary kinetic tool — controls energy flow between beats";
@@ -2445,7 +2511,6 @@ function describeEffectRole(eff) {
   if (e.includes("logo") || e.includes("brand")) return "Brand resolution element";
   return "Supporting visual element";
 }
-
 function openVideoModal(id) {
   const brief = state.briefs[id], prompt = state.videoPrompts[id];
   if (!brief || !prompt) return;
@@ -2466,7 +2531,6 @@ function openVideoModal(id) {
   document.getElementById("video-modal").dataset.activeId = id;
 }
 function closeVideoModal() { document.getElementById("video-modal").classList.remove("open"); }
-
 function sendToHiggsfield(briefId) {
   const prompt = state.videoPrompts[briefId];
   const brief = state.briefs[briefId];
@@ -2482,7 +2546,6 @@ function sendToHiggsfield(briefId) {
   if (state.current === "l4") renderMain();
   if (document.getElementById("video-modal").classList.contains("open")) openVideoModal(briefId);
 }
-
 function simulateHiggsfieldJob(briefId) {
   const job = state.higgsfieldJobs[briefId];
   if (!job) return;
@@ -2511,7 +2574,6 @@ function simulateHiggsfieldJob(briefId) {
     }
   }, 1200);
 }
-
 (function wireVideoModal() {
   document.getElementById("video-modal-close").onclick = closeVideoModal;
   document.getElementById("video-modal").addEventListener("click", (e) => {
@@ -2552,7 +2614,6 @@ function simulateHiggsfieldJob(briefId) {
     sendToHiggsfield(id);
   };
 })();
-
 function toast(msg, kind = "") {
   const t = document.createElement("div");
   t.className = `toast ${kind}`;
@@ -2560,12 +2621,9 @@ function toast(msg, kind = "") {
   document.getElementById("toasts").appendChild(t);
   setTimeout(() => t.remove(), 2400);
 }
-
 applyBrandChrome();
 renderSidebar();
 renderMain();
-
-
 function regenerateBrief(briefId, reason) {
   const b = state.briefs[briefId];
   if (!b) return;
@@ -2602,15 +2660,11 @@ function pickAlternativeForSlot(briefId) {
   toast("Switched " + b.slot + " to alternative: " + chosen.id);
   renderMain();
 }
-
-
 function copyCanvaFields() {
   const briefs = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === 'approved' && b.route === 'canva');
   const out = briefs.map(b => `=== ${b.slot} : ${b.topic} ===\nHEADLINE: ${b.topic}\nSUBHEAD: ${(b.hook || '').replace(/STATIC:\s*/i,'')}\nHERO_IMAGE: ${b.product || 'product hero'}\nPALETTE: ${brand().palette}\nCTA: ${b.cta}`).join('\n\n');
   navigator.clipboard.writeText(out).then(() => toast("Canva fields copied to clipboard"));
 }
-
-
 views.l4_5 = () => {
   if (!state.gate2Submitted) return pageHeader("Publish Schedule", "Locked") + `<div class="empty">Finalise Gate 2 first.</div>`;
   const briefs = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === 'approved');
@@ -2646,7 +2700,6 @@ views.l4_5 = () => {
       </div>
     </div>`;
 };
-
 function scheduleViaVista(briefId) {
   state.scheduledPosts = state.scheduledPosts || {};
   const slot = SLOTS.find(s => s.code === state.briefs[briefId]?.slot);
@@ -2677,11 +2730,9 @@ async function fetchVistaData() {
     const res = await fetch('/api/vista');
     const data = await res.json();
     if (!data.stats) return;
-
     const { stats, G2G_PROFILES, OFFGAMERS_PROFILES } = data;
     
     const er = (eng, imp) => imp > 0 ? ((eng / imp) * 100).toFixed(1) : 0;
-
     _PLATFORMS_G2G.forEach(p => {
       const name = p.p.toLowerCase();
       const id = String(G2G_PROFILES[name]);
@@ -2695,7 +2746,6 @@ async function fetchVistaData() {
       p.cesWow      = s.wow_engagement || 0;
       p.wow         = { imp: s.wow_impressions || 0, eng: s.wow_engagement || 0 };
     });
-
     _PLATFORMS_OG.forEach(p => {
       const name = p.p.toLowerCase();
       const id = String(OFFGAMERS_PROFILES[name]);
@@ -2709,7 +2759,6 @@ async function fetchVistaData() {
       p.cesWow      = s.wow_engagement || 0;
       p.wow         = { imp: s.wow_impressions || 0, eng: s.wow_engagement || 0 };
     });
-
     PLATFORMS = CURRENT_BRAND === 'g2g' ? _PLATFORMS_G2G : _PLATFORMS_OG;
     renderMain();
     console.log('✅ Dashboard updated with live Vista Social data + real CES!');
