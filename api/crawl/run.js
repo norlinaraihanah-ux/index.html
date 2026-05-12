@@ -39,6 +39,8 @@ async function processFeed(feed) {
         published_at: isValidIso(a.published_at) ? a.published_at : null,
         theme: ALLOWED_THEMES.has(a.theme) ? a.theme : 'news',
         momentum: clampInt(a.momentum, 1, 100, 50),
+        brand_fit: ALLOWED_FITS.has(String(a.brand_fit || '').toUpperCase()) ? String(a.brand_fit).toUpperCase() : 'BOTH',
+        suggested_action: a.suggested_action ? String(a.suggested_action).slice(0, 200) : null,
         raw_md: null  // we don't store raw markdown per article — too big
       }));
 
@@ -67,6 +69,8 @@ async function processFeed(feed) {
 const ALLOWED_THEMES = new Set([
   'game-drop', 'review', 'news', 'feature', 'trend', 'patch', 'industry'
 ]);
+
+const ALLOWED_FITS = new Set(['G2G', 'OFFGAMERS', 'BOTH']);
 
 function isValidIso(s) {
   if (!s || typeof s !== 'string') return false;
