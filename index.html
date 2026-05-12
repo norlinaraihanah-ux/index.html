@@ -1437,41 +1437,94 @@ views.l0d = () => {
     </div>`;
 };
 // ─── Layer 0e — Drop Watch (Rule 7: daily fresh-drop scan) ───────────────────
+// Universal coverage: AAA, indie, gacha, console, mobile, esports, sales, outages.
+// Source feeds (aggregators — wire these the same way Vista Social was wired):
+//   • IsThereAnyDeal API           → all PC store sales (Steam, Epic, GOG, Humble, Fanatical)
+//   • SteamDB API                  → Steam new releases, sales, player-count spikes
+//   • GG.deals API                 → game-key & console deal aggregator
+//   • Reddit API                   → /r/Games, /r/GamingLeaksAndRumours, /r/MobileGaming
+//   • Gaming-news RSS bundle       → Polygon, Eurogamer, IGN, GameSpot, Push Square,
+//                                     Nintendo Life, Gematsu, VG247, PCGamer, Kotaku
+//   • Twitter/X gaming handles     → @Wario64, @JasonSchreier, @geoffkeighley, @tomwarren
+//   • Status pages (RSS)           → status.playstation.com, support.xbox.com, nintendo.com
+//   • Top-up channel news          → Codashop, Razer Gold, Garena, official publisher feeds
+// One unified normalizer maps each feed → { source, drop, momentum, fit, suggested }
+// Pretty-name map for domains -> source labels shown in the table
+const DROP_WATCH_SOURCE_LABELS = {
+  "store.steampowered.com": "Steam News",
+  "ign.com":                "IGN",
+  "gamespot.com":           "GameSpot",
+  "gamerant.com":           "Game Rant",
+  "kotaku.com":             "Kotaku",
+  "polygon.com":            "Polygon",
+};
+function dropWatchSourceLabel(domain) {
+  return DROP_WATCH_SOURCE_LABELS[domain] || domain;
+}
+function momentumLabel(score) {
+  const n = parseInt(score, 10) || 0;
+  if (n >= 90) return "breaking";
+  if (n >= 75) return "peak";
+  if (n >= 60) return "rising";
+  return "fading";
+}
+function dropTone(label) {
+  return label === "breaking" ? "bad" : label === "peak" ? "ok" : label === "rising" ? "warn" : "muted";
+}
+function fitClass(fit) {
+  return "info"; // single style — the badge text already says G2G / OFFGAMERS / BOTH
+}
+
 views.l0e = () => {
-  // Mock fresh-drop alerts — wire to real source feeds (Hoyo, Kuro, Sony, Steam, etc.) the same way Vista was wired
-  const drops = [
-    { source: "miHoYo / HoYoverse", drop: "Genshin Impact 5.6 — Hiyuki banner phase 2 confirmed for Fri",  momentum: "rising", fit: "OffGamers", suggested: "Amend FRI brief — banner-phase angle" },
-    { source: "Kuro Games",         drop: "Wuthering Waves 2.4 — early 5★ leak from CN beta",                momentum: "breaking", fit: "OffGamers", suggested: "Bump to next week — leak still unconfirmed" },
-    { source: "Steam",              drop: "May 4 'Star Wars sale' surfaced overnight — runs Wed→Sun",         momentum: "peak", fit: "G2G", suggested: "Amend WED brief — ride the May the 4th angle" },
-    { source: "PlayStation",        drop: "PSN partial outage in SEA — buyers reporting checkout failures",   momentum: "rising", fit: "Both", suggested: "Pin support post — clarify alternative top-up paths" },
-  ];
-  const tone = (m) => m === "breaking" ? "bad" : m === "peak" ? "ok" : m === "rising" ? "warn" : "muted";
-  const rows = drops.map((d, i) => `
-    <tr>
-      <td><strong>${d.source}</strong></td>
-      <td>${d.drop}</td>
-      <td><span class="pill ${tone(d.momentum)} small">${d.momentum}</span></td>
-      <td><span class="pill info small">${d.fit}</span></td>
-      <td class="muted">${d.suggested}</td>
-      <td>
-        <button class="btn approve small" data-drop-action="amend" data-drop="${i}">Amend brief</button>
-        <button class="btn small" data-drop-action="bump" data-drop="${i}">Bump → next week</button>
-        <button class="btn ghost small" data-drop-action="ignore" data-drop="${i}">Ignore</button>
-      </td>
-    </tr>`).join("");
-  return pageHeader("Drop Watch — Daily Fresh-Drop Scan", "Mode 2 of trend-radar · runs every weekday morning · ~5 min scan of last 24h") + `
-    <div class="gate-banner"><div class="icon">🆕</div><div class="text"><strong>${drops.length} fresh drops detected today.</strong><small>Each drop triggers Rule 7: amend → today's brief returns to DRAFT and gets re-approved (Rule 6) before render. Bump → flow into next week's calendar. Ignore → no calendar impact.</small></div></div>
+  return pageHeader("Drop Watch — Daily Fresh-Drop Scan", "Live feed · refreshed daily at 07:00 UTC via Vercel Cron · pulls last 7 days") + `
+    <div class="gate-banner" id="drop-watch-banner"><div class="icon">🆕</div><div class="text"><strong id="drop-watch-count">Loading fresh drops…</strong><small>Each drop triggers Rule 7: amend → today's brief returns to DRAFT and gets re-approved (Rule 6) before render. Bump → flow into next week's calendar. Ignore → no calendar impact.</small></div></div>
     <div class="card">
-      <h3>Fresh drops in last 24h</h3>
-      <div class="sub">Sources scanned: miHoYo · Kuro · PlayStation · Xbox / Game Pass · Nintendo · Steam · Riot · Bandai · Square Enix · TikTok hashtags · X gaming news</div>
+      <h3>Fresh drops in last 7 days</h3>
+      <div class="sub">Sources: Steam News · IGN · GameSpot · Game Rant · Kotaku · Polygon — extracted + scored by Claude, stored in Supabase</div>
       <table>
         <thead><tr><th>Source</th><th>Drop</th><th>Momentum</th><th>Brand fit</th><th>Suggested action</th><th></th></tr></thead>
-        <tbody>${rows}</tbody>
+        <tbody id="drop-watch-body"><tr><td colspan="6" class="muted" style="padding:20px;text-align:center">Loading drops from /api/drop-watch…</td></tr></tbody>
       </table>
       <div class="muted small" style="margin-top:10px">⚠ If you Amend, the affected day's brief goes back to DRAFT and must be re-approved (Rule 6). Stale-brief check (Rule 8) blocks renders on briefs older than 24h.</div>
+    </div>
+    <div class="card" style="margin-top:14px;border-color:var(--accent-3)">
+      <div class="row"><strong>📡 Source feeds</strong><span class="spacer"></span><span class="pill info small">Aggregator-first — not publisher-by-publisher</span></div>
+      <div class="grid grid-2" style="margin-top:10px;font-size:12px">
+        <div>
+          <div class="aud-label">PC + sales</div>
+          <ul style="margin:6px 0 0 18px;padding:0;color:var(--text-2)">
+            <li><strong>IsThereAnyDeal API</strong> — Steam · Epic · GOG · Humble · Fanatical</li>
+            <li><strong>SteamDB API</strong> — new releases, sales, player-count spikes</li>
+            <li><strong>GG.deals API</strong> — game keys + console deals</li>
+          </ul>
+        </div>
+        <div>
+          <div class="aud-label">News + leaks</div>
+          <ul style="margin:6px 0 0 18px;padding:0;color:var(--text-2)">
+            <li><strong>Reddit API</strong> — /r/Games · /r/GamingLeaksAndRumours · /r/MobileGaming</li>
+            <li><strong>Gaming-news RSS</strong> — Polygon · IGN · Gematsu · Push Square · Nintendo Life · VG247 · PCGamer · Eurogamer · Kotaku</li>
+            <li><strong>X (Twitter) lists</strong> — @Wario64 · @JasonSchreier · @geoffkeighley · @tomwarren</li>
+          </ul>
+        </div>
+        <div>
+          <div class="aud-label">Console + platform</div>
+          <ul style="margin:6px 0 0 18px;padding:0;color:var(--text-2)">
+            <li><strong>Status RSS</strong> — status.playstation.com · support.xbox.com · status.nintendo.com</li>
+            <li><strong>Publisher RSS</strong> — HoYoLab · Kuro · Riot · Bandai · Square Enix</li>
+          </ul>
+        </div>
+        <div>
+          <div class="aud-label">Top-up + payments</div>
+          <ul style="margin:6px 0 0 18px;padding:0;color:var(--text-2)">
+            <li><strong>Codashop news</strong> · <strong>Razer Gold news</strong> · <strong>Garena news</strong></li>
+            <li><strong>Apple App Store + Google Play</strong> price-watch (regional pricing changes)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="muted small" style="margin-top:10px">🔌 Wiring: one unified normalizer maps each feed → <code>{ source, drop, momentum, fit, suggested }</code> shape. Cron every weekday 08:00 SGT, dedupe last 24h window, surface here. Same wiring pattern as Vista Social.</div>
     </div>`;
 };
-function attachL0eHandlers() {
+function attachDropActionHandlers() {
   document.querySelectorAll("[data-drop-action]").forEach(el => {
     el.onclick = () => {
       const action = el.dataset.dropAction;
@@ -1484,6 +1537,60 @@ function attachL0eHandlers() {
       }
     };
   });
+}
+
+async function attachL0eHandlers() {
+  const tbody = document.getElementById("drop-watch-body");
+  const countEl = document.getElementById("drop-watch-count");
+  if (!tbody) return;
+  try {
+    const resp = await fetch("/api/drop-watch", { cache: "no-store" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const data = await resp.json();
+    const articles = Array.isArray(data) ? data : (data.articles || []);
+    if (!articles.length) {
+      tbody.innerHTML = `<tr><td colspan="6" class="muted" style="padding:20px;text-align:center">No drops yet — the cron will populate this overnight, or trigger /api/crawl/run manually.</td></tr>`;
+      if (countEl) countEl.textContent = "0 fresh drops detected.";
+      return;
+    }
+    if (countEl) countEl.textContent = `${articles.length} fresh drops detected.`;
+    tbody.innerHTML = articles.map((a, i) => {
+      const label = momentumLabel(a.momentum);
+      const tone  = dropTone(label);
+      const fit   = (a.brand_fit || "BOTH").toUpperCase();
+      const drop  = a.summary ? `<strong>${escapeHtml(a.title || '')}</strong> — ${escapeHtml(a.summary)}` : `<strong>${escapeHtml(a.title || '')}</strong>`;
+      const action = a.suggested_action ? escapeHtml(a.suggested_action) : "Watch only — no immediate angle";
+      const sourceLabel = dropWatchSourceLabel(a.domain);
+      const linkedSource = a.url ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none"><strong>${escapeHtml(sourceLabel)}</strong></a>` : `<strong>${escapeHtml(sourceLabel)}</strong>`;
+      return `
+        <tr>
+          <td>${linkedSource}</td>
+          <td>${drop}</td>
+          <td><span class="pill ${tone} small">${label}</span></td>
+          <td><span class="pill ${fitClass(fit)} small">${escapeHtml(fit)}</span></td>
+          <td class="muted">${action}</td>
+          <td>
+            <button class="btn approve small" data-drop-action="amend" data-drop="${i}">Amend brief</button>
+            <button class="btn small" data-drop-action="bump" data-drop="${i}">Bump → next week</button>
+            <button class="btn ghost small" data-drop-action="ignore" data-drop="${i}">Ignore</button>
+          </td>
+        </tr>`;
+    }).join("");
+    attachDropActionHandlers();
+  } catch (err) {
+    console.error("[drop-watch] fetch failed:", err);
+    tbody.innerHTML = `<tr><td colspan="6" class="bad" style="padding:20px;text-align:center">Failed to load drops — check /api/drop-watch in console. (${escapeHtml(err.message)})</td></tr>`;
+    if (countEl) countEl.textContent = "Drop Watch error.";
+  }
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+function escapeAttr(s) {
+  return escapeHtml(s);
 }
 
 views.l1 = () => {
