@@ -110,6 +110,49 @@ Same pattern for `/api/trend-radar`.
 | `SUPABASE_API_KEY` | the `sb_secret_...` service key |
 | `FIRECRAWL_API_KEY` | (already set) |
 | `ANTHROPIC_API_KEY` | (already set) |
+| `TIKTOK_APP_ID` | `7639294468662919169` (your TREND SPOTTING app) |
+| `TIKTOK_APP_SECRET` | the client secret from developers.tiktok.com |
+
+### Optional TikTok overrides (only set if TikTok rotates a URL)
+
+| Name | Default |
+|---|---|
+| `TIKTOK_TOKEN_URL` | `https://open.tiktokapis.com/v2/oauth/token/` |
+| `TIKTOK_DISCOVERY_TRENDING_URL` | `https://business-api.tiktok.com/open_api/v1.3/discovery/trending_list/` |
+| `TIKTOK_MUSIC_TRENDING_URL` | `https://business-api.tiktok.com/open_api/v1.3/commercial_music/list/` |
+| `TIKTOK_CREATIVE_TOP_ADS_URL` | `https://business-api.tiktok.com/open_api/v1.3/creative/recommend/` |
+
+## TikTok endpoint (NEW)
+
+`GET /api/tiktok/trends?region=MY&limit=20`
+
+Pulls live signals from your approved scopes:
+
+- **Discovery** → trending hashtags in gaming
+- **Music management** → trending Commercial Music Library tracks
+- **Creative Recommendation** → top-performing creatives this week
+
+Returns:
+
+```json
+{
+  "ok": true,
+  "region": "MY",
+  "fetched_at": "2026-05-13T...",
+  "counts": { "hashtags": 12, "audio": 8, "creatives": 5, "total": 25 },
+  "signals":  [ { "type":"hashtag", "label":"#mlbb", "momentum":"rising", ... } ],
+  "by_type":  { "hashtags": [...], "audio": [...], "creatives": [...] },
+  "meta":     { "errors": [], "degraded": false, "window_days": 7 }
+}
+```
+
+**Failure mode:** never 500s. If any bucket fails the others still return, and `meta.degraded=true` so the dashboard can show a "partial data" pill. If all fail, the dashboard falls back to the manual curator scan + Day-1 baseline report.
+
+**Test it:**
+```
+https://your-app.vercel.app/api/tiktok/trends
+https://your-app.vercel.app/api/tiktok/trends?region=SG
+```
 
 ## Cron schedule
 
