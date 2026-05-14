@@ -438,7 +438,6 @@
   ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--accent-3), var(--accent-2)); }
   /* Selection */
   ::selection { background: var(--accent); color: #050810; }
-
   /* ──────────────────────────── SHIP BAY ──────────────────────────── */
   .shipbay-tabbar { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
   .shipbay-info { margin-bottom: 14px; }
@@ -446,11 +445,9 @@
   .shipbay-info .icon { font-size: 22px; }
   .shipbay-info .text strong { color: white; }
   .shipbay-info .text small { color: var(--text-2); display: block; margin-top: 2px; }
-
   .shipbay-day { margin-bottom: 22px; }
   .shipbay-day-h { font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
     color: var(--accent-2); margin: 6px 0 10px; padding-left: 4px; border-left: 3px solid var(--accent-2); padding-left: 10px; }
-
   .shipbay-slot { background: linear-gradient(180deg, rgba(15,23,46,.55), rgba(10,16,32,.45));
     border: 1px solid var(--line-2); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
   .shipbay-slot .slot-head { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
@@ -459,7 +456,6 @@
     color: var(--accent); padding: 3px 8px; border-radius: 6px; letter-spacing: .08em; }
   .shipbay-slot .slot-title { color: white; font-weight: 600; font-size: 14px; }
   .shipbay-slot .slot-meta { color: var(--muted); font-size: 12px; }
-
   .shipbay-ideas { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 10px; margin-bottom: 14px; }
   .shipbay-idea { background: rgba(15,23,46,.6); border: 1px solid var(--line-2); border-radius: 10px;
@@ -472,15 +468,12 @@
   .shipbay-idea .idea-title { color: white; font-weight: 600; font-size: 13px; line-height: 1.35; margin-bottom: 6px; }
   .shipbay-idea .idea-hook { color: var(--text-2); font-size: 12px; line-height: 1.5; margin-bottom: 8px; font-style: italic; }
   .shipbay-idea .idea-foot { display: flex; gap: 6px; flex-wrap: wrap; }
-
   .shipbay-idea-locked { background: rgba(15,23,46,.5); border: 1px dashed var(--line-2);
     border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
   .shipbay-idea-locked .idea-title { color: white; font-weight: 600; font-size: 13px; margin-bottom: 4px; }
   .shipbay-idea-locked .idea-hook { font-size: 12px; font-style: italic; }
-
   .shipbay-variants-head { color: var(--accent-2); font-size: 12px; letter-spacing: .08em;
     text-transform: uppercase; margin: 8px 0 10px; }
-
   .shipbay-variant { background: rgba(10,16,32,.7); border: 1px solid var(--line-2);
     border-radius: 10px; margin-bottom: 8px; overflow: hidden; transition: all .15s; }
   .shipbay-variant.expanded { border-color: var(--accent-2);
@@ -495,11 +488,9 @@
   .shipbay-variant-head .spacer { flex: 1; }
   .shipbay-variant-head .chevron { color: var(--accent-2); font-size: 11px;
     text-transform: uppercase; letter-spacing: .1em; }
-
   .shipbay-variant-body { padding: 14px 16px 16px; border-top: 1px solid var(--line-2);
     background: rgba(15,23,46,.4); }
   .shipbay-variant-actions { display: flex; gap: 8px; margin-top: 14px; align-items: center; }
-
   .shipbay-brief { color: var(--text-2); font-size: 13px; line-height: 1.6; }
   .shipbay-brief-head { display: flex; gap: 12px; align-items: flex-start;
     padding-bottom: 12px; margin-bottom: 14px; border-bottom: 1px solid var(--line-2); }
@@ -517,7 +508,6 @@
   .hook-line { color: white; font-size: 15px; font-style: italic; font-weight: 600;
     padding: 12px 14px; background: rgba(0,255,209,.06);
     border-left: 3px solid var(--accent-2); border-radius: 6px; }
-
   .shipbay-scene { background: rgba(10,16,32,.6); border: 1px solid var(--line-2);
     border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
   .shipbay-scene-head { display: flex; gap: 10px; align-items: center;
@@ -533,7 +523,6 @@
     letter-spacing: .1em; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 6px; }
   .shipbay-prompt pre { color: var(--text-2); font-family: "IBM Plex Mono", monospace;
     font-size: 11px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; margin: 0; }
-
   .shipbay-log { margin-top: 20px; }
   .shipbay-log .row { display: flex; gap: 10px; align-items: baseline; margin-bottom: 10px; }
   .shipbay-log .kv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
@@ -542,12 +531,10 @@
     border-bottom: 1px solid var(--line-2); }
   .shipbay-log .kv-table td { padding: 8px; color: var(--text-2); border-bottom: 1px solid var(--line-2); }
   .shipbay-log .kv-table tr:last-child td { border-bottom: none; }
-
   @media (max-width: 900px) {
     .shipbay-scene-grid { grid-template-columns: 1fr; }
     .shipbay-prompts { grid-template-columns: 1fr; }
   }
-
   /* ──────────────────────────── CURATOR SCAN ──────────────────────────── */
   .curator-scan-card { margin-bottom: 14px; border-color: var(--accent-2);
     background: linear-gradient(180deg, rgba(15,23,46,.6), rgba(10,16,32,.5)); }
@@ -559,7 +546,6 @@
     font-family: "IBM Plex Mono", monospace; font-size: 12px;
     font-weight: 600; min-width: 200px; }
   .curator-handle:hover { color: var(--accent); text-decoration: underline; }
-
   /* ──────────────────────────── TIKTOK LIVE SIGNALS ──────────────────────────── */
   .tk-row { display: flex; align-items: center; gap: 10px; padding: 6px 8px;
     border-bottom: 1px solid var(--line-2); font-size: 13px; }
@@ -656,7 +642,6 @@ const LAYERS = [
   { cadence: "Weekly", id: "l0b",  group: "l0",  label: "Competitor Watch", status: "done" },
   { cadence: "Daily", id: "l0c",  group: "l0",  label: "Trend Radar",      status: "done" },
   { cadence: "Weekly", id: "l0d",  group: "l0",  label: "Audience Atlas",     status: "done" },
-  { cadence: "Daily",  id: "l0e",  group: "l0",  label: "Drop Watch",         status: "progress" },
   { cadence: "Daily",  id: "l1",   group: "l12", label: "Insight Synthesis (live)", status: "done" },
   { cadence: "Daily", id: "shipbay", group: "prod", label: "🚀 Ship Bay (no-approval)", status: "progress" },
   { cadence: "Event", id: "l4",   group: "prod", label: "Asset Production",    status: "locked" },
@@ -1379,7 +1364,7 @@ function renderMain() {
   if (state.current === "g1") attachGate1Handlers();
   if (state.current === "g2") attachGate2Handlers();
   if (state.current === "l4") attachL4Handlers();
-  if (state.current === "l0e") attachL0eHandlers();
+  if (state.current === "l0c") attachL0cHandlers();
   if (state.current === "l5") attachL5Handlers();
 }
 /* ============================================================
@@ -1487,9 +1472,12 @@ views.l0c = () => {
       <td><span class="pill ${t.reach === 'peak' ? 'ok' : t.reach === 'rising' ? 'warn' : 'muted'} small">${t.reach}</span></td>
       <td>${t.leverage}</td>
     </tr>`).join('');
-  return pageHeader("Trend Radar", `As of ${RUN_DATE} · 14-day look-ahead · gaming + social-platform trends`)
-    + renderCuratorScanCard()
-    + renderTikTokLiveCard() + `
+  return pageHeader("Trend Radar", `As of ${RUN_DATE} · 14-day look-ahead · gaming + social-platform trends`) + `
+    <div class="grid grid-3" style="margin-bottom:14px;align-items:start">
+      <div class="trend-col">${renderCuratorScanCard()}</div>
+      <div class="trend-col">${renderTikTokLiveCard()}</div>
+      <div class="trend-col">${renderDropWatchCard()}</div>
+    </div>
     <div class="card" style="margin-bottom:14px;border-color:var(--accent)">
       <h3>🔥 Trending audio / bandwagon / conversations</h3>
       <div class="sub">Per-platform trend pulse + how to leverage it for this week's content</div>
@@ -1501,26 +1489,40 @@ views.l0c = () => {
     </div>
     <div class="grid grid-2">
       <div class="card">
-        <h3>Trending game titles</h3>
-        <div class="sub">14-day window</div>
+        <div class="row" style="align-items:center">
+          <h3 style="margin:0">Trending game titles</h3>
+          <span class="spacer"></span>
+          <span class="pill info small" id="titles-source-pill">scraping…</span>
+        </div>
+        <div class="sub">Live · auto-scraped from gaming-news feeds (last 7 days)</div>
         <table>
-          <thead><tr><th>Title</th><th>Signal</th><th>Sources</th><th>Release</th></tr></thead>
-          <tbody>${TRENDS.trending_titles.map(t => `<tr><td><strong>${t.title}</strong></td><td><span class="pill ${t.signal === 'strong' ? 'solid' : t.signal === 'moderate' ? 'info' : 'muted'} small">${t.signal}</span></td><td class="num">${t.sources}</td><td class="muted">${t.release}</td></tr>`).join('')}</tbody>
+          <thead><tr><th>Title</th><th>Signal</th><th>Source</th><th>Release</th></tr></thead>
+          <tbody id="trending-titles-body"><tr><td colspan="4" class="muted" style="padding:18px;text-align:center">Scraping titles from /api/drop-watch…</td></tr></tbody>
         </table>
       </div>
       <div class="card">
-        <h3>Industry events</h3>
+        <div class="row" style="align-items:center">
+          <h3 style="margin:0">Industry events</h3>
+          <span class="spacer"></span>
+          <span class="pill info small" id="events-source-pill">scraping…</span>
+        </div>
+        <div class="sub">Live · auto-scraped from gaming-industry calendar feeds</div>
         <table>
           <thead><tr><th>Event</th><th>Dates</th><th>Angle</th></tr></thead>
-          <tbody>${TRENDS.events.map(e => `<tr><td><strong>${e.name}</strong></td><td class="muted">${e.dates}</td><td>${e.angle}</td></tr>`).join('')}</tbody>
+          <tbody id="industry-events-body"><tr><td colspan="3" class="muted" style="padding:18px;text-align:center">Scraping events from /api/trend-radar…</td></tr></tbody>
         </table>
       </div>
     </div>
     <div class="card" style="margin-top:14px">
-      <h3>IG format trends</h3>
+      <div class="row" style="align-items:center">
+        <h3 style="margin:0">IG format trends</h3>
+        <span class="spacer"></span>
+        <span class="pill info small" id="ig-formats-source-pill">scraping…</span>
+      </div>
+      <div class="sub">Live · derived from curator-scan signals + TikTok crossover formats</div>
       <table>
         <thead><tr><th>Format</th><th>Observed on</th><th>Strength</th></tr></thead>
-        <tbody>${TRENDS.ig_format_trends.map(f => `<tr><td><strong>${f.format}</strong></td><td class="muted">${f.observed}</td><td><span class="pill ${f.strength === 'strong' ? 'solid' : 'info'} small">${f.strength}</span></td></tr>`).join('')}</tbody>
+        <tbody id="ig-format-trends-body"><tr><td colspan="3" class="muted" style="padding:18px;text-align:center">Computing IG format trends…</td></tr></tbody>
       </table>
     </div>`;
 };
@@ -1619,56 +1621,26 @@ function dropTone(label) {
 function fitClass(fit) {
   return "info"; // single style — the badge text already says G2G / OFFGAMERS / BOTH
 }
-
-views.l0e = () => {
-  return pageHeader("Drop Watch — Daily Fresh-Drop Scan", "Live feed · refreshed daily at 07:00 UTC via Vercel Cron · pulls last 7 days") + `
-    <div class="gate-banner" id="drop-watch-banner"><div class="icon">🆕</div><div class="text"><strong id="drop-watch-count">Loading fresh drops…</strong><small>Each drop triggers Rule 7: amend → today's brief returns to DRAFT and gets re-approved (Rule 6) before render. Bump → flow into next week's calendar. Ignore → no calendar impact.</small></div></div>
-    <div class="card">
-      <h3>Fresh drops in last 7 days</h3>
-      <div class="sub">Sources: Steam News · IGN · GameSpot · Game Rant · Kotaku · Polygon — extracted + scored by Claude, stored in Supabase</div>
-      <table>
-        <thead><tr><th>Source</th><th>Drop</th><th>Momentum</th><th>Brand fit</th><th>Suggested action</th><th></th></tr></thead>
-        <tbody id="drop-watch-body"><tr><td colspan="6" class="muted" style="padding:20px;text-align:center">Loading drops from /api/drop-watch…</td></tr></tbody>
-      </table>
-      <div class="muted small" style="margin-top:10px">⚠ If you Amend, the affected day's brief goes back to DRAFT and must be re-approved (Rule 6). Stale-brief check (Rule 8) blocks renders on briefs older than 24h.</div>
-    </div>
-    <div class="card" style="margin-top:14px;border-color:var(--accent-3)">
-      <div class="row"><strong>📡 Source feeds</strong><span class="spacer"></span><span class="pill info small">Aggregator-first — not publisher-by-publisher</span></div>
-      <div class="grid grid-2" style="margin-top:10px;font-size:12px">
-        <div>
-          <div class="aud-label">PC + sales</div>
-          <ul style="margin:6px 0 0 18px;padding:0;color:var(--text-2)">
-            <li><strong>IsThereAnyDeal API</strong> — Steam · Epic · GOG · Humble · Fanatical</li>
-            <li><strong>SteamDB API</strong> — new releases, sales, player-count spikes</li>
-            <li><strong>GG.deals API</strong> — game keys + console deals</li>
-          </ul>
+function renderDropWatchCard() {
+  // Compact card sized for the 3-column grid inside Trend Radar.
+  // Live-populated by attachL0cHandlers() via /api/drop-watch.
+  return `
+    <div class="card" style="border-color:var(--accent-3)">
+      <div class="row" style="align-items:center;gap:14px;margin-bottom:8px">
+        <div style="font-size:22px">🆕</div>
+        <div style="flex:1">
+          <strong style="color:white">Drop Watch</strong>
+          <div class="muted small" style="margin-top:2px" id="drop-watch-count">Loading fresh drops…</div>
         </div>
-        <div>
-          <div class="aud-label">News + leaks</div>
-          <ul style="margin:6px 0 0 18px;padding:0;color:var(--text-2)">
-            <li><strong>Reddit API</strong> — /r/Games · /r/GamingLeaksAndRumours · /r/MobileGaming</li>
-            <li><strong>Gaming-news RSS</strong> — Polygon · IGN · Gematsu · Push Square · Nintendo Life · VG247 · PCGamer · Eurogamer · Kotaku</li>
-            <li><strong>X (Twitter) lists</strong> — @Wario64 · @JasonSchreier · @geoffkeighley · @tomwarren</li>
-          </ul>
-        </div>
-        <div>
-          <div class="aud-label">Console + platform</div>
-          <ul style="margin:6px 0 0 18px;padding:0;color:var(--text-2)">
-            <li><strong>Status RSS</strong> — status.playstation.com · support.xbox.com · status.nintendo.com</li>
-            <li><strong>Publisher RSS</strong> — HoYoLab · Kuro · Riot · Bandai · Square Enix</li>
-          </ul>
-        </div>
-        <div>
-          <div class="aud-label">Top-up + payments</div>
-          <ul style="margin:6px 0 0 18px;padding:0;color:var(--text-2)">
-            <li><strong>Codashop news</strong> · <strong>Razer Gold news</strong> · <strong>Garena news</strong></li>
-            <li><strong>Apple App Store + Google Play</strong> price-watch (regional pricing changes)</li>
-          </ul>
-        </div>
+        <span class="pill info small">last 7 days</span>
       </div>
-      <div class="muted small" style="margin-top:10px">🔌 Wiring: one unified normalizer maps each feed → <code>{ source, drop, momentum, fit, suggested }</code> shape. Cron every weekday 08:00 SGT, dedupe last 24h window, surface here. Same wiring pattern as Vista Social.</div>
+      <table class="kv-table">
+        <thead><tr><th>Drop</th><th>Momentum</th><th>Fit</th></tr></thead>
+        <tbody id="drop-watch-body"><tr><td colspan="3" class="muted" style="padding:14px;text-align:center">Scraping /api/drop-watch…</td></tr></tbody>
+      </table>
+      <div class="muted small" style="margin-top:8px">Aggregator-first feed: Steam · IGN · GameSpot · Polygon · Kotaku · Game Rant. Refreshed daily by Vercel Cron 07:00 UTC.</div>
     </div>`;
-};
+}
 function attachDropActionHandlers() {
   document.querySelectorAll("[data-drop-action]").forEach(el => {
     el.onclick = () => {
@@ -1683,8 +1655,20 @@ function attachDropActionHandlers() {
     };
   });
 }
-
-async function attachL0eHandlers() {
+/* Live-scrape pipeline that powers Trend Radar's 3-column header (Drop Watch
+   card) and the lower live tables — trending game titles, industry events,
+   IG format trends. All four feeds light up in parallel; each failure is
+   isolated so partial data still renders. */
+async function attachL0cHandlers() {
+  // Fire all four scrapes in parallel — partial failures don't block siblings
+  await Promise.all([
+    populateDropWatch(),
+    populateTrendingTitles(),
+    populateIndustryEvents(),
+    populateIgFormatTrends(),
+  ]);
+}
+async function populateDropWatch() {
   const tbody = document.getElementById("drop-watch-body");
   const countEl = document.getElementById("drop-watch-count");
   if (!tbody) return;
@@ -1694,41 +1678,155 @@ async function attachL0eHandlers() {
     const data = await resp.json();
     const articles = Array.isArray(data) ? data : (data.articles || []);
     if (!articles.length) {
-      tbody.innerHTML = `<tr><td colspan="6" class="muted" style="padding:20px;text-align:center">No drops yet — the cron will populate this overnight, or trigger /api/crawl/run manually.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="3" class="muted" style="padding:14px;text-align:center">No drops yet — the cron populates overnight.</td></tr>`;
       if (countEl) countEl.textContent = "0 fresh drops detected.";
       return;
     }
     if (countEl) countEl.textContent = `${articles.length} fresh drops detected.`;
-    tbody.innerHTML = articles.map((a, i) => {
+    // Compact 3-column view: show top 6 in the Trend Radar card
+    tbody.innerHTML = articles.slice(0, 6).map((a) => {
       const label = momentumLabel(a.momentum);
       const tone  = dropTone(label);
       const fit   = (a.brand_fit || "BOTH").toUpperCase();
-      const drop  = a.summary ? `<strong>${escapeHtml(a.title || '')}</strong> — ${escapeHtml(a.summary)}` : `<strong>${escapeHtml(a.title || '')}</strong>`;
-      const action = a.suggested_action ? escapeHtml(a.suggested_action) : "Watch only — no immediate angle";
-      const sourceLabel = dropWatchSourceLabel(a.domain);
-      const linkedSource = a.url ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none"><strong>${escapeHtml(sourceLabel)}</strong></a>` : `<strong>${escapeHtml(sourceLabel)}</strong>`;
+      const title = a.title || '';
+      const linkedTitle = a.url
+        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener" style="color:inherit"><strong>${escapeHtml(title)}</strong></a>`
+        : `<strong>${escapeHtml(title)}</strong>`;
       return `
         <tr>
-          <td>${linkedSource}</td>
-          <td>${drop}</td>
+          <td>${linkedTitle}<div class="muted small">${escapeHtml(dropWatchSourceLabel(a.domain))}</div></td>
           <td><span class="pill ${tone} small">${label}</span></td>
           <td><span class="pill ${fitClass(fit)} small">${escapeHtml(fit)}</span></td>
-          <td class="muted">${action}</td>
-          <td>
-            <button class="btn approve small" data-drop-action="amend" data-drop="${i}">Amend brief</button>
-            <button class="btn small" data-drop-action="bump" data-drop="${i}">Bump → next week</button>
-            <button class="btn ghost small" data-drop-action="ignore" data-drop="${i}">Ignore</button>
-          </td>
         </tr>`;
     }).join("");
-    attachDropActionHandlers();
   } catch (err) {
     console.error("[drop-watch] fetch failed:", err);
-    tbody.innerHTML = `<tr><td colspan="6" class="bad" style="padding:20px;text-align:center">Failed to load drops — check /api/drop-watch in console. (${escapeHtml(err.message)})</td></tr>`;
-    if (countEl) countEl.textContent = "Drop Watch error.";
+    tbody.innerHTML = `<tr><td colspan="3" class="bad" style="padding:14px;text-align:center">Drop Watch fetch failed · ${escapeHtml(err.message)}</td></tr>`;
+    if (countEl) countEl.textContent = "Drop Watch error — see console.";
   }
 }
-
+async function populateTrendingTitles() {
+  const tbody = document.getElementById("trending-titles-body");
+  const pill = document.getElementById("titles-source-pill");
+  if (!tbody) return;
+  try {
+    const resp = await fetch("/api/drop-watch", { cache: "no-store" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const data = await resp.json();
+    const articles = Array.isArray(data) ? data : (data.articles || []);
+    // Filter to release/launch-style drops only — these are the "trending titles"
+    const titleSignals = articles.filter(a => {
+      const t = `${a.title || ''} ${a.summary || ''}`.toLowerCase();
+      return /(launch|release|drop|patch|update|out now|early access|reveal)/i.test(t);
+    }).slice(0, 8);
+    if (!titleSignals.length) {
+      tbody.innerHTML = `<tr><td colspan="4" class="muted" style="padding:14px;text-align:center">No title-signal drops in the last 7 days.</td></tr>`;
+      if (pill) { pill.textContent = "0 signals"; pill.className = "pill muted small"; }
+      return;
+    }
+    if (pill) { pill.textContent = `${titleSignals.length} live · scraped`; pill.className = "pill ok small"; }
+    tbody.innerHTML = titleSignals.map(a => {
+      const mom = momentumLabel(a.momentum);
+      const signalLabel = mom === "breaking" || mom === "peak" ? "strong" : mom === "rising" ? "moderate" : "watch";
+      const cls = signalLabel === "strong" ? "solid" : signalLabel === "moderate" ? "info" : "muted";
+      const sourceLabel = dropWatchSourceLabel(a.domain || "");
+      const linkedTitle = a.url
+        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener" style="color:inherit"><strong>${escapeHtml(a.title || '')}</strong></a>`
+        : `<strong>${escapeHtml(a.title || '')}</strong>`;
+      const release = a.published_at ? new Date(a.published_at).toLocaleDateString() : (a.release || '—');
+      return `<tr><td>${linkedTitle}</td><td><span class="pill ${cls} small">${signalLabel}</span></td><td class="muted">${escapeHtml(sourceLabel)}</td><td class="muted">${escapeHtml(release)}</td></tr>`;
+    }).join("");
+  } catch (err) {
+    console.error("[trending-titles] fetch failed:", err);
+    tbody.innerHTML = `<tr><td colspan="4" class="bad" style="padding:14px;text-align:center">Trending-titles fetch failed · ${escapeHtml(err.message)}</td></tr>`;
+    if (pill) { pill.textContent = "error"; pill.className = "pill bad small"; }
+  }
+}
+async function populateIndustryEvents() {
+  const tbody = document.getElementById("industry-events-body");
+  const pill = document.getElementById("events-source-pill");
+  if (!tbody) return;
+  try {
+    // Try /api/trend-radar first (preferred — event feed); fall back to drop-watch
+    let events = [];
+    try {
+      const resp = await fetch("/api/trend-radar", { cache: "no-store" });
+      if (resp.ok) {
+        const data = await resp.json();
+        const items = Array.isArray(data) ? data : (data.events || data.items || []);
+        events = items.filter(x => /(event|conference|expo|summit|gamescom|tgs|tokyo game show|games week|showcase|direct|state of play|esl|valorant champions|worlds)/i.test(`${x.title || x.name || ''} ${x.summary || x.angle || ''}`));
+      }
+    } catch (_) { /* fall through */ }
+    // Fallback: derive events from drop-watch if /api/trend-radar didn't return any
+    if (!events.length) {
+      const resp = await fetch("/api/drop-watch", { cache: "no-store" });
+      if (!resp.ok) throw new Error("HTTP " + resp.status);
+      const data = await resp.json();
+      const articles = Array.isArray(data) ? data : (data.articles || []);
+      events = articles.filter(a => /(event|conference|expo|summit|gamescom|tgs|showcase|direct|state of play|championship|worlds)/i.test(`${a.title || ''} ${a.summary || ''}`)).slice(0, 6);
+    }
+    if (!events.length) {
+      tbody.innerHTML = `<tr><td colspan="3" class="muted" style="padding:14px;text-align:center">No industry events in scraping window.</td></tr>`;
+      if (pill) { pill.textContent = "0 events"; pill.className = "pill muted small"; }
+      return;
+    }
+    if (pill) { pill.textContent = `${events.length} live · scraped`; pill.className = "pill ok small"; }
+    tbody.innerHTML = events.slice(0, 8).map(e => {
+      const name  = e.name || e.title || '—';
+      const dates = e.dates || (e.published_at ? new Date(e.published_at).toLocaleDateString() : '—');
+      const angle = e.angle || e.summary || e.suggested_action || '—';
+      const url   = e.url || e.link || null;
+      const linkedName = url ? `<a href="${escapeAttr(url)}" target="_blank" rel="noopener" style="color:inherit"><strong>${escapeHtml(name)}</strong></a>` : `<strong>${escapeHtml(name)}</strong>`;
+      return `<tr><td>${linkedName}</td><td class="muted">${escapeHtml(dates)}</td><td>${escapeHtml(angle)}</td></tr>`;
+    }).join("");
+  } catch (err) {
+    console.error("[industry-events] fetch failed:", err);
+    tbody.innerHTML = `<tr><td colspan="3" class="bad" style="padding:14px;text-align:center">Events fetch failed · ${escapeHtml(err.message)}</td></tr>`;
+    if (pill) { pill.textContent = "error"; pill.className = "pill bad small"; }
+  }
+}
+async function populateIgFormatTrends() {
+  const tbody = document.getElementById("ig-format-trends-body");
+  const pill  = document.getElementById("ig-formats-source-pill");
+  if (!tbody) return;
+  try {
+    // IG format trends are derived from TikTok crossover signals + curator scan notes
+    // (TikTok formats jump to IG Reels with ~5-7 day lag — that's our live signal).
+    const tl = state.tikTokLive || {};
+    const sources = [];
+    // TikTok hashtags → format hints (e.g. #pov, #grwm, #storytime)
+    const formatTags = (tl.by_type?.hashtags || []).filter(h => {
+      const lab = (h.label || '').toLowerCase();
+      return /(pov|grwm|storytime|day in the life|getready|tutorial|reaction|unboxing|asmr|carousel|tier|ranking|countdown)/.test(lab);
+    });
+    formatTags.forEach(h => {
+      const lab = h.label || '';
+      sources.push({ format: lab, observed: `TikTok #${lab.replace(/^#/, '')}`, strength: h.momentum || 'rising' });
+    });
+    // Curator scan notes also call out format experimentation — include the latest if present
+    const lastScan = (state.curatorScans || [])[0];
+    if (lastScan && lastScan.formats) {
+      lastScan.formats.forEach(f => sources.push({ format: f.name, observed: `IG curator scan · ${f.handle || ''}`, strength: f.strength || 'rising' }));
+    }
+    // Fall back to the seeded TRENDS.ig_format_trends if no live signal is available yet
+    const rows = sources.length ? sources : (TRENDS.ig_format_trends || []);
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="3" class="muted" style="padding:14px;text-align:center">No IG format signal yet — refresh TikTok signals or run the IG curator scan.</td></tr>`;
+      if (pill) { pill.textContent = "no signal"; pill.className = "pill muted small"; }
+      return;
+    }
+    const sourceLabel = sources.length ? `${sources.length} live · scraped` : "seed data · run scans for live";
+    if (pill) { pill.textContent = sourceLabel; pill.className = sources.length ? "pill ok small" : "pill warn small"; }
+    tbody.innerHTML = rows.slice(0, 10).map(f => {
+      const cls = f.strength === 'strong' || f.strength === 'peak' ? 'solid' : f.strength === 'rising' ? 'warn' : 'info';
+      return `<tr><td><strong>${escapeHtml(f.format)}</strong></td><td class="muted">${escapeHtml(f.observed)}</td><td><span class="pill ${cls} small">${escapeHtml(f.strength)}</span></td></tr>`;
+    }).join("");
+  } catch (err) {
+    console.error("[ig-formats] failed:", err);
+    tbody.innerHTML = `<tr><td colspan="3" class="bad" style="padding:14px;text-align:center">IG format trends failed · ${escapeHtml(err.message)}</td></tr>`;
+    if (pill) { pill.textContent = "error"; pill.className = "pill bad small"; }
+  }
+}
 function escapeHtml(s) {
   return String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -1737,17 +1835,14 @@ function escapeHtml(s) {
 function escapeAttr(s) {
   return escapeHtml(s);
 }
-
 views.l1 = () => {
   // ── Live synthesis from PLATFORMS (the same array Performance Pulse uses) ──
   // Every number on this page is computed at render time from the same source
   // of truth as Performance Pulse. Switch brands → numbers update automatically.
-
   const plats = PLATFORMS || [];
   const median = (arr) => { const s = [...arr].sort((a,b)=>a-b); return s.length ? s[Math.floor(s.length/2)] : 0; };
   const erMed  = median(plats.map(p => p.er));
   const cesMed = median(plats.map(p => p.ces));
-
   // KPI status — derived from posts/target ratio + ER vs erTarget + WoW
   const kpiStatus = (p) => {
     const cadenceHit = (p.posts / Math.max(p.postTarget, 1)) >= 0.9;
@@ -1759,7 +1854,6 @@ views.l1 = () => {
     if (score === 1) return { label: "at_risk",   pill: "warn", reason: !cadenceHit && !erHit ? "Cadence + ER both below" : "Two of three signals failing" };
     return            { label: "off_track", pill: "bad",  reason: "Cadence, ER and trend all below" };
   };
-
   // ER × CES quadrant read
   const readQuad = (p) => {
     const hiEr  = p.er  >= erMed;
@@ -1769,7 +1863,6 @@ views.l1 = () => {
     if (!hiEr && hiCes)  return "Quality is landing but reach is thin. Boost or repurpose.";
     return                       "Underperforming on both. Audit content + cadence.";
   };
-
   const kpiRows = plats.map(p => {
     const k = kpiStatus(p);
     return `<tr>
@@ -1780,10 +1873,8 @@ views.l1 = () => {
       <td class="num">${p.ces} <span class="${cesTierClass ? cesTierClass(p.cesWow) : ''}" style="font-size:11px">${p.cesWow >= 0 ? '+' : ''}${p.cesWow}% WoW</span></td>
     </tr>`;
   }).join("");
-
   const quad = plats.map(p => `
     <tr><td><strong>${p.p}</strong></td><td class="num">${p.er}%</td><td class="num">${p.ces}</td><td>${readQuad(p)}</td></tr>`).join("");
-
   // Winners — top 3 by CES + positive WoW
   const winners = [...plats].sort((a,b) => b.ces - a.ces).slice(0, 3);
   const winnersHtml = winners.map(p => `
@@ -1794,7 +1885,6 @@ views.l1 = () => {
       <td>${p.top}</td>
       <td><span class="muted small">${p.cesWow >= 0 ? `+${p.cesWow}% WoW — scale this format` : `${p.cesWow}% WoW — strong absolute but cooling`}</span></td>
     </tr>`).join("");
-
   // Losers — bottom 3 by WoW eng (steepest decliners)
   const decliners = [...plats].sort((a,b) => (a.wow?.eng || 0) - (b.wow?.eng || 0)).slice(0, 3);
   const declinersHtml = decliners.map(p => `
@@ -1805,7 +1895,6 @@ views.l1 = () => {
       <td class="num">${p.posts}/${p.postTarget}</td>
       <td><span class="muted small">${p.posts < p.postTarget ? 'Under cadence — schedule more' : 'Cadence ok — fix content quality'}</span></td>
     </tr>`).join("");
-
   // Auto-generated narrative — 3 bullets the moment the page loads
   const topWinner = winners[0];
   const topLoser  = decliners[0];
@@ -1817,7 +1906,6 @@ views.l1 = () => {
     topLoser ? `<strong>${topLoser.p} is bleeding</strong> — engagement ${topLoser.wow?.eng}% WoW. ${topLoser.posts < topLoser.postTarget ? 'Cadence is below target — schedule more.' : 'Cadence is on target — content quality is the issue, audit hooks.'}` : null,
     `<strong>Overall cadence ${cadencePct}%</strong> of weekly target (${totalPosts}/${totalTarget} posts). ${cadencePct >= 95 ? 'You\'re hitting volume — focus on quality.' : 'Volume gap — schedule the remaining slots.'}`
   ].filter(Boolean);
-
   return pageHeader("Insight Synthesis (live)", `Computed from Performance Pulse · ${BRANDS_META[CURRENT_BRAND].name.replace(" Social AI","")} · ${plats.length} platforms`) + `
     <div class="card" style="margin-bottom:14px;border-color:var(--accent)">
       <h3>🎯 This week's read — auto-narrative</h3>
@@ -1826,7 +1914,6 @@ views.l1 = () => {
       </ul>
       <div class="muted small" style="margin-top:10px">📡 Wired directly to PLATFORMS data — flip brand or wait for Vista Social refresh and these bullets update.</div>
     </div>
-
     <div class="card">
       <h3>KPI gap status — derived live</h3>
       <div class="sub">Status = cadence (posts vs target) + ER vs target + WoW engagement trend</div>
@@ -1835,7 +1922,6 @@ views.l1 = () => {
         <tbody>${kpiRows}</tbody>
       </table>
     </div>
-
     <div class="card" style="margin-top:14px">
       <h3>ER × CES quadrant — reading guide</h3>
       <div class="sub">Thresholds are LIVE medians: ER median ${erMed.toFixed(1)}% · CES median ${cesMed.toFixed(0)}. High ER + low CES = viral reach with weak body. Low ER + high CES = quality content, scale cadence.</div>
@@ -1844,7 +1930,6 @@ views.l1 = () => {
         <tbody>${quad}</tbody>
       </table>
     </div>
-
     <div class="grid grid-2" style="margin-top:14px">
       <div class="card" style="border-color:var(--accent-2)">
         <h3>🏆 What's working — scale these</h3>
@@ -1871,23 +1956,18 @@ function triggerCuratorScan() {
   const ts = new Date().toISOString();
   const handles = state.curators.map(c => c.handle).join(", ");
   const prompt = `Run today's curator scan.
-
 Scan these 3 Instagram curators via Claude in Chrome (use my logged-in browser session):
 ${state.curators.map(c => `• ${c.handle} — ${c.url}`).join("\n")}
-
 For each curator:
 1. Navigate to /reels/ and identify the 2-3 most recent posts (newest reel codes).
 2. For each new reel, extract: caption (full), audio (track name + artist), hook (first 1-2 seconds visual or text-overlay).
 3. Flag any explicit TREND CALL-OUTS in the caption (e.g. "X is blowing up", "NEW format you NEED").
-
 Then write a one-page Trend Radar update covering:
 - Audios converging on 2+ curators (high-confidence ride signal)
 - Hook formulas converging (e.g. BREAKING-NEWS, negative-open)
 - Format experiments flagged (e.g. horizontal vlogs, ultra-wide)
 - Cultural moments hot right now (peak vs. fading)
-
 Save the report to /sessions/charming-blissful-fermi/mnt/Desktop/ as trend-radar-${ts.split('T')[0]}.md and present me a computer:// link.
-
 (Triggered from Ship Bay dashboard · ${handles})`;
   state.curatorScans.unshift({
     ts,
@@ -1953,7 +2033,6 @@ async function loadTikTokTrends(region) {
   }
   renderMain();
 }
-
 function renderTikTokLiveCard() {
   const tl = state.tikTokLive || {};
   const when = tl.fetched_at ? new Date(tl.fetched_at).toLocaleString() : "never";
@@ -1969,7 +2048,6 @@ function renderTikTokLiveCard() {
         : `<span class="pill bad small">${Math.floor(minsAgo/(24*60))}d ago · stale</span>`;
   const btnLabel = tl.loading ? "⏳ Fetching…" : "↻ Refresh TikTok signals";
   const btnDisabled = tl.loading ? "disabled" : "";
-
   // Empty state — first-load CTA
   if (!tl.fetched_at && !tl.loading) {
     return `
@@ -1986,7 +2064,6 @@ function renderTikTokLiveCard() {
         <div class="muted small" style="margin-top:10px">💡 Click to fetch live trending hashtags, sounds, and top creatives. Falls back to manual curator scan if the API errors.</div>
       </div>`;
   }
-
   // Error state
   if (tl.error) {
     return `
@@ -2002,7 +2079,6 @@ function renderTikTokLiveCard() {
         <div class="muted small" style="margin-top:10px">Check TIKTOK_APP_ID / TIKTOK_APP_SECRET env vars on Vercel · or wait — TikTok's API is occasionally flaky.</div>
       </div>`;
   }
-
   const renderBucket = (title, emoji, rows, max) => {
     if (!rows || !rows.length) return `<div class="card" style="opacity:.5"><h3>${emoji} ${title}</h3><div class="muted small">No fresh data yet — refresh or wait for next cycle.</div></div>`;
     const top = rows.slice(0, max || 8);
@@ -2014,7 +2090,6 @@ function renderTikTokLiveCard() {
       </div>`).join("");
     return `<div class="card"><h3>${emoji} ${title}</h3><div class="sub">${rows.length} signal${rows.length === 1 ? '' : 's'}</div>${items}</div>`;
   };
-
   return `
     <div class="card" style="border-color:var(--accent);margin-bottom:14px">
       <div class="row" style="align-items:center;gap:14px;margin-bottom:8px">
@@ -2033,7 +2108,6 @@ function renderTikTokLiveCard() {
       </div>
     </div>`;
 }
-
 function renderCuratorScanCard() {
   const lastScan = state.curatorScans[0];
   const lastWhen = lastScan
@@ -2080,7 +2154,6 @@ function renderCuratorScanCard() {
       <div class="muted small" style="margin-top:10px">💡 Click triggers Claude to scan via your logged-in Chrome session. Results land in chat + saved as a dated markdown to your Desktop. Open in Cowork mode for one-click fire; otherwise the prompt is copied to clipboard.</div>
     </div>`;
 }
-
 /* ============================================================
    SHIP BAY — no-approval express lane (per-day, per-platform)
    Bypasses Gate 1 / Gate 2. Brief preview + Ship to Higgsfield.
@@ -2431,41 +2504,156 @@ function shipBayFire(key, brief) {
   renderMain();
 }
 /* ── RENDER FUNCTIONS ───────────────────────────────────────────────────── */
+/* ── LEVERAGE RECOMMENDATION ─────────────────────────────────────────────
+   Decides HOW to execute an idea on a given platform. Outputs one of:
+     • mia_talkinghead  — Mia / human talking-head (Informative + Educational)
+     • game_compilation — Compilation of in-game scenes (News / Entertainment)
+     • audio_compilation — Ride a trending audio + game-scenes compilation
+                           (TikTok-first, when a fresh audio signal exists)
+   Rules:
+     - TikTok with a fresh trending-audio signal → audio_compilation
+     - idea.mia OR pillar ∈ {Informative, Educational} → mia_talkinghead
+     - else → game_compilation
+*/
+function shipBayLeverageFor(slot, idea, platform) {
+  const tl = state.tikTokLive || {};
+  const hasFreshAudio = !!(tl.fetched_at && (tl.by_type?.audio || []).length);
+  const minsAgo = tl.fetched_at ? Math.floor((Date.now() - new Date(tl.fetched_at).getTime()) / 60000) : Infinity;
+  const audioIsFresh = hasFreshAudio && minsAgo < 24 * 60; // within last 24h
+  if (platform.id === "tt" && audioIsFresh && slot.pillar !== "Promotional") {
+    const topAudio = (tl.by_type.audio || [])[0];
+    return {
+      mode: "audio_compilation",
+      label: "Trending audio + game-scenes compilation",
+      icon: "🔊",
+      detail: topAudio
+        ? `Ride <strong>${escapeHtml(topAudio.label || '')}</strong> (${escapeHtml(topAudio.momentum || 'rising')}) under a fast-cut compilation of in-game moments tied to "${escapeHtml(idea.title)}".`
+        : `Ride the freshest TikTok audio under a fast-cut compilation of in-game moments tied to "${escapeHtml(idea.title)}".`,
+      cast: "No talking-head · scenes + audio only",
+    };
+  }
+  if (idea.mia || slot.pillar === "Informative" || slot.pillar === "Educational") {
+    return {
+      mode: "mia_talkinghead",
+      label: "Mia talking-head",
+      icon: "🎤",
+      detail: `<strong>@Mia</strong> piece-to-camera · friend-explaining tone · delivers "${escapeHtml(idea.title)}" in ${platform.default_duration}. Captions burned-in.`,
+      cast: "@Mia (solo)",
+    };
+  }
+  return {
+    mode: "game_compilation",
+    label: "Compilation of in-game scenes",
+    icon: "🎬",
+    detail: `Fast-cut compilation of in-game scenes that visually carry "${escapeHtml(idea.title)}" — original VO or licensed track, no presenter.`,
+    cast: "No on-screen presenter · b-roll only",
+  };
+}
+/* Auto-suggest one idea per platform from today's slots.
+   Strategy: pick the idea whose pillar best fits each platform's strength.
+     • IG : prefers Mia / Informative / Educational ideas (carousel-friendly)
+     • TT : prefers Entertainment / News (riding trending audio)
+     • FB : prefers any with explanatory depth (Educational / News fallback)
+   If a platform's preferred pillar isn't in today's slots, falls back to the
+   first non-promotional idea (TikTok skips Promotional entirely). */
+function shipBayAutoSuggestForPlatform(todaySlots, platform) {
+  const preferredPillars = {
+    ig: ["Informative", "Educational", "Brand", "Entertainment", "News", "Promotional"],
+    tt: ["Entertainment", "News", "Informative", "Educational", "Brand"], // no Promotional
+    fb: ["Educational", "News", "Informative", "Brand", "Entertainment", "Promotional"],
+  }[platform.id] || ["Informative"];
+  for (const pillar of preferredPillars) {
+    const slot = todaySlots.find(s => s.pillar === pillar);
+    if (!slot) continue;
+    if (platform.id === "tt" && slot.pillar === "Promotional") continue; // TT blocked rule
+    const ideas = IDEAS[slot.code] || [];
+    if (!ideas.length) continue;
+    const idea = ideas.find(i => i.mia) || ideas[0];
+    return { slot, idea };
+  }
+  return null;
+}
 function renderShipBayDailyTab() {
   const today = shipBayTodayCode();
   const todaySlots = shipBaySlotsForDay(today);
   if (!todaySlots.length) {
     return `<div class="card"><div class="muted">No slots configured for today (${today}) in ${BRANDS_META[CURRENT_BRAND].name}.</div></div>`;
   }
-  const slotsHtml = todaySlots.map(slot => {
-    const ideas = IDEAS[slot.code] || [];
-    const pickedId = state.shipBay.dailyPicks[slot.code];
-    const ideaCards = ideas.map(idea => `
-      <div class="shipbay-idea ${pickedId === idea.id ? 'selected' : ''}" onclick="shipBayPickIdea('${slot.code}','${idea.id}')">
-        <div class="idea-id">${idea.id}${idea.mia ? ' · 🌟 Mia' : ''}</div>
-        <div class="idea-title">${escapeHtml(idea.title)}</div>
-        <div class="idea-hook">${escapeHtml(idea.hook || '')}</div>
-        <div class="idea-foot"><span class="pill muted">KPI: ${escapeHtml(idea.kpi || '—')}</span></div>
-      </div>`).join("");
-    let variantsHtml = "";
-    if (pickedId) {
-      const picked = ideas.find(i => i.id === pickedId);
-      variantsHtml = `<div class="shipbay-variants-head">✓ Picked <strong>${escapeHtml(picked.title)}</strong> — platform variants:</div>` +
-        SHIPBAY_PLATFORMS.map(p => renderShipBayVariantCard(slot.code, pickedId, p.id)).join("");
+  // For each platform, auto-suggest ONE idea + a leverage recommendation
+  const platformCards = SHIPBAY_PLATFORMS.map(platform => {
+    const pick = shipBayAutoSuggestForPlatform(todaySlots, platform);
+    if (!pick) {
+      return `<div class="card" style="opacity:.6">
+        <div class="row" style="align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-size:22px">${platform.emoji}</span>
+          <strong>${escapeHtml(platform.label)}</strong>
+          <span class="spacer"></span>
+          <span class="pill muted small">no fit today</span>
+        </div>
+        <div class="muted small">${platform.id === "tt" ? "All of today's slots are Promotional — TikTok blocks promo content." : "No compatible slot for today."}</div>
+      </div>`;
     }
-    return `<div class="shipbay-slot">
-      <div class="slot-head">
-        <span class="slot-code">${slot.code}</span>
-        <span class="slot-title">${slot.day} · ${slot.pillar} · ${slot.format}</span>
-        <span class="slot-meta">${escapeHtml(slot.intent || '')}</span>
+    const { slot, idea } = pick;
+    const leverage = shipBayLeverageFor(slot, idea, platform);
+    const key = shipBayVariantKey(slot.code, idea.id, platform.id);
+    const expanded = !!state.shipBay.expanded[key];
+    const pending = !!state.shipBay.pendingShips[key];
+    const logEntry = state.shipBay.shipLog.find(e => e.key === key);
+    const status = logEntry?.status;
+    let statusPill = "";
+    if (pending) statusPill = `<span class="pill warn small">⏱ queued · 30s</span>`;
+    else if (status === "shipped") statusPill = `<span class="pill ok small">✓ shipped</span>`;
+    else if (status === "cancelled") statusPill = `<span class="pill bad small">✕ cancelled</span>`;
+    // Build brief lazily — only when user expands
+    let briefBody = "";
+    if (expanded) {
+      if (!state.shipBay.briefs[key]) {
+        state.shipBay.briefs[key] = buildShipBayBrief(slot.code, idea.id, platform.id);
+      }
+      const brief = state.shipBay.briefs[key];
+      const buttons = brief && brief.blocked
+        ? `<button class="btn ghost small" disabled>🚫 Blocked — see brief</button>`
+        : pending
+          ? `<button class="btn reject small" onclick="shipBayCancelShip('${key}')">✕ Cancel ship (30s)</button>`
+          : `<button class="btn primary small" onclick="shipBayShip('${slot.code}','${idea.id}','${platform.id}')">🚀 Ship to Higgsfield</button>
+             <button class="btn small" onclick="shipBayRefreshBrief('${slot.code}','${idea.id}','${platform.id}')">↻ Refresh</button>`;
+      briefBody = `<div class="shipbay-variant-body">
+        ${formatShipBayBrief(brief)}
+        <div class="shipbay-variant-actions">${buttons}</div>
+      </div>`;
+    }
+    return `<div class="card shipbay-platform-card">
+      <div class="row" style="align-items:center;gap:10px;margin-bottom:8px">
+        <span style="font-size:22px">${platform.emoji}</span>
+        <div style="flex:1">
+          <strong>${escapeHtml(platform.label)}</strong>
+          <div class="muted small">${escapeHtml(platform.default_duration)} · ${escapeHtml(platform.style.split("·")[0].trim())}</div>
+        </div>
+        ${statusPill}
       </div>
-      <div class="shipbay-ideas">${ideaCards}</div>
-      ${variantsHtml}
+      <div class="shipbay-idea-locked" style="margin-bottom:10px">
+        <div class="idea-id" style="font-size:11px;color:var(--text-2);text-transform:uppercase;letter-spacing:.4px">${escapeHtml(slot.code)} · ${escapeHtml(slot.pillar)}${idea.mia ? ' · 🌟 Mia' : ''}</div>
+        <div class="idea-title" style="font-weight:600;margin-top:2px">${escapeHtml(idea.title)}</div>
+        <div class="idea-hook muted small" style="margin-top:4px">${escapeHtml(idea.hook || '')}</div>
+      </div>
+      <div class="shipbay-leverage" style="background:rgba(124,92,255,.08);border:1px solid var(--accent);border-radius:8px;padding:10px;margin-bottom:10px">
+        <div class="row" style="align-items:center;gap:8px;margin-bottom:6px">
+          <span style="font-size:18px">${leverage.icon}</span>
+          <strong style="color:white">Leverage: ${escapeHtml(leverage.label)}</strong>
+        </div>
+        <div class="small" style="color:var(--text-2);line-height:1.4">${leverage.detail}</div>
+        <div class="muted small" style="margin-top:6px">Cast: ${escapeHtml(leverage.cast)}</div>
+      </div>
+      <div class="shipbay-variant-head" onclick="shipBayToggleBrief('${slot.code}','${idea.id}','${platform.id}')" style="cursor:pointer">
+        <span class="muted small">${expanded ? '▲ Hide brief' : '▼ View full Higgsfield brief'}</span>
+      </div>
+      ${briefBody}
     </div>`;
   }).join("");
   return `<div class="card shipbay-info">
-    <div class="row"><div class="icon">📅</div><div class="text"><strong>Today: ${today}</strong><small>Pick 1 of 3 per slot · review the brief · ship to Higgsfield. No approval gate.</small></div></div>
-  </div>${slotsHtml}`;
+    <div class="row"><div class="icon">📅</div><div class="text"><strong>Today: ${today}</strong><small>Auto-suggested one idea + leverage recommendation per platform. No manual picking — review the brief and ship.</small></div></div>
+  </div>
+  <div class="grid grid-3" style="align-items:start">${platformCards}</div>`;
 }
 function renderShipBayWeeklyTab() {
   const dayOrder = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
@@ -2557,7 +2745,6 @@ views.shipbay = () => {
     `Pick idea → preview brief → ship to Higgsfield · ${BRANDS_META[CURRENT_BRAND].name.replace(" Social AI","")} · per-day buttons · no auto-ship`)
     + tabBar + body + renderShipBayLog();
 };
-
 views.l4 = () => {
   if (!state.gate2Submitted) return pageHeader("Asset Production", "Locked") + `<div class="empty">Finalise Gate 2 first.</div>`;
   const approved = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === "approved");
