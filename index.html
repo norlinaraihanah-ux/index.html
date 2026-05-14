@@ -588,7 +588,6 @@
     </details>
     <hr/>
     <div class="small muted" style="padding: 0 8px;">
-      Approver: <strong style="color:var(--text)">Lina Raihanah</strong><br/>
       In-site approvals canonical (v2.7)<br/>
       Cadence: D=Daily / W=Weekly / E=Event
     </div>
@@ -1377,8 +1376,7 @@ function pageHeader(title, sub) {
       <div class="page-subtitle">${sub || ""}</div>
     </div>
     <div class="run-meta">
-      Run date <strong>${RUN_DATE}</strong> · Mon SGT<br/>
-      Approver <strong>Lina Raihanah</strong>
+      Run date <strong>${RUN_DATE}</strong> · Mon SGT
     </div>
   </div>`;
 }
@@ -1464,66 +1462,24 @@ views.l0b = () => {
     ${tableFor(COMPETITORS_LI, "LinkedIn")}`;
 };
 views.l0c = () => {
-  const social = (TRENDS.social_trends || []).map(t => `
-    <tr>
-      <td><span class="pill ${t.platform === 'TikTok' ? 'solid' : t.platform === 'Instagram' ? 'info' : 'muted'} small">${t.platform}</span></td>
-      <td><span class="pill ${t.kind === 'audio' ? 'warn' : t.kind === 'bandwagon' ? 'solid' : 'info'} small">${t.kind}</span></td>
-      <td><strong>${t.item}</strong></td>
-      <td><span class="pill ${t.reach === 'peak' ? 'ok' : t.reach === 'rising' ? 'warn' : 'muted'} small">${t.reach}</span></td>
-      <td>${t.leverage}</td>
-    </tr>`).join('');
   return pageHeader("Trend Radar", `As of ${RUN_DATE} · 14-day look-ahead · gaming + social-platform trends`) + `
     <div class="grid grid-3" style="margin-bottom:14px;align-items:start">
       <div class="trend-col">${renderCuratorScanCard()}</div>
       <div class="trend-col">${renderTikTokLiveCard()}</div>
       <div class="trend-col">${renderDropWatchCard()}</div>
     </div>
-    <div class="card" style="margin-bottom:14px;border-color:var(--accent)">
-      <h3>🔥 Trending audio / bandwagon / conversations</h3>
-      <div class="sub">Per-platform trend pulse + how to leverage it for this week's content</div>
+    <div class="card" style="border-color:var(--accent)">
+      <div class="row" style="align-items:center">
+        <h3 style="margin:0">🔥 Trending audio / bandwagon / conversations</h3>
+        <span class="spacer"></span>
+        <span class="pill info small" id="live-social-source-pill">aggregating…</span>
+      </div>
+      <div class="sub">Live · auto-aggregated from Curator Scan + TikTok Live Signals + Drop Watch</div>
       <table>
         <thead><tr><th>Platform</th><th>Kind</th><th>Trend</th><th>Reach</th><th>Leverage angle</th></tr></thead>
-        <tbody>${social}</tbody>
+        <tbody id="live-social-body"><tr><td colspan="5" class="muted" style="padding:18px;text-align:center">Aggregating signals from Curator Scan + TikTok + Drop Watch…</td></tr></tbody>
       </table>
-      <div class="muted small" style="margin-top:8px">⏱ Audio trend half-life ≈ 5-7 days — refresh daily.</div>
-    </div>
-    <div class="grid grid-2">
-      <div class="card">
-        <div class="row" style="align-items:center">
-          <h3 style="margin:0">Trending game titles</h3>
-          <span class="spacer"></span>
-          <span class="pill info small" id="titles-source-pill">scraping…</span>
-        </div>
-        <div class="sub">Live · auto-scraped from gaming-news feeds (last 7 days)</div>
-        <table>
-          <thead><tr><th>Title</th><th>Signal</th><th>Source</th><th>Release</th></tr></thead>
-          <tbody id="trending-titles-body"><tr><td colspan="4" class="muted" style="padding:18px;text-align:center">Scraping titles from /api/drop-watch…</td></tr></tbody>
-        </table>
-      </div>
-      <div class="card">
-        <div class="row" style="align-items:center">
-          <h3 style="margin:0">Industry events</h3>
-          <span class="spacer"></span>
-          <span class="pill info small" id="events-source-pill">scraping…</span>
-        </div>
-        <div class="sub">Live · auto-scraped from gaming-industry calendar feeds</div>
-        <table>
-          <thead><tr><th>Event</th><th>Dates</th><th>Angle</th></tr></thead>
-          <tbody id="industry-events-body"><tr><td colspan="3" class="muted" style="padding:18px;text-align:center">Scraping events from /api/trend-radar…</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="card" style="margin-top:14px">
-      <div class="row" style="align-items:center">
-        <h3 style="margin:0">IG format trends</h3>
-        <span class="spacer"></span>
-        <span class="pill info small" id="ig-formats-source-pill">scraping…</span>
-      </div>
-      <div class="sub">Live · derived from curator-scan signals + TikTok crossover formats</div>
-      <table>
-        <thead><tr><th>Format</th><th>Observed on</th><th>Strength</th></tr></thead>
-        <tbody id="ig-format-trends-body"><tr><td colspan="3" class="muted" style="padding:18px;text-align:center">Computing IG format trends…</td></tr></tbody>
-      </table>
+      <div class="muted small" style="margin-top:8px">⏱ Refreshes when any of the three source cards update. Audio trend half-life ≈ 5–7 days.</div>
     </div>`;
 };
 views.l0d = () => {
@@ -1655,18 +1611,14 @@ function attachDropActionHandlers() {
     };
   });
 }
-/* Live-scrape pipeline that powers Trend Radar's 3-column header (Drop Watch
-   card) and the lower live tables — trending game titles, industry events,
-   IG format trends. All four feeds light up in parallel; each failure is
-   isolated so partial data still renders. */
+/* Live-scrape pipeline for Trend Radar. Drop Watch fetches from /api/drop-watch
+   and feeds its own card; then the aggregated "Trending audio / bandwagon /
+   conversations" table is rebuilt from Curator Scan + TikTok Live Signals +
+   Drop Watch — all in one place. */
 async function attachL0cHandlers() {
-  // Fire all four scrapes in parallel — partial failures don't block siblings
-  await Promise.all([
-    populateDropWatch(),
-    populateTrendingTitles(),
-    populateIndustryEvents(),
-    populateIgFormatTrends(),
-  ]);
+  // Drop Watch loads first (network), then we aggregate using its data + state
+  await populateDropWatch();
+  populateLiveSocialTrends();
 }
 async function populateDropWatch() {
   const tbody = document.getElementById("drop-watch-body");
@@ -1677,6 +1629,7 @@ async function populateDropWatch() {
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const data = await resp.json();
     const articles = Array.isArray(data) ? data : (data.articles || []);
+    state.dropWatchCache = articles; // cache for the live-social aggregator
     if (!articles.length) {
       tbody.innerHTML = `<tr><td colspan="3" class="muted" style="padding:14px;text-align:center">No drops yet — the cron populates overnight.</td></tr>`;
       if (countEl) countEl.textContent = "0 fresh drops detected.";
@@ -1705,127 +1658,94 @@ async function populateDropWatch() {
     if (countEl) countEl.textContent = "Drop Watch error — see console.";
   }
 }
-async function populateTrendingTitles() {
-  const tbody = document.getElementById("trending-titles-body");
-  const pill = document.getElementById("titles-source-pill");
+/* Build the aggregated "Trending audio / bandwagon / conversations" table
+   from the three live sources: Curator Scan, TikTok Live Signals, Drop Watch.
+   Pure DOM op — reads from state + most recent /api/drop-watch payload (cached
+   on state.dropWatchCache by populateDropWatch). */
+function populateLiveSocialTrends() {
+  const tbody = document.getElementById("live-social-body");
+  const pill  = document.getElementById("live-social-source-pill");
   if (!tbody) return;
-  try {
-    const resp = await fetch("/api/drop-watch", { cache: "no-store" });
-    if (!resp.ok) throw new Error("HTTP " + resp.status);
-    const data = await resp.json();
-    const articles = Array.isArray(data) ? data : (data.articles || []);
-    // Filter to release/launch-style drops only — these are the "trending titles"
-    const titleSignals = articles.filter(a => {
-      const t = `${a.title || ''} ${a.summary || ''}`.toLowerCase();
-      return /(launch|release|drop|patch|update|out now|early access|reveal)/i.test(t);
-    }).slice(0, 8);
-    if (!titleSignals.length) {
-      tbody.innerHTML = `<tr><td colspan="4" class="muted" style="padding:14px;text-align:center">No title-signal drops in the last 7 days.</td></tr>`;
-      if (pill) { pill.textContent = "0 signals"; pill.className = "pill muted small"; }
-      return;
-    }
-    if (pill) { pill.textContent = `${titleSignals.length} live · scraped`; pill.className = "pill ok small"; }
-    tbody.innerHTML = titleSignals.map(a => {
-      const mom = momentumLabel(a.momentum);
-      const signalLabel = mom === "breaking" || mom === "peak" ? "strong" : mom === "rising" ? "moderate" : "watch";
-      const cls = signalLabel === "strong" ? "solid" : signalLabel === "moderate" ? "info" : "muted";
-      const sourceLabel = dropWatchSourceLabel(a.domain || "");
-      const linkedTitle = a.url
-        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener" style="color:inherit"><strong>${escapeHtml(a.title || '')}</strong></a>`
-        : `<strong>${escapeHtml(a.title || '')}</strong>`;
-      const release = a.published_at ? new Date(a.published_at).toLocaleDateString() : (a.release || '—');
-      return `<tr><td>${linkedTitle}</td><td><span class="pill ${cls} small">${signalLabel}</span></td><td class="muted">${escapeHtml(sourceLabel)}</td><td class="muted">${escapeHtml(release)}</td></tr>`;
-    }).join("");
-  } catch (err) {
-    console.error("[trending-titles] fetch failed:", err);
-    tbody.innerHTML = `<tr><td colspan="4" class="bad" style="padding:14px;text-align:center">Trending-titles fetch failed · ${escapeHtml(err.message)}</td></tr>`;
-    if (pill) { pill.textContent = "error"; pill.className = "pill bad small"; }
-  }
-}
-async function populateIndustryEvents() {
-  const tbody = document.getElementById("industry-events-body");
-  const pill = document.getElementById("events-source-pill");
-  if (!tbody) return;
-  try {
-    // Try /api/trend-radar first (preferred — event feed); fall back to drop-watch
-    let events = [];
-    try {
-      const resp = await fetch("/api/trend-radar", { cache: "no-store" });
-      if (resp.ok) {
-        const data = await resp.json();
-        const items = Array.isArray(data) ? data : (data.events || data.items || []);
-        events = items.filter(x => /(event|conference|expo|summit|gamescom|tgs|tokyo game show|games week|showcase|direct|state of play|esl|valorant champions|worlds)/i.test(`${x.title || x.name || ''} ${x.summary || x.angle || ''}`));
-      }
-    } catch (_) { /* fall through */ }
-    // Fallback: derive events from drop-watch if /api/trend-radar didn't return any
-    if (!events.length) {
-      const resp = await fetch("/api/drop-watch", { cache: "no-store" });
-      if (!resp.ok) throw new Error("HTTP " + resp.status);
-      const data = await resp.json();
-      const articles = Array.isArray(data) ? data : (data.articles || []);
-      events = articles.filter(a => /(event|conference|expo|summit|gamescom|tgs|showcase|direct|state of play|championship|worlds)/i.test(`${a.title || ''} ${a.summary || ''}`)).slice(0, 6);
-    }
-    if (!events.length) {
-      tbody.innerHTML = `<tr><td colspan="3" class="muted" style="padding:14px;text-align:center">No industry events in scraping window.</td></tr>`;
-      if (pill) { pill.textContent = "0 events"; pill.className = "pill muted small"; }
-      return;
-    }
-    if (pill) { pill.textContent = `${events.length} live · scraped`; pill.className = "pill ok small"; }
-    tbody.innerHTML = events.slice(0, 8).map(e => {
-      const name  = e.name || e.title || '—';
-      const dates = e.dates || (e.published_at ? new Date(e.published_at).toLocaleDateString() : '—');
-      const angle = e.angle || e.summary || e.suggested_action || '—';
-      const url   = e.url || e.link || null;
-      const linkedName = url ? `<a href="${escapeAttr(url)}" target="_blank" rel="noopener" style="color:inherit"><strong>${escapeHtml(name)}</strong></a>` : `<strong>${escapeHtml(name)}</strong>`;
-      return `<tr><td>${linkedName}</td><td class="muted">${escapeHtml(dates)}</td><td>${escapeHtml(angle)}</td></tr>`;
-    }).join("");
-  } catch (err) {
-    console.error("[industry-events] fetch failed:", err);
-    tbody.innerHTML = `<tr><td colspan="3" class="bad" style="padding:14px;text-align:center">Events fetch failed · ${escapeHtml(err.message)}</td></tr>`;
-    if (pill) { pill.textContent = "error"; pill.className = "pill bad small"; }
-  }
-}
-async function populateIgFormatTrends() {
-  const tbody = document.getElementById("ig-format-trends-body");
-  const pill  = document.getElementById("ig-formats-source-pill");
-  if (!tbody) return;
-  try {
-    // IG format trends are derived from TikTok crossover signals + curator scan notes
-    // (TikTok formats jump to IG Reels with ~5-7 day lag — that's our live signal).
-    const tl = state.tikTokLive || {};
-    const sources = [];
-    // TikTok hashtags → format hints (e.g. #pov, #grwm, #storytime)
-    const formatTags = (tl.by_type?.hashtags || []).filter(h => {
-      const lab = (h.label || '').toLowerCase();
-      return /(pov|grwm|storytime|day in the life|getready|tutorial|reaction|unboxing|asmr|carousel|tier|ranking|countdown)/.test(lab);
+  const rows = [];
+  // ── Source 1: TikTok Live Signals — audio + hashtags + creatives ──
+  const tl = state.tikTokLive || {};
+  (tl.by_type?.audio || []).slice(0, 4).forEach(a => {
+    rows.push({
+      platform: "TikTok",
+      kind: "audio",
+      item: a.label || "—",
+      reach: a.momentum || "rising",
+      leverage: `Ride this sound under a fast-cut compilation — pairs cleanly with the current Ship Bay TikTok pick.`,
+      sourceCard: "TikTok Live Signals",
     });
-    formatTags.forEach(h => {
-      const lab = h.label || '';
-      sources.push({ format: lab, observed: `TikTok #${lab.replace(/^#/, '')}`, strength: h.momentum || 'rising' });
+  });
+  (tl.by_type?.hashtags || []).slice(0, 3).forEach(h => {
+    rows.push({
+      platform: "TikTok",
+      kind: "bandwagon",
+      item: h.label || "—",
+      reach: h.momentum || "rising",
+      leverage: `Trending hashtag — reframe this week's idea so it can sit naturally inside the format.`,
+      sourceCard: "TikTok Live Signals",
     });
-    // Curator scan notes also call out format experimentation — include the latest if present
-    const lastScan = (state.curatorScans || [])[0];
-    if (lastScan && lastScan.formats) {
-      lastScan.formats.forEach(f => sources.push({ format: f.name, observed: `IG curator scan · ${f.handle || ''}`, strength: f.strength || 'rising' }));
-    }
-    // Fall back to the seeded TRENDS.ig_format_trends if no live signal is available yet
-    const rows = sources.length ? sources : (TRENDS.ig_format_trends || []);
-    if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="3" class="muted" style="padding:14px;text-align:center">No IG format signal yet — refresh TikTok signals or run the IG curator scan.</td></tr>`;
-      if (pill) { pill.textContent = "no signal"; pill.className = "pill muted small"; }
-      return;
-    }
-    const sourceLabel = sources.length ? `${sources.length} live · scraped` : "seed data · run scans for live";
-    if (pill) { pill.textContent = sourceLabel; pill.className = sources.length ? "pill ok small" : "pill warn small"; }
-    tbody.innerHTML = rows.slice(0, 10).map(f => {
-      const cls = f.strength === 'strong' || f.strength === 'peak' ? 'solid' : f.strength === 'rising' ? 'warn' : 'info';
-      return `<tr><td><strong>${escapeHtml(f.format)}</strong></td><td class="muted">${escapeHtml(f.observed)}</td><td><span class="pill ${cls} small">${escapeHtml(f.strength)}</span></td></tr>`;
-    }).join("");
-  } catch (err) {
-    console.error("[ig-formats] failed:", err);
-    tbody.innerHTML = `<tr><td colspan="3" class="bad" style="padding:14px;text-align:center">IG format trends failed · ${escapeHtml(err.message)}</td></tr>`;
-    if (pill) { pill.textContent = "error"; pill.className = "pill bad small"; }
+  });
+  (tl.by_type?.creatives || []).slice(0, 2).forEach(c => {
+    rows.push({
+      platform: "TikTok",
+      kind: "conversation",
+      item: c.label || "—",
+      reach: c.momentum || "rising",
+      leverage: `Top creative on the platform — study the hook structure before locking your ${RUN_DATE} cuts.`,
+      sourceCard: "TikTok Live Signals",
+    });
+  });
+  // ── Source 2: Curator Scan — recent IG notes from trusted strategists ──
+  const lastScan = (state.curatorScans || [])[0];
+  if (lastScan) {
+    const noteList = Array.isArray(lastScan.signals) ? lastScan.signals : (lastScan.note ? [{ label: lastScan.note, reach: "rising" }] : []);
+    noteList.slice(0, 3).forEach(s => {
+      rows.push({
+        platform: "Instagram",
+        kind: "conversation",
+        item: s.label || s.note || s,
+        reach: s.reach || s.momentum || "rising",
+        leverage: s.leverage || `Echo the curator's angle — strong fit for a Mia explainer or carousel.`,
+        sourceCard: "Daily IG Curator Scan",
+      });
+    });
   }
+  // ── Source 3: Drop Watch — fresh gaming-news drops with brand angles ──
+  const dwArticles = state.dropWatchCache || [];
+  dwArticles.slice(0, 5).forEach(a => {
+    const mom = momentumLabel(a.momentum);
+    const reach = mom === "breaking" || mom === "peak" ? "peak" : mom === "rising" ? "rising" : "moderate";
+    rows.push({
+      platform: "Cross-platform",
+      kind: "conversation",
+      item: a.title || "—",
+      reach,
+      leverage: a.suggested_action || `Hook a quick news-reaction Reel/TT around this drop — link in bio.`,
+      sourceCard: `Drop Watch · ${dropWatchSourceLabel(a.domain || "")}`,
+    });
+  });
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="muted" style="padding:14px;text-align:center">No live signals yet — refresh TikTok, run the curator scan, or wait for Drop Watch cron.</td></tr>`;
+    if (pill) { pill.textContent = "no signal"; pill.className = "pill muted small"; }
+    return;
+  }
+  if (pill) { pill.textContent = `${rows.length} live signals`; pill.className = "pill ok small"; }
+  tbody.innerHTML = rows.map(t => {
+    const platformPill = t.platform === 'TikTok' ? 'solid' : t.platform === 'Instagram' ? 'info' : 'muted';
+    const kindPill = t.kind === 'audio' ? 'warn' : t.kind === 'bandwagon' ? 'solid' : 'info';
+    const reachPill = t.reach === 'peak' ? 'ok' : t.reach === 'rising' ? 'warn' : 'muted';
+    return `<tr>
+      <td><span class="pill ${platformPill} small">${escapeHtml(t.platform)}</span><div class="muted small" style="margin-top:4px;font-size:10px">${escapeHtml(t.sourceCard)}</div></td>
+      <td><span class="pill ${kindPill} small">${escapeHtml(t.kind)}</span></td>
+      <td><strong>${escapeHtml(t.item)}</strong></td>
+      <td><span class="pill ${reachPill} small">${escapeHtml(t.reach)}</span></td>
+      <td>${escapeHtml(t.leverage)}</td>
+    </tr>`;
+  }).join("");
 }
 function escapeHtml(s) {
   return String(s == null ? "" : s)
@@ -2042,116 +1962,93 @@ function renderTikTokLiveCard() {
   const freshnessPill = !tl.fetched_at
     ? `<span class="pill bad small">never fetched</span>`
     : minsAgo < 30
-      ? `<span class="pill ok small">${minsAgo}m ago · live</span>`
+      ? `<span class="pill ok small">${minsAgo}m · live</span>`
       : minsAgo < 24*60
         ? `<span class="pill warn small">${Math.floor(minsAgo/60)}h ago</span>`
-        : `<span class="pill bad small">${Math.floor(minsAgo/(24*60))}d ago · stale</span>`;
+        : `<span class="pill bad small">${Math.floor(minsAgo/(24*60))}d · stale</span>`;
   const btnLabel = tl.loading ? "⏳ Fetching…" : "↻ Refresh TikTok signals";
   const btnDisabled = tl.loading ? "disabled" : "";
   // Empty state — first-load CTA
   if (!tl.fetched_at && !tl.loading) {
     return `
-      <div class="card" style="border-color:var(--accent);margin-bottom:14px">
-        <div class="row" style="align-items:center;gap:14px">
-          <div style="font-size:22px">🎵</div>
-          <div style="flex:1">
-            <strong style="color:white">TikTok Live Signals</strong>
-            <div class="muted small" style="margin-top:2px">Discovery + Music + Creative Recommendation · region ${tl.region || "MY"} · via your TREND SPOTTING app</div>
-          </div>
+      <div class="card" style="border-color:var(--accent)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span style="font-size:22px">🎵</span>
+          <strong style="color:white;flex:1">TikTok Live Signals</strong>
           ${freshnessPill}
-          <button class="btn primary" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
         </div>
-        <div class="muted small" style="margin-top:10px">💡 Click to fetch live trending hashtags, sounds, and top creatives. Falls back to manual curator scan if the API errors.</div>
+        <div class="muted small" style="margin-bottom:10px">Discovery + Music + Creative · region ${tl.region || "MY"}</div>
+        <button class="btn primary" style="width:100%" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
+        <div class="muted small" style="margin-top:8px">Click to fetch live hashtags / sounds / top creatives.</div>
       </div>`;
   }
   // Error state
   if (tl.error) {
     return `
-      <div class="card" style="border-color:#a13f3f;margin-bottom:14px">
-        <div class="row" style="align-items:center;gap:14px">
-          <div style="font-size:22px">⚠️</div>
-          <div style="flex:1">
-            <strong style="color:white">TikTok Live Signals</strong>
-            <div class="muted small" style="margin-top:2px">Last fetch failed — ${escapeHtml(tl.error)}</div>
-          </div>
-          <button class="btn" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
+      <div class="card" style="border-color:#a13f3f">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span style="font-size:22px">⚠️</span>
+          <strong style="color:white;flex:1">TikTok Live Signals</strong>
+          ${freshnessPill}
         </div>
-        <div class="muted small" style="margin-top:10px">Check TIKTOK_APP_ID / TIKTOK_APP_SECRET env vars on Vercel · or wait — TikTok's API is occasionally flaky.</div>
+        <div class="muted small" style="margin-bottom:10px">Last fetch failed — ${escapeHtml(tl.error)}</div>
+        <button class="btn" style="width:100%" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
       </div>`;
   }
+  // Stacked vertical sub-buckets so card fits in a narrow 3-column grid
   const renderBucket = (title, emoji, rows, max) => {
-    if (!rows || !rows.length) return `<div class="card" style="opacity:.5"><h3>${emoji} ${title}</h3><div class="muted small">No fresh data yet — refresh or wait for next cycle.</div></div>`;
-    const top = rows.slice(0, max || 8);
+    if (!rows || !rows.length) return `<div style="opacity:.5;margin-top:8px"><div class="aud-label" style="font-size:11px">${emoji} ${title}</div><div class="muted small">No fresh data yet.</div></div>`;
+    const top = rows.slice(0, max || 5);
     const items = top.map((s, i) => `
-      <div class="tk-row">
-        <span class="tk-rank">${i + 1}</span>
-        <span class="tk-label">${escapeHtml(s.label || '')}</span>
+      <div class="tk-row" style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+        <span class="tk-rank" style="font-size:10px;color:var(--text-2);width:14px;flex-shrink:0">${i + 1}</span>
+        <span class="tk-label" style="flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(s.label || '')}</span>
         <span class="pill ${s.momentum === 'peak' ? 'ok' : s.momentum === 'rising' ? 'warn' : s.momentum === 'fading' ? 'bad' : 'muted'} small">${escapeHtml(s.momentum || 'watch')}</span>
       </div>`).join("");
-    return `<div class="card"><h3>${emoji} ${title}</h3><div class="sub">${rows.length} signal${rows.length === 1 ? '' : 's'}</div>${items}</div>`;
+    return `<div style="margin-top:8px"><div class="aud-label" style="font-size:11px;margin-bottom:4px">${emoji} ${title} · ${rows.length}</div>${items}</div>`;
   };
   return `
-    <div class="card" style="border-color:var(--accent);margin-bottom:14px">
-      <div class="row" style="align-items:center;gap:14px;margin-bottom:8px">
-        <div style="font-size:22px">🎵</div>
-        <div style="flex:1">
-          <strong style="color:white">TikTok Live Signals</strong>
-          <div class="muted small" style="margin-top:2px">${tl.counts.total} signals · region ${tl.region} · last ${when}${tl.degraded ? ' · <span style="color:#e8b945">partial data (some buckets failed)</span>' : ''}</div>
-        </div>
+    <div class="card" style="border-color:var(--accent)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <span style="font-size:22px">🎵</span>
+        <strong style="color:white;flex:1">TikTok Live Signals</strong>
         ${freshnessPill}
-        <button class="btn primary" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
       </div>
-      <div class="grid grid-3" style="margin-top:10px">
-        ${renderBucket('Trending hashtags', '#️⃣', tl.by_type.hashtags, 8)}
-        ${renderBucket('Trending sounds', '🔊', tl.by_type.audio, 6)}
-        ${renderBucket('Top creatives', '🎨', tl.by_type.creatives, 5)}
-      </div>
+      <div class="muted small" style="margin-bottom:8px">${tl.counts.total} signals · ${tl.region} · ${when}${tl.degraded ? ' · partial' : ''}</div>
+      <button class="btn primary" style="width:100%" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
+      ${renderBucket('Trending hashtags', '#️⃣', tl.by_type.hashtags, 5)}
+      ${renderBucket('Trending sounds', '🔊', tl.by_type.audio, 4)}
+      ${renderBucket('Top creatives', '🎨', tl.by_type.creatives, 3)}
     </div>`;
 }
 function renderCuratorScanCard() {
   const lastScan = state.curatorScans[0];
-  const lastWhen = lastScan
-    ? new Date(lastScan.ts).toLocaleString()
-    : "never";
   const minutesAgo = lastScan
     ? Math.floor((Date.now() - new Date(lastScan.ts).getTime()) / 60000)
     : null;
   const freshnessPill = !lastScan
     ? `<span class="pill bad small">never run</span>`
     : minutesAgo < 60
-      ? `<span class="pill ok small">${minutesAgo}m ago · fresh</span>`
+      ? `<span class="pill ok small">${minutesAgo}m · fresh</span>`
       : minutesAgo < 24 * 60
-        ? `<span class="pill warn small">${Math.floor(minutesAgo/60)}h ago · today</span>`
-        : `<span class="pill bad small">${Math.floor(minutesAgo/(24*60))}d ago · stale</span>`;
+        ? `<span class="pill warn small">${Math.floor(minutesAgo/60)}h · today</span>`
+        : `<span class="pill bad small">${Math.floor(minutesAgo/(24*60))}d · stale</span>`;
   const handlesHtml = state.curators.map(c => `
-    <div class="curator-row">
-      <a href="${c.url}" target="_blank" rel="noopener" class="curator-handle">${escapeHtml(c.handle)}</a>
-      <span class="muted small">${escapeHtml(c.note)}</span>
+    <div class="curator-row" style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+      <a href="${c.url}" target="_blank" rel="noopener" class="curator-handle" style="font-weight:600;font-size:12px">${escapeHtml(c.handle)}</a>
+      <div class="muted small" style="margin-top:2px">${escapeHtml(c.note)}</div>
     </div>`).join("");
-  const recentScans = state.curatorScans.slice(0, 5).map(s =>
-    `<tr><td>${new Date(s.ts).toLocaleString()}</td><td><span class="pill ${s.status === 'completed' ? 'ok' : 'warn'} small">${s.status}</span></td><td class="muted">${escapeHtml(s.note || '')}</td></tr>`
-  ).join("");
   return `
     <div class="card curator-scan-card">
-      <div class="row" style="align-items:center;gap:14px;margin-bottom:12px">
-        <div style="font-size:22px">🔍</div>
-        <div style="flex:1">
-          <strong style="color:white">Daily IG Curator Scan</strong>
-          <div class="muted small" style="margin-top:2px">3 trusted strategists · monitored via Claude in Chrome · feeds Trend Radar signal pool</div>
-        </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <span style="font-size:22px">🔍</span>
+        <strong style="color:white;flex:1">Daily IG Curator Scan</strong>
         ${freshnessPill}
-        <button class="btn primary" onclick="triggerCuratorScan()">↻ Run today's IG scan</button>
       </div>
-      <div class="curator-list">${handlesHtml}</div>
-      ${state.curatorScans.length ? `
-      <details style="margin-top:12px">
-        <summary class="muted small" style="cursor:pointer">📋 Recent scan history (${state.curatorScans.length})</summary>
-        <table class="kv-table" style="margin-top:8px">
-          <thead><tr><th>When</th><th>Status</th><th>Note</th></tr></thead>
-          <tbody>${recentScans}</tbody>
-        </table>
-      </details>` : ''}
-      <div class="muted small" style="margin-top:10px">💡 Click triggers Claude to scan via your logged-in Chrome session. Results land in chat + saved as a dated markdown to your Desktop. Open in Cowork mode for one-click fire; otherwise the prompt is copied to clipboard.</div>
+      <div class="muted small" style="margin-bottom:10px">3 trusted strategists · monitored via Claude in Chrome</div>
+      <button class="btn primary" style="width:100%" onclick="triggerCuratorScan()">↻ Run today's IG scan</button>
+      <div class="curator-list" style="margin-top:10px">${handlesHtml}</div>
+      <div class="muted small" style="margin-top:10px">Results land in chat + saved to Desktop. Feeds Trend Radar signal pool.</div>
     </div>`;
 }
 /* ============================================================
@@ -2549,29 +2446,59 @@ function shipBayLeverageFor(slot, idea, platform) {
     cast: "No on-screen presenter · b-roll only",
   };
 }
-/* Auto-suggest one idea per platform from today's slots.
-   Strategy: pick the idea whose pillar best fits each platform's strength.
-     • IG : prefers Mia / Informative / Educational ideas (carousel-friendly)
-     • TT : prefers Entertainment / News (riding trending audio)
-     • FB : prefers any with explanatory depth (Educational / News fallback)
-   If a platform's preferred pillar isn't in today's slots, falls back to the
-   first non-promotional idea (TikTok skips Promotional entirely). */
-function shipBayAutoSuggestForPlatform(todaySlots, platform) {
-  const preferredPillars = {
-    ig: ["Informative", "Educational", "Brand", "Entertainment", "News", "Promotional"],
-    tt: ["Entertainment", "News", "Informative", "Educational", "Brand"], // no Promotional
-    fb: ["Educational", "News", "Informative", "Brand", "Entertainment", "Promotional"],
-  }[platform.id] || ["Informative"];
+/* Pick ONE master idea for today — preferred pillar order favours Mia-led
+   informative/educational content because it's the most repurposable across
+   all three platforms. Falls back gracefully if today's slots don't include
+   the preferred pillars. */
+function shipBayPickMasterIdea(todaySlots) {
+  const preferredPillars = ["Informative", "Educational", "News", "Entertainment", "Brand", "Promotional"];
   for (const pillar of preferredPillars) {
     const slot = todaySlots.find(s => s.pillar === pillar);
     if (!slot) continue;
-    if (platform.id === "tt" && slot.pillar === "Promotional") continue; // TT blocked rule
     const ideas = IDEAS[slot.code] || [];
     if (!ideas.length) continue;
     const idea = ideas.find(i => i.mia) || ideas[0];
     return { slot, idea };
   }
+  // Absolute fallback: first slot, first idea
+  for (const slot of todaySlots) {
+    const ideas = IDEAS[slot.code] || [];
+    if (ideas.length) return { slot, idea: ideas[0] };
+  }
   return null;
+}
+/* Platform-tailored treatment of the SAME master idea — different hook angle,
+   different format/cadence, different leverage approach. */
+function shipBayTailorForPlatform(slot, idea, platform) {
+  const leverage = shipBayLeverageFor(slot, idea, platform);
+  const base = {
+    ig: {
+      angle: "Caption-led explainer",
+      hookStyle: `Open on Mia direct-to-camera: "${escapeHtml(idea.hook || idea.title)}" — captions burned-in, no music for first 0.8s to stop the scroll.`,
+      structure: "Carousel-friendly · 30s reel · hook (0–3s) → setup (3–8s) → payoff (8–25s) → CTA (25–30s)",
+      cta: "'Save for later · link in bio' overlay + caption tease",
+      audio: "Original Mia VO OR trending IG audio if it fits the message",
+      caption: `Long-form caption (4–6 lines) unpacking the idea + 5–8 niche gaming hashtags. Pin first comment with link.`,
+    },
+    tt: {
+      angle: "Trend-audio-first compilation",
+      hookStyle: `Open on a fast game-scene cut tied to the idea — no talking-head. Native TikTok captions only. Sound carries the message.`,
+      structure: "15s · hook (0–2s) → payoff (2–10s) → loop-tail (10–15s) · 3 fast cuts",
+      cta: "Loop-back ending (last frame visually matches first) · CTA in caption only",
+      audio: leverage.mode === "audio_compilation" ? `Ride trending TikTok sound (see live signal in Trend Radar)` : "Pick the freshest trending sound · do NOT use IG audio here",
+      caption: `Short caption · 1 line · 3 hashtags max · CTA copy in caption since native TT users skip in-video CTAs.`,
+    },
+    fb: {
+      angle: "Explanatory · slightly longer",
+      hookStyle: `Open on Mia mid-shot with a more setup-heavy intro — FB skews older, they tolerate a 2–3s build before the payoff.`,
+      structure: "45s · hook (0–3s) → context (3–12s) → payoff (12–35s) → soft CTA (35–45s)",
+      cta: "Explicit CTA in last 5s + first comment pinned with link",
+      audio: "Original VO or licensed track · captions burned-in (most FB viewers mute)",
+      caption: `Medium caption (2–3 lines) · explain the value · ask a discussion-prompt question to drive comments.`,
+    },
+  };
+  const tailor = base[platform.id];
+  return { ...tailor, leverage };
 }
 function renderShipBayDailyTab() {
   const today = shipBayTodayCode();
@@ -2579,22 +2506,25 @@ function renderShipBayDailyTab() {
   if (!todaySlots.length) {
     return `<div class="card"><div class="muted">No slots configured for today (${today}) in ${BRANDS_META[CURRENT_BRAND].name}.</div></div>`;
   }
-  // For each platform, auto-suggest ONE idea + a leverage recommendation
+  const master = shipBayPickMasterIdea(todaySlots);
+  if (!master) {
+    return `<div class="card"><div class="muted">No ideas defined in today's slots — check the content calendar.</div></div>`;
+  }
+  const { slot, idea } = master;
+  // Build three platform-tailored variants of the SAME idea
   const platformCards = SHIPBAY_PLATFORMS.map(platform => {
-    const pick = shipBayAutoSuggestForPlatform(todaySlots, platform);
-    if (!pick) {
+    // TikTok blocks promotional content
+    if (platform.id === "tt" && slot.pillar === "Promotional") {
       return `<div class="card" style="opacity:.6">
-        <div class="row" style="align-items:center;gap:10px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
           <span style="font-size:22px">${platform.emoji}</span>
-          <strong>${escapeHtml(platform.label)}</strong>
-          <span class="spacer"></span>
-          <span class="pill muted small">no fit today</span>
+          <strong style="flex:1">${escapeHtml(platform.label)}</strong>
+          <span class="pill muted small">🚫 blocked</span>
         </div>
-        <div class="muted small">${platform.id === "tt" ? "All of today's slots are Promotional — TikTok blocks promo content." : "No compatible slot for today."}</div>
+        <div class="muted small">TikTok skipped — today's master idea is Promotional. Run a non-promo idea on TT instead.</div>
       </div>`;
     }
-    const { slot, idea } = pick;
-    const leverage = shipBayLeverageFor(slot, idea, platform);
+    const tailor = shipBayTailorForPlatform(slot, idea, platform);
     const key = shipBayVariantKey(slot.code, idea.id, platform.id);
     const expanded = !!state.shipBay.expanded[key];
     const pending = !!state.shipBay.pendingShips[key];
@@ -2604,7 +2534,6 @@ function renderShipBayDailyTab() {
     if (pending) statusPill = `<span class="pill warn small">⏱ queued · 30s</span>`;
     else if (status === "shipped") statusPill = `<span class="pill ok small">✓ shipped</span>`;
     else if (status === "cancelled") statusPill = `<span class="pill bad small">✕ cancelled</span>`;
-    // Build brief lazily — only when user expands
     let briefBody = "";
     if (expanded) {
       if (!state.shipBay.briefs[key]) {
@@ -2623,35 +2552,43 @@ function renderShipBayDailyTab() {
       </div>`;
     }
     return `<div class="card shipbay-platform-card">
-      <div class="row" style="align-items:center;gap:10px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <span style="font-size:22px">${platform.emoji}</span>
         <div style="flex:1">
           <strong>${escapeHtml(platform.label)}</strong>
-          <div class="muted small">${escapeHtml(platform.default_duration)} · ${escapeHtml(platform.style.split("·")[0].trim())}</div>
+          <div class="muted small">${escapeHtml(platform.default_duration)} · ${escapeHtml(tailor.angle)}</div>
         </div>
         ${statusPill}
       </div>
-      <div class="shipbay-idea-locked" style="margin-bottom:10px">
-        <div class="idea-id" style="font-size:11px;color:var(--text-2);text-transform:uppercase;letter-spacing:.4px">${escapeHtml(slot.code)} · ${escapeHtml(slot.pillar)}${idea.mia ? ' · 🌟 Mia' : ''}</div>
-        <div class="idea-title" style="font-weight:600;margin-top:2px">${escapeHtml(idea.title)}</div>
-        <div class="idea-hook muted small" style="margin-top:4px">${escapeHtml(idea.hook || '')}</div>
-      </div>
       <div class="shipbay-leverage" style="background:rgba(124,92,255,.08);border:1px solid var(--accent);border-radius:8px;padding:10px;margin-bottom:10px">
-        <div class="row" style="align-items:center;gap:8px;margin-bottom:6px">
-          <span style="font-size:18px">${leverage.icon}</span>
-          <strong style="color:white">Leverage: ${escapeHtml(leverage.label)}</strong>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="font-size:16px">${tailor.leverage.icon}</span>
+          <strong style="color:white;font-size:13px">${escapeHtml(tailor.leverage.label)}</strong>
         </div>
-        <div class="small" style="color:var(--text-2);line-height:1.4">${leverage.detail}</div>
-        <div class="muted small" style="margin-top:6px">Cast: ${escapeHtml(leverage.cast)}</div>
+        <div class="small" style="color:var(--text-2);line-height:1.4;margin-bottom:6px">${tailor.hookStyle}</div>
+        <div class="muted small" style="font-size:11px"><strong>Structure:</strong> ${escapeHtml(tailor.structure)}</div>
+        <div class="muted small" style="font-size:11px"><strong>Audio:</strong> ${escapeHtml(tailor.audio)}</div>
+        <div class="muted small" style="font-size:11px"><strong>CTA:</strong> ${escapeHtml(tailor.cta)}</div>
+        <div class="muted small" style="font-size:11px;margin-top:4px"><strong>Caption:</strong> ${escapeHtml(tailor.caption)}</div>
       </div>
-      <div class="shipbay-variant-head" onclick="shipBayToggleBrief('${slot.code}','${idea.id}','${platform.id}')" style="cursor:pointer">
-        <span class="muted small">${expanded ? '▲ Hide brief' : '▼ View full Higgsfield brief'}</span>
+      <div class="shipbay-variant-head" onclick="shipBayToggleBrief('${slot.code}','${idea.id}','${platform.id}')" style="cursor:pointer;padding:6px 0;border-top:1px solid rgba(255,255,255,.06)">
+        <span class="muted small">${expanded ? '▲ Hide full Higgsfield brief' : '▼ View full Higgsfield brief'}</span>
       </div>
       ${briefBody}
     </div>`;
   }).join("");
   return `<div class="card shipbay-info">
-    <div class="row"><div class="icon">📅</div><div class="text"><strong>Today: ${today}</strong><small>Auto-suggested one idea + leverage recommendation per platform. No manual picking — review the brief and ship.</small></div></div>
+    <div class="row"><div class="icon">📅</div><div class="text"><strong>Today: ${today}</strong><small>One master idea · repurposed three ways. No manual picking.</small></div></div>
+  </div>
+  <div class="card" style="border-color:var(--accent);margin-bottom:14px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-size:22px">${idea.mia ? '🌟' : '💡'}</span>
+      <div style="flex:1">
+        <div class="muted small" style="text-transform:uppercase;letter-spacing:.4px;font-size:10px">Master idea · ${escapeHtml(slot.code)} · ${escapeHtml(slot.pillar)} · ${escapeHtml(slot.format)}</div>
+        <strong style="color:white;font-size:16px">${escapeHtml(idea.title)}</strong>
+      </div>
+    </div>
+    <div class="muted small" style="line-height:1.5">${escapeHtml(idea.hook || '')}</div>
   </div>
   <div class="grid grid-3" style="align-items:start">${platformCards}</div>`;
 }
