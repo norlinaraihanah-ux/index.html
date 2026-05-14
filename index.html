@@ -3,208 +3,210 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>G2G + OffGamers Social AI Pipeline</title>
+<title>G2G Social AI Pipeline — Run 2026-04-28</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600;8..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* SHARED — light, contrast-first */
-    --bg:    #f6f7fb;  /* page off-white */
-    --bg-2:  #ffffff;  /* card surface */
-    --bg-3:  #eef0f6;  /* sunken / hover */
-    --bg-4:  #e3e7ef;  /* sidebar surface */
-    --line:    rgba(20,28,48,.07);
-    --line-2:  rgba(20,28,48,.13);
-    --line-3:  rgba(20,28,48,.22);
-    --text:    #15192b;  /* near-black, NOT pure black */
-    --text-2:  #3a4359;  /* secondary copy */
-    --muted:   #6b7388;  /* metadata */
-    --ok:    #1d8a4f;
-    --warn:  #c66b00;
-    --bad:   #c52327;
-    --info:  #0b65b6;
-    --pill-bg: rgba(20,28,48,.05);
-    /* Brand-driven accent — overridden by body[data-brand="..."] below */
-    --accent:    #ff4130;   /* G2G primary red */
-    --accent-2:  #bd1000;   /* G2G dark red */
-    --accent-3:  #c966ff;   /* G2G neon purple — used sparingly */
-    --accent-4:  #00fff0;   /* G2G neon cyan — sparingly */
-    --accent-ink: #ffffff;  /* text colour ON top of accent */
-    --glow-soft: 0 1px 3px rgba(20,28,48,.06), 0 6px 22px rgba(20,28,48,.06);
-    --glow-accent: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
-    --glow-violet: var(--glow-soft);
-    --glow-cyan:   var(--glow-soft);
-    --glow-blue:   var(--glow-soft);
-  }
-  body[data-brand="g2g"] {
-    --accent:    #ff4130;   /* G2G red */
-    --accent-2:  #bd1000;   /* darker red — for hover */
-    --accent-3:  #c966ff;   /* G2G neon purple */
-    --accent-4:  #00fff0;   /* G2G neon cyan */
-    --accent-ink: #ffffff;
-  }
-  body[data-brand="offgamers"] {
-    --accent:    #2222de;   /* OffGamers primary blue */
-    --accent-2:  #4545ff;   /* OffGamers neon blue */
-    --accent-3:  #00ccff;   /* OffGamers light blue */
-    --accent-4:  #deff00;   /* OffGamers yellow */
-    --accent-ink: #ffffff;
+    /* FUTURISTIC — softened, easier on the eyes */
+    --bg: #0d1424; --bg-2: #131a2c; --bg-3: #1a2238; --bg-4: #212a44;
+    --line: rgba(150,180,220,.10); --line-2: rgba(150,180,220,.20); --line-3: rgba(150,180,220,.34);
+    --text: #ecf2fb; --text-2: #c9d3e6; --muted: #8a96b3;
+    --accent: #8b7cff;       /* softer violet */
+    --accent-2: #5edcc0;     /* gentler mint */
+    --accent-3: #6fb4ff;     /* softer electric blue */
+    --accent-4: #ff8dcb;     /* softer magenta */
+    --ok: #5cd9a5; --warn: #ffa94d; --bad: #ff6b81; --info: #6fb4ff;
+    --pill-bg: rgba(150,180,220,.07);
+    --glow-violet: 0 0 12px rgba(139,124,255,.30), 0 0 26px rgba(139,124,255,.14);
+    --glow-cyan:   0 0 12px rgba(94,220,192,.28), 0 0 26px rgba(94,220,192,.12);
+    --glow-blue:   0 0 10px rgba(111,180,255,.30);
   }
   * { box-sizing: border-box; }
   html, body {
     margin: 0; padding: 0; background: var(--bg); color: var(--text);
-    font-family: "Poppins", "Roboto Flex", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    font-size: 14.5px; line-height: 1.55; letter-spacing: 0;
+    font-family: "Montserrat", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 15px; line-height: 1.6; letter-spacing: .1px;
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
   }
-  /* Soft brand-tinted halo behind content — no dark overlay */
+  /* Subtle ambient backdrop — softer than before */
   body::before {
     content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background:
-      radial-gradient(900px 700px at 8% -10%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 65%),
-      radial-gradient(800px 600px at 100% 0%, color-mix(in srgb, var(--accent) 4%, transparent), transparent 70%);
+      radial-gradient(900px 700px at 8% -10%, rgba(139,124,255,.10), transparent 65%),
+      radial-gradient(800px 600px at 100% 0%, rgba(94,220,192,.06), transparent 65%),
+      radial-gradient(1000px 800px at 50% 110%, rgba(111,180,255,.06), transparent 65%);
+  }
+  body::after {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .22;
+    background-image:
+      linear-gradient(rgba(150,180,220,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(150,180,220,.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 80%);
   }
   .app, .toasts, .modal-backdrop { position: relative; z-index: 1; }
-  a { color: var(--accent); text-decoration: none; transition: color .15s; }
-  a:hover { color: var(--accent-2); text-decoration: underline; }
+  a { color: var(--accent-3); text-decoration: none; transition: color .15s; }
+  a:hover { color: var(--accent-2); }
   button { font-family: inherit; font-size: inherit; cursor: pointer; }
-  code { font-family: "IBM Plex Mono", "JetBrains Mono", "SF Mono", Menlo, monospace; font-size: 12.5px; background: var(--bg-3); padding: 2px 7px; border-radius: 4px; color: var(--text); border: 1px solid var(--line); }
-  pre { font-family: "IBM Plex Mono", "JetBrains Mono", "SF Mono", Menlo, monospace; font-size: 12.5px; }
-  ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--text); }
+  code { font-family: "IBM Plex Mono", "JetBrains Mono", "SF Mono", Menlo, monospace; font-size: 13px; background: rgba(150,180,220,.06); padding: 2px 7px; border-radius: 4px; color: #c2f0e0; border: 1px solid var(--line); }
+  pre { font-family: "IBM Plex Mono", "JetBrains Mono", "SF Mono", Menlo, monospace; font-size: 13px; }
   /* Layout */
-  .app { display: grid; grid-template-columns: 264px 1fr; min-height: 100vh; }
+  .app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
   .sidebar {
-    background: var(--bg-4);
-    border-right: 1px solid var(--line-2); padding: 16px 12px; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    background: linear-gradient(180deg, rgba(10,16,32,.92), rgba(5,8,16,.95));
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-right: 1px solid var(--line-2); padding: 18px 14px; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    box-shadow: inset -1px 0 0 rgba(124,232,255,.04);
   }
-  .main { padding: 24px 32px 80px; max-width: 1280px; }
+  .sidebar::before {
+    content: ''; position: absolute; top: 0; right: 0; width: 1px; height: 100%;
+    background: linear-gradient(180deg, transparent, var(--accent), var(--accent-2), transparent);
+    opacity: .5;
+  }
+  .main { padding: 28px 36px 80px; max-width: 1280px; }
   /* Brand + switcher */
-  .brand { display: flex; align-items: center; gap: 10px; padding: 4px 6px 14px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 6px 6px 14px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
   .brand-logo {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: var(--accent);
-    display: grid; place-items: center; font-weight: 800; font-size: 13px; color: var(--accent-ink);
-    font-family: "Poppins", system-ui, sans-serif; letter-spacing: -.5px;
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 25%, transparent);
+    width: 34px; height: 34px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-3) 50%, var(--accent-2));
+    display: grid; place-items: center; font-weight: 800; font-size: 13px; color: #050810;
+    box-shadow: var(--glow-violet); position: relative;
+    font-family: "IBM Plex Mono", "JetBrains Mono", monospace; letter-spacing: -.5px;
   }
-  .brand-name { font-weight: 700; letter-spacing: -.1px; font-size: 14px; color: var(--text); }
-  .brand-sub { color: var(--muted); font-size: 11px; font-family: "IBM Plex Mono", monospace; letter-spacing: .3px; }
+  .brand-logo::after {
+    content: ''; position: absolute; inset: -1px; border-radius: 10px; padding: 1px;
+    background: linear-gradient(135deg, var(--accent-2), transparent 40%, var(--accent));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude; -webkit-mask-composite: xor; pointer-events: none;
+  }
+  .brand-name { font-weight: 700; letter-spacing: .3px; font-size: 14px; }
+  .brand-sub { color: var(--muted); font-size: 11px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; letter-spacing: .5px; }
   .brand-switcher {
-    display: flex; gap: 4px; margin: 0 4px 12px; padding: 3px;
-    background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 10px;
+    display: flex; gap: 4px; margin: 0 6px 14px; padding: 3px;
+    background: rgba(124,232,255,.04); border: 1px solid var(--line-2); border-radius: 10px;
+    box-shadow: inset 0 0 12px rgba(124,232,255,.05);
   }
   .brand-switcher button {
     flex: 1; background: transparent; color: var(--muted); border: 0; padding: 7px 8px;
-    border-radius: 7px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .15s;
-    text-transform: uppercase; letter-spacing: 1.2px; font-family: "Poppins", system-ui, sans-serif;
+    border-radius: 7px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .2s;
+    text-transform: uppercase; letter-spacing: 1.2px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace;
   }
-  .brand-switcher button:hover { color: var(--text); background: var(--bg-3); }
+  .brand-switcher button:hover { color: var(--text); background: rgba(124,232,255,.08); }
   .brand-switcher button.active {
-    background: var(--accent);
-    color: var(--accent-ink);
+    background: linear-gradient(135deg, var(--accent), var(--accent-3));
+    color: #050810; box-shadow: var(--glow-violet);
   }
   .sidebar-section {
-    color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
-    margin: 16px 8px 6px; font-weight: 600; font-family: "Poppins", system-ui, sans-serif;
+    color: var(--accent-2); font-size: 10px; text-transform: uppercase; letter-spacing: 2.4px;
+    margin: 18px 8px 8px; font-weight: 600; font-family: "IBM Plex Mono", "JetBrains Mono", monospace;
     display: flex; align-items: center; gap: 8px;
   }
   .sidebar-section::after {
     content: ''; flex: 1; height: 1px;
-    background: var(--line-2);
+    background: linear-gradient(90deg, var(--line-2), transparent);
   }
   .nav { display: flex; flex-direction: column; gap: 2px; }
   .nav-item {
     display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px;
-    cursor: pointer; color: var(--text-2); border: 1px solid transparent; transition: all .12s;
+    cursor: pointer; color: var(--text-2); border: 1px solid transparent; transition: all .15s;
     position: relative;
   }
-  .nav-item:hover { background: var(--bg-2); color: var(--text); border-color: var(--line); }
+  .nav-item:hover { background: rgba(124,232,255,.05); color: var(--text); border-color: var(--line); }
   .nav-item.active {
-    background: var(--bg-2);
-    border-color: var(--line-2); color: var(--text);
-    box-shadow: inset 3px 0 0 var(--accent);
-    font-weight: 600;
+    background: linear-gradient(90deg, rgba(124,92,255,.14), rgba(0,255,209,.04));
+    border-color: var(--line-3); color: var(--text);
+    box-shadow: inset 2px 0 0 var(--accent-2);
   }
   .nav-item .dot {
     width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0;
+    box-shadow: 0 0 0 0 currentColor;
   }
-  .nav-item.s-done .dot { background: var(--ok); }
-  .nav-item.s-progress .dot { background: var(--warn); animation: pulse 1.4s ease-in-out infinite; }
+  .nav-item.s-done .dot { background: var(--ok); box-shadow: 0 0 6px var(--ok); }
+  .nav-item.s-progress .dot { background: var(--warn); animation: pulse 1.4s ease-in-out infinite; box-shadow: 0 0 8px var(--warn); }
   .nav-item.s-locked { color: var(--muted); }
   .nav-item.s-locked .dot { background: var(--line-3); }
   .nav-item .nav-label { flex: 1; font-size: 13px; }
-  .nav-item .nav-tag { font-size: 10px; color: var(--muted); font-family: "IBM Plex Mono", monospace; letter-spacing: .3px; }
+  .nav-item .nav-tag { font-size: 10px; color: var(--muted); font-family: "IBM Plex Mono", "JetBrains Mono", monospace; letter-spacing: .5px; }
   .nav-cadence {
     font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px;
-    background: var(--bg-3); color: var(--muted); border: 1px solid var(--line-2);
-    letter-spacing: .8px; font-family: "Poppins", system-ui, sans-serif;
+    background: rgba(124,232,255,.04); color: var(--muted); border: 1px solid var(--line-2);
+    letter-spacing: 1px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace;
   }
-  .nav-cadence[data-c="Daily"]  { color: #0e6e3e; border-color: rgba(29,138,79,.35); background: rgba(29,138,79,.08); }
-  .nav-cadence[data-c="Weekly"] { color: #0b65b6; border-color: rgba(11,101,182,.35); background: rgba(11,101,182,.08); }
-  .nav-cadence[data-c="Event"]  { color: #6a3aa8; border-color: rgba(106,58,168,.30); background: rgba(106,58,168,.07); }
+  .nav-cadence[data-c="Daily"]  { color: #80ffd9; border-color: rgba(46,229,166,.4); background: rgba(46,229,166,.06); box-shadow: 0 0 6px rgba(46,229,166,.15); }
+  .nav-cadence[data-c="Weekly"] { color: #aedeff; border-color: rgba(76,194,255,.4); background: rgba(76,194,255,.06); box-shadow: 0 0 6px rgba(76,194,255,.15); }
+  .nav-cadence[data-c="Event"]  { color: #d6c2ff; border-color: rgba(124,92,255,.35); background: rgba(124,92,255,.06); }
   @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.85); } }
   /* Header */
-  .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--line-2); margin-bottom: 22px; position: relative; }
+  .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--line-2); margin-bottom: 24px; position: relative; }
   .page-header::after {
-    content: ''; position: absolute; bottom: -1px; left: 0; width: 60px; height: 3px;
-    background: var(--accent); border-radius: 2px;
+    content: ''; position: absolute; bottom: -1px; left: 0; width: 120px; height: 1px;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent), transparent);
+    box-shadow: var(--glow-cyan);
   }
   .page-title {
-    font-size: 26px; font-weight: 700; margin: 0; letter-spacing: -.5px; line-height: 1.2;
+    font-size: 26px; font-weight: 700; margin: 0; letter-spacing: -.4px; line-height: 1.2;
     color: var(--text);
   }
-  .page-title .accent { color: var(--accent); }
+  .page-title .accent {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
   .page-subtitle { color: var(--text-2); margin-top: 6px; font-size: 14px; }
-  .run-meta { text-align: right; color: var(--muted); font-size: 12px; font-family: "IBM Plex Mono", monospace; line-height: 1.7; }
-  .run-meta strong { color: var(--accent); font-weight: 600; }
+  .run-meta { text-align: right; color: var(--muted); font-size: 12px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; line-height: 1.7; }
+  .run-meta strong { color: var(--accent-2); font-weight: 600; }
   /* Cards & grid */
-  .grid { display: grid; gap: 14px; }
+  .grid { display: grid; gap: 16px; }
   .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .card {
-    background: var(--bg-2);
-    border: 1px solid var(--line-2); border-radius: 12px; padding: 16px 18px;
-    box-shadow: var(--glow-soft);
-    transition: box-shadow .15s, border-color .15s;
+    background: linear-gradient(180deg, rgba(15,23,46,.85), rgba(10,16,32,.78));
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line-2); border-radius: 14px; padding: 18px 20px;
+    position: relative; overflow: hidden; transition: border-color .2s, transform .2s;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line-3), transparent);
   }
   .card:hover { border-color: var(--line-3); }
-  .card h3 { margin: 0 0 4px; font-size: 15px; font-weight: 600; letter-spacing: -.1px; color: var(--text); }
+  .card h3 { margin: 0 0 4px; font-size: 15px; font-weight: 600; letter-spacing: -.1px; }
   .card .sub { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
-  .kpi { display: grid; gap: 4px; }
-  .kpi .label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1.4px; font-family: "Poppins", system-ui, sans-serif; font-weight: 600; }
+  .kpi { display: grid; gap: 6px; }
+  .kpi .label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-weight: 600; }
   .kpi .value {
-    font-size: 26px; font-weight: 700; letter-spacing: -.5px;
-    font-family: "Poppins", "Roboto Flex", system-ui, sans-serif;
-    color: var(--text); line-height: 1.1;
+    font-size: 28px; font-weight: 700; letter-spacing: -.4px;
+    font-family: "IBM Plex Mono", "JetBrains Mono", "Montserrat", monospace;
+    color: var(--text);
   }
-  .kpi .delta { font-size: 11.5px; color: var(--muted); font-family: "IBM Plex Mono", monospace; font-weight: 500; }
+  .kpi .delta { font-size: 12px; color: var(--muted); font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-weight: 500; }
   .delta.up,   .kpi .delta.up,   .kpi.delta.up   { color: var(--ok)   !important; }
   .delta.warn, .kpi .delta.warn, .kpi.delta.warn { color: var(--warn) !important; }
   .delta.down, .kpi .delta.down, .kpi.delta.down { color: var(--bad)  !important; }
-  /* Audience age — clean stacked bars */
+  /* Audience age — clean stacked bars (replaces messy slash-strings in L0d) */
   .age-stack { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
   .age-row { display: grid; grid-template-columns: 50px 1fr 38px; align-items: center; gap: 8px; }
-  .age-bucket { font-size: 12px; color: var(--text-2); font-family: "IBM Plex Mono", monospace; font-weight: 500; }
-  .age-bar { height: 6px; background: var(--bg-3); border-radius: 4px; overflow: hidden; border: 1px solid var(--line); }
-  .age-bar-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width .4s ease; }
-  .age-pct { font-size: 12px; color: var(--text); font-family: "IBM Plex Mono", monospace; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .age-bucket { font-size: 12px; color: var(--text-2); font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-weight: 500; }
+  .age-bar { height: 6px; background: rgba(150,180,220,.10); border-radius: 4px; overflow: hidden; border: 1px solid var(--line); }
+  .age-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-3)); border-radius: 4px; transition: width .4s ease; }
+  .age-pct { font-size: 12px; color: var(--text); font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
   .aud-block { margin-bottom: 10px; }
   .aud-block:last-child { margin-bottom: 0; }
-  .aud-label { color: var(--accent); font-size: 10px; text-transform: uppercase; letter-spacing: 1.3px; margin-bottom: 4px; font-family: "Poppins", system-ui, sans-serif; font-weight: 700; }
+  .aud-label { color: var(--accent-2); font-size: 10px; text-transform: uppercase; letter-spacing: 1.4px; margin-bottom: 4px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-weight: 600; }
   .aud-value { color: var(--text); font-size: 13px; font-weight: 500; }
   /* Collapsible sidebar sections */
-  .nav-section { margin: 12px 4px 4px; border: 0; }
+  .nav-section { margin: 14px 6px 4px; border: 0; }
   .nav-section[open] > summary::after { transform: rotate(90deg); }
   .nav-section > summary {
     list-style: none; cursor: pointer; user-select: none;
-    color: var(--muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.8px;
-    font-weight: 700; font-family: "Poppins", system-ui, sans-serif;
+    color: var(--accent-2); font-size: 10.5px; text-transform: uppercase; letter-spacing: 2px;
+    font-weight: 600; font-family: "IBM Plex Mono", "JetBrains Mono", monospace;
     padding: 4px 6px 6px; display: flex; align-items: center; gap: 8px;
-    border-radius: 6px; transition: color .12s, background .12s;
+    border-radius: 6px; transition: color .15s, background .15s;
   }
-  .nav-section > summary:hover { color: var(--text); background: var(--bg-2); }
+  .nav-section > summary:hover { color: var(--accent); background: rgba(150,180,220,.04); }
   .nav-section > summary::-webkit-details-marker { display: none; }
   .nav-section > summary::after {
     content: '›'; font-size: 14px; font-weight: 700; color: var(--muted);
@@ -213,180 +215,211 @@
   }
   .nav-section > summary > .nav-section-line {
     flex: 1; height: 1px;
-    background: var(--line-2);
+    background: linear-gradient(90deg, var(--line-2), transparent);
     margin-left: 6px;
   }
   .nav-section > .nav { padding-top: 4px; }
   /* Tables */
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { color: var(--muted); font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.1px; font-family: "Poppins", system-ui, sans-serif; background: var(--bg-3); }
+  th { color: var(--accent-2); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; }
   td { font-size: 13.5px; color: var(--text); }
-  tr { transition: background .12s; }
-  tr:hover td { background: color-mix(in srgb, var(--accent) 4%, transparent); }
+  tr { transition: background .15s; }
+  tr:hover td { background: rgba(124,232,255,.03); }
   tr:last-child td { border-bottom: none; }
-  td.num { font-variant-numeric: tabular-nums; font-family: "IBM Plex Mono", monospace; }
-  /* Pills — flat, brand-aware, accessible */
+  td.num { font-variant-numeric: tabular-nums; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; }
+  /* Pills */
   .pill {
     display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px;
-    font-size: 10.5px; font-weight: 700; border-radius: 999px;
+    font-size: 10.5px; font-weight: 600; border-radius: 999px;
     background: var(--pill-bg); color: var(--text); border: 1px solid var(--line-2);
-    white-space: nowrap; letter-spacing: .3px; font-family: "Poppins", system-ui, sans-serif;
+    white-space: nowrap; letter-spacing: .3px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace;
     text-transform: uppercase;
   }
   .pill.small { font-size: 9.5px; padding: 2px 8px; }
-  .pill.ok    { color: #fff; background: var(--ok);   border-color: var(--ok); }
-  .pill.warn  { color: #fff; background: var(--warn); border-color: var(--warn); }
-  .pill.bad   { color: #fff; background: var(--bad);  border-color: var(--bad); }
-  .pill.info  { color: #fff; background: var(--info); border-color: var(--info); }
+  .pill.ok    { color: #050810; background: linear-gradient(135deg, var(--ok), #80ffd9); border-color: var(--ok); box-shadow: 0 0 10px rgba(46,229,166,.4); }
+  .pill.warn  { color: #1a0d00; background: linear-gradient(135deg, var(--warn), #ffd28a); border-color: var(--warn); box-shadow: 0 0 10px rgba(255,181,71,.35); }
+  .pill.bad   { color: #1a0008; background: linear-gradient(135deg, var(--bad), #ff8da3); border-color: var(--bad); box-shadow: 0 0 10px rgba(255,77,109,.4); }
+  .pill.info  { color: #021829; background: linear-gradient(135deg, var(--info), #aedeff); border-color: var(--info); box-shadow: 0 0 10px rgba(76,194,255,.35); }
   .pill.muted { color: var(--muted); background: transparent; border-color: var(--line-2); }
-  .pill.solid { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+  .pill.solid { color: #050810; background: linear-gradient(135deg, var(--accent-2), var(--accent-3)); border-color: var(--accent-2); box-shadow: var(--glow-cyan); }
   /* Buttons */
   .btn {
     display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
     font-size: 12.5px; font-weight: 600; border-radius: 8px;
-    border: 1px solid var(--line-2); background: var(--bg-2); color: var(--text);
-    transition: all .12s ease; font-family: inherit; letter-spacing: 0;
+    border: 1px solid var(--line-2); background: rgba(15,23,46,.8); color: var(--text);
+    transition: all .18s ease; font-family: inherit; letter-spacing: .2px;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    position: relative;
   }
-  .btn:hover { background: var(--bg-3); border-color: var(--line-3); color: var(--text); }
+  .btn:hover { background: rgba(124,232,255,.08); border-color: var(--line-3); color: var(--accent-2); box-shadow: 0 0 12px rgba(0,255,209,.18); }
   .btn:active { transform: translateY(1px); }
   .btn.primary {
-    background: var(--accent);
-    border-color: var(--accent); color: var(--accent-ink); font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent-3));
+    border-color: transparent; color: #050810; font-weight: 700;
+    box-shadow: var(--glow-violet);
   }
-  .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); color: var(--accent-ink); }
+  .btn.primary:hover { background: linear-gradient(135deg, #8b6dff, var(--accent-2)); color: #050810; box-shadow: var(--glow-cyan); }
   .btn.approve {
-    background: var(--ok);
-    border-color: var(--ok); color: #fff; font-weight: 700;
+    background: linear-gradient(135deg, var(--ok), var(--accent-2));
+    border-color: transparent; color: #050810; font-weight: 700;
+    box-shadow: 0 0 14px rgba(46,229,166,.35);
   }
-  .btn.approve:hover { background: #156a3c; border-color: #156a3c; }
+  .btn.approve:hover { box-shadow: 0 0 22px rgba(46,229,166,.55); }
   .btn.reject {
-    background: var(--bg-2); border-color: var(--bad); color: var(--bad);
+    background: transparent; border-color: var(--bad); color: #ff8da3;
   }
-  .btn.reject:hover { background: var(--bad); color: #fff; }
+  .btn.reject:hover { background: rgba(255,77,109,.1); color: var(--bad); box-shadow: 0 0 12px rgba(255,77,109,.3); }
   .btn.ghost { background: transparent; }
   .btn.small { padding: 4px 10px; font-size: 11px; }
   .btn:disabled { opacity: .4; cursor: not-allowed; }
-  .btn:disabled:hover { background: var(--bg-2); border-color: var(--line-2); color: var(--text); }
+  .btn:disabled:hover { background: rgba(15,23,46,.8); border-color: var(--line-2); color: var(--text); box-shadow: none; }
   .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
   /* Slot / idea cards */
   .slot {
-    background: var(--bg-2);
-    border: 1px solid var(--line-2); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px;
-    box-shadow: var(--glow-soft);
+    background: linear-gradient(180deg, rgba(15,23,46,.85), rgba(10,16,32,.78));
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line-2); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px;
+    position: relative; overflow: hidden;
+  }
+  .slot::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line-3), transparent);
   }
   .slot-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
   .slot-code {
-    font-weight: 700; letter-spacing: 1.2px; font-size: 11px; padding: 4px 10px;
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
-    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); border-radius: 6px; color: var(--accent);
-    font-family: "Poppins", system-ui, sans-serif;
+    font-weight: 700; letter-spacing: 1.5px; font-size: 11px; padding: 4px 10px;
+    background: linear-gradient(135deg, rgba(124,92,255,.18), rgba(0,255,209,.06));
+    border: 1px solid var(--line-3); border-radius: 6px; color: var(--accent-2);
+    font-family: "IBM Plex Mono", "JetBrains Mono", monospace;
   }
-  .slot-title { font-weight: 600; font-size: 14px; color: var(--text); }
-  .slot-meta { color: var(--muted); font-size: 11.5px; margin-left: auto; font-family: "IBM Plex Mono", monospace; }
+  .slot-title { font-weight: 600; font-size: 14px; }
+  .slot-meta { color: var(--muted); font-size: 11.5px; margin-left: auto; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; }
   .ideas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
   .idea {
-    background: var(--bg-3); border: 1.5px solid var(--line-2); border-radius: 10px;
-    padding: 12px 14px; cursor: pointer; transition: all .15s ease;
+    background: rgba(10,16,32,.6); border: 1.5px solid var(--line-2); border-radius: 10px;
+    padding: 12px 14px; cursor: pointer; transition: all .2s ease; position: relative;
   }
-  .idea:hover { border-color: var(--line-3); background: var(--bg-2); transform: translateY(-1px); box-shadow: var(--glow-soft); }
+  .idea:hover { border-color: var(--line-3); background: rgba(124,92,255,.05); transform: translateY(-1px); }
   .idea.selected {
-    border-color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, var(--bg-2));
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent);
+    border-color: var(--accent-2); background: rgba(0,255,209,.06);
+    box-shadow: var(--glow-cyan), inset 0 0 18px rgba(0,255,209,.05);
   }
-  .idea .idea-id { font-size: 10px; color: var(--accent); margin-bottom: 4px; letter-spacing: .8px; font-family: "Poppins", system-ui, sans-serif; font-weight: 700; }
-  .idea .idea-title { font-weight: 600; margin-bottom: 6px; line-height: 1.35; color: var(--text); }
+  .idea .idea-id { font-size: 10px; color: var(--accent-3); margin-bottom: 4px; letter-spacing: 1px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-weight: 600; }
+  .idea .idea-title { font-weight: 600; margin-bottom: 6px; line-height: 1.35; }
   .idea .idea-hook { color: var(--text-2); font-size: 12px; line-height: 1.45; }
   .idea .idea-foot { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
   /* Brief */
   .brief {
-    background: var(--bg-2);
-    border: 1px solid var(--line-2); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px;
-    box-shadow: var(--glow-soft);
+    background: linear-gradient(180deg, rgba(15,23,46,.85), rgba(10,16,32,.78));
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line-2); border-radius: 14px; padding: 18px 20px; margin-bottom: 14px;
+    position: relative; overflow: hidden;
   }
-  .brief.approved { border-color: var(--ok); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ok) 18%, transparent); }
-  .brief.rejected { border-color: var(--bad); opacity: .92; }
+  .brief::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line-3), transparent);
+  }
+  .brief.approved { border-color: var(--ok); box-shadow: 0 0 22px rgba(46,229,166,.18); }
+  .brief.approved::before { background: linear-gradient(90deg, transparent, var(--ok), transparent); }
+  .brief.rejected { border-color: var(--bad); opacity: .9; }
+  .brief.rejected::before { background: linear-gradient(90deg, transparent, var(--bad), transparent); }
   .brief-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
   .brief-fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 18px; margin-bottom: 14px; }
-  .brief-field .label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 3px; font-family: "Poppins", system-ui, sans-serif; font-weight: 700; }
+  .brief-field .label { font-size: 10px; color: var(--accent-2); text-transform: uppercase; letter-spacing: 1.4px; margin-bottom: 3px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-weight: 600; }
   .brief-field .value { font-size: 13px; color: var(--text); }
   .brief-foot { display: flex; gap: 8px; align-items: flex-start; padding-top: 12px; border-top: 1px solid var(--line); }
   .reject-reason {
-    flex: 1; padding: 8px 12px; background: var(--bg-3); border: 1px solid var(--line-2);
+    flex: 1; padding: 8px 12px; background: rgba(10,16,32,.7); border: 1px solid var(--line-2);
     border-radius: 6px; color: var(--text); font: inherit; font-size: 13px; outline: none;
-    transition: border-color .12s, box-shadow .12s;
+    transition: border-color .15s, box-shadow .15s;
   }
-  .reject-reason:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .reject-reason:focus { border-color: var(--accent-3); box-shadow: var(--glow-blue); }
   .reject-reason::placeholder { color: var(--muted); }
   /* Layer 4/5/6 */
   .lane {
-    background: var(--bg-2);
-    border: 1px solid var(--line-2); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
-    box-shadow: var(--glow-soft);
+    background: linear-gradient(180deg, rgba(15,23,46,.78), rgba(10,16,32,.7));
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--line-2); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px;
   }
   .lane-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .lane-title { font-weight: 600; color: var(--text); }
+  .lane-title { font-weight: 600; }
   .lane-cap { color: var(--muted); font-size: 12px; }
   .lane-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; transition: background .12s; }
-  .lane-row:hover { background: var(--bg-3); }
+  .lane-row:hover { background: rgba(124,232,255,.03); }
   .lane-row + .lane-row { border-top: 1px solid var(--line); }
   .lane-row .lane-name { flex: 1; }
   /* Higgsfield queue panel */
   .hf-panel {
-    background: var(--bg-2);
-    border: 1px solid var(--line-2); border-radius: 10px; padding: 14px 16px; margin-top: 12px;
-    box-shadow: var(--glow-soft);
+    background: linear-gradient(180deg, rgba(15,23,46,.78), rgba(10,16,32,.7));
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--line-2); border-radius: 12px; padding: 14px 16px; margin-top: 12px;
   }
   .hf-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
   .hf-row:last-child { border-bottom: none; }
-  .hf-id { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--accent); letter-spacing: .3px; }
-  .hf-eta { color: var(--muted); font-size: 12px; font-family: "IBM Plex Mono", monospace; }
+  .hf-id { font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-size: 11px; color: var(--accent-3); letter-spacing: .5px; }
+  .hf-eta { color: var(--muted); font-size: 12px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; }
   .hf-progress { width: 120px; }
   /* Gate banner */
   .gate-banner {
-    background: color-mix(in srgb, var(--accent) 8%, var(--bg-2));
-    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); border-radius: 12px; padding: 14px 18px; margin-bottom: 16px;
+    background:
+      linear-gradient(135deg, rgba(124,92,255,.22), rgba(0,255,209,.12)),
+      linear-gradient(180deg, rgba(15,23,46,.7), rgba(10,16,32,.6));
+    border: 1px solid var(--line-3); border-radius: 14px; padding: 14px 18px; margin-bottom: 18px;
     display: flex; gap: 16px; align-items: center;
-    box-shadow: var(--glow-soft);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--glow-violet), inset 0 0 30px rgba(124,92,255,.08);
+    position: relative; overflow: hidden;
   }
-  .gate-banner .icon { font-size: 22px; }
+  .gate-banner::before {
+    content: ''; position: absolute; top: 0; left: -50%; right: 0; height: 1px; width: 200%;
+    background: linear-gradient(90deg, transparent, var(--accent-2), transparent);
+    animation: scan 4s linear infinite;
+  }
+  @keyframes scan { 0% { transform: translateX(-50%); } 100% { transform: translateX(50%); } }
+  .gate-banner .icon { font-size: 22px; filter: drop-shadow(0 0 8px var(--accent-2)); }
   .gate-banner .text { flex: 1; }
-  .gate-banner .text strong { color: var(--text); }
+  .gate-banner .text strong { color: white; }
   .gate-banner .text small { color: var(--text-2); display: block; margin-top: 2px; }
   /* Modal (Seedance prompt viewer) */
-  .modal-backdrop { position: fixed; inset: 0; background: rgba(20,28,48,.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 200; }
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(2,4,8,.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 200; }
   .modal-backdrop.open { display: flex; }
   .modal {
-    background: var(--bg-2);
-    border: 1px solid var(--line-3); border-radius: 14px;
+    background: linear-gradient(180deg, rgba(15,23,46,.95), rgba(10,16,32,.92));
+    border: 1px solid var(--line-3); border-radius: 16px;
     width: min(880px, 92vw); max-height: 86vh; display: flex; flex-direction: column;
-    box-shadow: 0 20px 60px rgba(20,28,48,.25);
+    box-shadow: 0 30px 80px rgba(0,0,0,.7), var(--glow-violet); position: relative; overflow: hidden;
+  }
+  .modal::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
   }
   .modal-head { padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
   .modal-head .meta { flex: 1; }
-  .modal-head .meta h3 { margin: 0; font-size: 16px; color: var(--text); }
-  .modal-head .meta .sub { color: var(--muted); font-size: 12px; margin-top: 2px; font-family: "IBM Plex Mono", monospace; }
-  .modal-head .close { background: transparent; border: 0; color: var(--muted); font-size: 18px; cursor: pointer; transition: color .12s; }
+  .modal-head .meta h3 { margin: 0; font-size: 16px; }
+  .modal-head .meta .sub { color: var(--muted); font-size: 12px; margin-top: 2px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; }
+  .modal-head .close { background: transparent; border: 0; color: var(--muted); font-size: 18px; cursor: pointer; transition: color .15s; }
   .modal-head .close:hover { color: var(--bad); }
   .modal-tabs { display: flex; gap: 4px; padding: 8px 14px 0; border-bottom: 1px solid var(--line); }
-  .modal-tab { background: transparent; border: 0; color: var(--muted); padding: 8px 14px; border-bottom: 2px solid transparent; font-size: 12px; cursor: pointer; transition: all .12s; text-transform: uppercase; letter-spacing: .8px; font-family: "Poppins", system-ui, sans-serif; font-weight: 600; }
+  .modal-tab { background: transparent; border: 0; color: var(--muted); padding: 8px 14px; border-bottom: 2px solid transparent; font-size: 12px; cursor: pointer; transition: all .15s; text-transform: uppercase; letter-spacing: 1px; font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-weight: 600; }
   .modal-tab:hover { color: var(--text); }
-  .modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .modal-tab.active { color: var(--accent-2); border-bottom-color: var(--accent-2); text-shadow: var(--glow-cyan); }
   .modal-pane { display: none; padding: 16px 20px; overflow-y: auto; flex: 1; }
   .modal-pane.active { display: block; }
-  .seedance { font-family: "IBM Plex Mono", monospace; font-size: 12px; line-height: 1.55; white-space: pre-wrap; color: var(--text); background: var(--bg-3); padding: 12px; border-radius: 8px; border: 1px solid var(--line); margin: 0; }
+  .seedance { font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-size: 12px; line-height: 1.55; white-space: pre-wrap; color: #b3f5e8; margin: 0; }
   .modal-foot { padding: 12px 20px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 8px; }
   /* Toast */
   .toasts { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; z-index: 100; }
   .toast {
-    background: var(--bg-2);
+    background: linear-gradient(180deg, rgba(15,23,46,.95), rgba(10,16,32,.92));
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--line-3); border-radius: 10px; padding: 10px 14px;
-    font-size: 13px; min-width: 240px; color: var(--text);
-    box-shadow: 0 10px 30px rgba(20,28,48,.15);
-    animation: slideIn .25s cubic-bezier(.2,.8,.2,1);
+    font-size: 13px; min-width: 240px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.5), var(--glow-violet);
+    animation: slideIn .3s cubic-bezier(.2,.8,.2,1);
   }
-  .toast.ok  { border-left: 4px solid var(--ok); }
-  .toast.bad { border-left: 4px solid var(--bad); }
+  .toast.ok  { border-color: var(--ok);  box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 16px rgba(46,229,166,.35); }
+  .toast.bad { border-color: var(--bad); box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 16px rgba(255,77,109,.35); }
   @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
   /* Misc */
   .muted { color: var(--muted); }
@@ -394,18 +427,150 @@
   .row { display: flex; gap: 10px; align-items: center; }
   .spacer { flex: 1; }
   hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
-  .progress-bar { height: 6px; background: var(--bg-3); border-radius: 999px; overflow: hidden; border: 1px solid var(--line-2); }
-  .progress-bar > div { height: 100%; background: var(--accent); transition: width .3s ease; }
+  .progress-bar { height: 6px; background: rgba(10,16,32,.8); border-radius: 999px; overflow: hidden; border: 1px solid var(--line-2); position: relative; }
+  .progress-bar > div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-3), var(--accent-2)); transition: width .3s ease; box-shadow: 0 0 10px rgba(0,255,209,.4); }
   .empty { padding: 28px; text-align: center; color: var(--muted); }
   .hidden { display: none !important; }
   /* Scrollbar */
   ::-webkit-scrollbar { width: 10px; height: 10px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--line-3); border-radius: 10px; border: 2px solid var(--bg); }
-  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  ::-webkit-scrollbar-track { background: rgba(10,16,32,.4); }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent), var(--accent-3)); border-radius: 10px; border: 2px solid rgba(10,16,32,.6); }
+  ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--accent-3), var(--accent-2)); }
+  /* Selection */
+  ::selection { background: var(--accent); color: #050810; }
+
+  /* ──────────────────────────── SHIP BAY ──────────────────────────── */
+  .shipbay-tabbar { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+  .shipbay-info { margin-bottom: 14px; }
+  .shipbay-info .row { display: flex; gap: 14px; align-items: center; }
+  .shipbay-info .icon { font-size: 22px; }
+  .shipbay-info .text strong { color: white; }
+  .shipbay-info .text small { color: var(--text-2); display: block; margin-top: 2px; }
+
+  .shipbay-day { margin-bottom: 22px; }
+  .shipbay-day-h { font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent-2); margin: 6px 0 10px; padding-left: 4px; border-left: 3px solid var(--accent-2); padding-left: 10px; }
+
+  .shipbay-slot { background: linear-gradient(180deg, rgba(15,23,46,.55), rgba(10,16,32,.45));
+    border: 1px solid var(--line-2); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+  .shipbay-slot .slot-head { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .shipbay-slot .slot-code { font-family: "IBM Plex Mono", monospace; font-size: 11px;
+    background: rgba(124,92,255,.15); border: 1px solid rgba(124,92,255,.35);
+    color: var(--accent); padding: 3px 8px; border-radius: 6px; letter-spacing: .08em; }
+  .shipbay-slot .slot-title { color: white; font-weight: 600; font-size: 14px; }
+  .shipbay-slot .slot-meta { color: var(--muted); font-size: 12px; }
+
+  .shipbay-ideas { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px; margin-bottom: 14px; }
+  .shipbay-idea { background: rgba(15,23,46,.6); border: 1px solid var(--line-2); border-radius: 10px;
+    padding: 12px 14px; cursor: pointer; transition: all .15s; }
+  .shipbay-idea:hover { border-color: var(--accent-2); transform: translateY(-1px); }
+  .shipbay-idea.selected { border-color: var(--accent); background: rgba(124,92,255,.12);
+    box-shadow: 0 0 0 2px rgba(124,92,255,.25); }
+  .shipbay-idea .idea-id { font-family: "IBM Plex Mono", monospace; font-size: 10px;
+    color: var(--accent-3); letter-spacing: .1em; margin-bottom: 6px; }
+  .shipbay-idea .idea-title { color: white; font-weight: 600; font-size: 13px; line-height: 1.35; margin-bottom: 6px; }
+  .shipbay-idea .idea-hook { color: var(--text-2); font-size: 12px; line-height: 1.5; margin-bottom: 8px; font-style: italic; }
+  .shipbay-idea .idea-foot { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .shipbay-idea-locked { background: rgba(15,23,46,.5); border: 1px dashed var(--line-2);
+    border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+  .shipbay-idea-locked .idea-title { color: white; font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .shipbay-idea-locked .idea-hook { font-size: 12px; font-style: italic; }
+
+  .shipbay-variants-head { color: var(--accent-2); font-size: 12px; letter-spacing: .08em;
+    text-transform: uppercase; margin: 8px 0 10px; }
+
+  .shipbay-variant { background: rgba(10,16,32,.7); border: 1px solid var(--line-2);
+    border-radius: 10px; margin-bottom: 8px; overflow: hidden; transition: all .15s; }
+  .shipbay-variant.expanded { border-color: var(--accent-2);
+    box-shadow: 0 0 0 1px rgba(0,255,209,.15), 0 6px 24px rgba(0,255,209,.06); }
+  .shipbay-variant.blocked { opacity: .65; border-style: dashed; }
+  .shipbay-variant-head { display: flex; gap: 10px; align-items: center; padding: 12px 14px;
+    cursor: pointer; user-select: none; }
+  .shipbay-variant-head:hover { background: rgba(124,92,255,.06); }
+  .shipbay-variant-head .platform-badge { font-weight: 600; color: white;
+    background: rgba(0,255,209,.1); border: 1px solid rgba(0,255,209,.25);
+    padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+  .shipbay-variant-head .spacer { flex: 1; }
+  .shipbay-variant-head .chevron { color: var(--accent-2); font-size: 11px;
+    text-transform: uppercase; letter-spacing: .1em; }
+
+  .shipbay-variant-body { padding: 14px 16px 16px; border-top: 1px solid var(--line-2);
+    background: rgba(15,23,46,.4); }
+  .shipbay-variant-actions { display: flex; gap: 8px; margin-top: 14px; align-items: center; }
+
+  .shipbay-brief { color: var(--text-2); font-size: 13px; line-height: 1.6; }
+  .shipbay-brief-head { display: flex; gap: 12px; align-items: flex-start;
+    padding-bottom: 12px; margin-bottom: 14px; border-bottom: 1px solid var(--line-2); }
+  .shipbay-brief-head .brief-title { color: white; font-size: 16px; font-weight: 700;
+    letter-spacing: -.01em; line-height: 1.3; }
+  .shipbay-brief-head .brief-meta { color: var(--muted); font-size: 11px;
+    letter-spacing: .04em; margin-top: 4px; text-transform: uppercase; }
+  .shipbay-brief-section { margin-bottom: 16px; }
+  .shipbay-brief-section .section-h { color: var(--accent-2); font-size: 11px;
+    letter-spacing: .14em; text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+  .kv-row { display: flex; gap: 10px; padding: 3px 0; align-items: baseline; }
+  .kv-k { color: var(--muted); font-size: 11px; min-width: 130px;
+    letter-spacing: .04em; text-transform: uppercase; }
+  .kv-v { color: var(--text-2); }
+  .hook-line { color: white; font-size: 15px; font-style: italic; font-weight: 600;
+    padding: 12px 14px; background: rgba(0,255,209,.06);
+    border-left: 3px solid var(--accent-2); border-radius: 6px; }
+
+  .shipbay-scene { background: rgba(10,16,32,.6); border: 1px solid var(--line-2);
+    border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+  .shipbay-scene-head { display: flex; gap: 10px; align-items: center;
+    margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--line-2); }
+  .shipbay-scene-head strong { color: white; font-size: 13px; }
+  .shipbay-scene-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-bottom: 10px; }
+  .shipbay-scene-grid .kv-k { display: block; margin-bottom: 2px; }
+  .shipbay-scene-grid .kv-v { font-size: 12px; }
+  .shipbay-prompts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .shipbay-prompt { background: rgba(0,0,0,.35); border: 1px solid var(--line-2);
+    border-radius: 6px; padding: 10px 12px; }
+  .shipbay-prompt .prompt-label { color: var(--accent-3); font-size: 10px;
+    letter-spacing: .1em; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 6px; }
+  .shipbay-prompt pre { color: var(--text-2); font-family: "IBM Plex Mono", monospace;
+    font-size: 11px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; margin: 0; }
+
+  .shipbay-log { margin-top: 20px; }
+  .shipbay-log .row { display: flex; gap: 10px; align-items: baseline; margin-bottom: 10px; }
+  .shipbay-log .kv-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .shipbay-log .kv-table th { text-align: left; padding: 6px 8px; color: var(--muted);
+    font-weight: 600; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    border-bottom: 1px solid var(--line-2); }
+  .shipbay-log .kv-table td { padding: 8px; color: var(--text-2); border-bottom: 1px solid var(--line-2); }
+  .shipbay-log .kv-table tr:last-child td { border-bottom: none; }
+
+  @media (max-width: 900px) {
+    .shipbay-scene-grid { grid-template-columns: 1fr; }
+    .shipbay-prompts { grid-template-columns: 1fr; }
+  }
+
+  /* ──────────────────────────── CURATOR SCAN ──────────────────────────── */
+  .curator-scan-card { margin-bottom: 14px; border-color: var(--accent-2);
+    background: linear-gradient(180deg, rgba(15,23,46,.6), rgba(10,16,32,.5)); }
+  .curator-list { display: grid; gap: 6px; margin-top: 6px;
+    padding: 10px 12px; background: rgba(10,16,32,.4);
+    border: 1px dashed var(--line-2); border-radius: 8px; }
+  .curator-row { display: flex; gap: 12px; align-items: center; }
+  .curator-handle { color: var(--accent-2); text-decoration: none;
+    font-family: "IBM Plex Mono", monospace; font-size: 12px;
+    font-weight: 600; min-width: 200px; }
+  .curator-handle:hover { color: var(--accent); text-decoration: underline; }
+
+  /* ──────────────────────────── TIKTOK LIVE SIGNALS ──────────────────────────── */
+  .tk-row { display: flex; align-items: center; gap: 10px; padding: 6px 8px;
+    border-bottom: 1px solid var(--line-2); font-size: 13px; }
+  .tk-row:last-child { border-bottom: none; }
+  .tk-rank { font-family: "IBM Plex Mono", monospace; font-size: 11px;
+    color: var(--accent-2); width: 18px; text-align: right; flex-shrink: 0; }
+  .tk-label { flex: 1; color: white; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; }
 </style>
 </head>
-<body data-brand="g2g">
+<body>
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
@@ -428,7 +593,7 @@
       <nav class="nav" id="nav-l12"></nav>
     </details>
     <details class="nav-section" open>
-      <summary><span>Production</span><span class="nav-section-line"></span></summary>
+      <summary><span>Approval &amp; Production</span><span class="nav-section-line"></span></summary>
       <nav class="nav" id="nav-prod"></nav>
     </details>
     <details class="nav-section" open>
@@ -488,14 +653,14 @@ function cesTierClass(n) {
 }
 const LAYERS = [
   { cadence: "Daily", id: "l0a",  group: "l0",  label: "Performance Pulse",  status: "done" },
-  { cadence: "Weekly", id: "l0d",  group: "l0",  label: "Audience Atlas",     status: "done" },
   { cadence: "Weekly", id: "l0b",  group: "l0",  label: "Competitor Watch", status: "done" },
   { cadence: "Daily", id: "l0c",  group: "l0",  label: "Trend Radar",      status: "done" },
+  { cadence: "Weekly", id: "l0d",  group: "l0",  label: "Audience Atlas",     status: "done" },
   { cadence: "Daily",  id: "l0e",  group: "l0",  label: "Drop Watch",         status: "progress" },
-  { cadence: "Weekly", id: "l2",       group: "l12",  label: "Strategy Engine",      status: "done" },
-  { cadence: "Daily",  id: "ship_bay", group: "prod", label: "Ship Bay (no-approval)", status: "progress" },
-  { cadence: "Event",  id: "l4",       group: "prod", label: "Asset Production",     status: "progress" },
-  { cadence: "Event",  id: "l4_5",     group: "prod", label: "Publish Schedule",     status: "progress" },
+  { cadence: "Daily",  id: "l1",   group: "l12", label: "Insight Synthesis (live)", status: "done" },
+  { cadence: "Daily", id: "shipbay", group: "prod", label: "🚀 Ship Bay (no-approval)", status: "progress" },
+  { cadence: "Event", id: "l4",   group: "prod", label: "Asset Production",    status: "locked" },
+  { cadence: "Event", id: "l4_5", group: "prod", label: "Publish Schedule",  status: "locked" },
   { cadence: "Daily", id: "l5",   group: "loop", label: "Live Posts",    status: "locked" },
   { cadence: "Daily", id: "l6",   group: "loop", label: "Learnings Loop",   status: "locked" },
 ];
@@ -510,13 +675,13 @@ const BRANDS_META = {
     productLabel: "G2G Product",
     igHandle:   "@g2g_global",
     voice:      "marketplace-trust + GLEO + Mia recurring character",
-    accent:     "#ff4130",
+    accent:     "#7c5cff",
     rawDataFile:"g2g_raw_data_2026-04-28.json",
     igScrapeAs: "@g2g_global",
     competitorFile: "g2g_competitor_data_2026-04-28.json",
     canvaTemplate: "🌍GBL-Promotion · folder G2G TEMPLATES",
     audienceCommunity: "Loyal G2G community + recurring fans of Mia / GLEO",
-    palette:    "G2G red #ff4130 + neon purple + neon cyan",
+    palette:    "G2G purple + accent gold",
   },
   offgamers: {
     key:        "offgamers",
@@ -525,13 +690,13 @@ const BRANDS_META = {
     productLabel: "OffGamers Product",
     igHandle:   "@offgamers",
     voice:      "gaming meme + flash deal + game-launch news",
-    accent:     "#2222de",
+    accent:     "#ff7a3d",
     rawDataFile:"offgamers_raw_data_2026-04-28.json",
     igScrapeAs: "@offgamers",
     competitorFile: "offgamers_competitor_data_2026-04-28.json",
     canvaTemplate: "🌍OG-Promotion · folder OFFGAMERS TEMPLATES",
     audienceCommunity: "OffGamers loyal community + meme-friendly gamer crowd",
-    palette:    "OffGamers blue #2222de + light blue + yellow accent",
+    palette:    "OffGamers orange + slate dark",
   },
 };
 /* ---- Layer 0a — Vista Social, KPI snapshot per platform ---- */
@@ -1089,31 +1254,29 @@ function loadBrand(key) {
   };
   // 2. swap data
   CURRENT_BRAND = key;
-  // 2a. swap brand CSS theme via body[data-brand]
-  document.body.setAttribute('data-brand', key);
   const d = BRANDS_DATA[key];
   PLATFORMS = d.PLATFORMS; COMPETITORS = d.COMPETITORS; TRENDS = d.TRENDS;
   AUDIENCE = d.AUDIENCE;   ANALYSIS = d.ANALYSIS;       SLOTS = d.SLOTS;   IDEAS = d.IDEAS;
   // 3. restore that brand's state (or fresh defaults)
   const s = state.brandStates[key] || {};
   state.picks           = s.picks           || {};
-  state.gate1Submitted  = true;  // v2.7 no-approval flow — always auto-pass
+  state.gate1Submitted  = !!s.gate1Submitted;
   state.briefs          = s.briefs          || {};
   state.gate2           = s.gate2           || {};
-  state.gate2Submitted  = true;  // v2.7 no-approval flow — always auto-pass
+  state.gate2Submitted  = !!s.gate2Submitted;
   state.publishConfirms = s.publishConfirms || {};
   state.videoPrompts    = s.videoPrompts    || {};
   state.higgsfieldJobs  = s.higgsfieldJobs  || {};
   state.scheduledPosts  = s.scheduledPosts  || {};
   state.qaPass          = s.qaPass          || null;
   state.current         = s.current         || "l0a";
-  // v2.7 — auto-seed Ship Bay so production views always have content for this brand
-  if (typeof autoSeedPicksAndBriefs === "function") autoSeedPicksAndBriefs();
-  // 4. recompute layer statuses for this brand (no-approval v2.7 flow)
-  setStatus("ship_bay", "progress");
-  setStatus("l4", "progress");
-  setStatus("l4_5", "progress");
-  setStatus("l5", "progress");
+  // 4. recompute layer statuses for this brand
+  setStatus("g1", state.gate1Submitted ? "done" : "progress");
+  setStatus("l3", state.gate1Submitted ? "done" : "locked");
+  setStatus("g2", state.gate2Submitted ? "done" : (state.gate1Submitted ? "progress" : "locked"));
+  setStatus("l4", state.gate2Submitted ? "done" : "locked");
+  setStatus("l4_5", state.gate2Submitted ? "progress" : "locked");
+  setStatus("l5", state.gate2Submitted ? "progress" : "locked");
   setStatus("l6", "locked");
   // 5. update chrome (title, sidebar brand block)
   applyBrandChrome();
@@ -1137,22 +1300,46 @@ function applyBrandChrome() {
   });
 }
 /* ---- Live state ---- */
-// Approval gates are deprecated (v2.7 no-approval flow). The gate1/gate2 flags
-// remain as internal bookkeeping so downstream production views keep working
-// without a refactor — they default to `true` (auto-shipped via Ship Bay).
 const state = {
   current: "l0a",
   qaPass: null, // R5 — { at: timestamp, by: approver } when QA pass is logged at L5
   picks: {},
-  gate1Submitted: true,
+  gate1Submitted: false,
   briefs: {},
   gate2: {},
-  gate2Submitted: true,
+  gate2Submitted: false,
   publishConfirms: {},
   videoPrompts: {},
   higgsfieldJobs: {},
   brandStates: {},   // snapshot per brand on switch
   scheduledPosts: {}, // Vista Social schedule state per brief
+  // ── Curator Scan state (daily IG monitoring via Claude in Chrome) ─────────
+  curatorScans: [],   // [{ts, triggered_by, status: 'triggered'|'completed', note}]
+  curators: [
+    { handle: "@thekatelynrhoades",      url: "https://www.instagram.com/thekatelynrhoades/",      note: "Platform shifts · BREAKING NEWS hook formula" },
+    { handle: "@elasmarketingservices",  url: "https://www.instagram.com/elasmarketingservices/",  note: "Trend-cycle fast follower · mid-tier audio catcher" },
+    { handle: "@social.unicorns",        url: "https://www.instagram.com/social.unicorns/",        note: "Explicit trend call-outs · format experimentation" },
+  ],
+  // ── TikTok live signals (Discovery + Music + Creative Recommendation) ─────
+  tikTokLive: {
+    loading: false,
+    error: null,
+    fetched_at: null,
+    region: "MY",
+    counts: { hashtags: 0, audio: 0, creatives: 0, total: 0 },
+    signals: [],           // flat ranked list
+    by_type: { hashtags: [], audio: [], creatives: [] },
+    degraded: false,
+  },
+  // ── Ship Bay state (no-approval express lane) ─────────────────────────────
+  shipBay: {
+    tab: "daily",          // "daily" | "weekly"
+    dailyPicks: {},        // { slotCode: ideaId }     — daily picker selections
+    expanded: {},          // { variantKey: true }     — which variant cards are open
+    briefs: {},            // { variantKey: briefObj } — cached generated briefs
+    shipLog: [],           // [{ts, day, platform, ideaId, title, status, brief}]
+    pendingShips: {},      // { variantKey: timeoutId } — 30s cancel windows
+  },
 };
 /* ============================================================
    RENDER — sidebar + page router
@@ -1189,9 +1376,9 @@ function renderMain() {
   const view = views[state.current];
   if (!view) { m.innerHTML = `<div class="empty">View not found.</div>`; return; }
   m.innerHTML = view();
-  if (state.current === "ship_bay") attachShipBayHandlers();
+  if (state.current === "g1") attachGate1Handlers();
+  if (state.current === "g2") attachGate2Handlers();
   if (state.current === "l4") attachL4Handlers();
-  if (state.current === "l0c") attachL0cHandlers();
   if (state.current === "l0e") attachL0eHandlers();
   if (state.current === "l5") attachL5Handlers();
 }
@@ -1227,19 +1414,8 @@ views.l0a = () => {
     engWow:      Math.round(PLATFORMS.reduce((s,p)=>s+p.wow.eng,0)/PLATFORMS.length),
   };
   const wow = (n) => `<span class="${cesTierClass(n)}" style="font-size:11px">${n >= 0 ? '+' : ''}${n}% WoW</span>`;
-  // ----- merged Insight Synthesis (formerly views.l1) -----
-  const kpiRows = Object.entries(ANALYSIS.kpi_status).map(([p,s]) => `
-    <tr><td><strong>${p}</strong></td><td><span class="pill ${s === 'on_track' ? 'ok' : s === 'at_risk' ? 'warn' : s === 'mixed' ? 'info' : 'bad'}">${s.replace('_',' ').toUpperCase()}</span></td></tr>`).join("");
-  const quad = ANALYSIS.er_ces_quadrant.map(q => `
-    <tr><td><strong>${q.p}</strong></td><td>${q.er}</td><td>${q.ces}</td><td>${q.read}</td></tr>`).join("");
-  const pillars = Object.entries(ANALYSIS.pillar_balance).map(([k,v]) => {
-    const t = ANALYSIS.pillar_targets[k];
-    return `<tr><td><strong>${k}</strong></td><td class="num">${v}%</td><td class="num muted">target ${t}%</td></tr>`;
-  }).join("");
-  const repurp = ANALYSIS.repurpose.map(r => `<tr><td>${r.src}</td><td class="num">${r.reach_er}×</td><td class="num">${r.shares}</td><td class="muted">${r.reason}</td></tr>`).join("");
-  const gaps = ANALYSIS.competitor_gaps.map(g => `<li>${g}</li>`).join("");
-  return pageHeader("Performance Pulse", `7-day rolling window · week theme: <strong>${ANALYSIS.week_theme}</strong> · output: ${brand().rawDataFile}`) + `
-    <div class="card" style="margin-bottom:14px;border-left:4px solid var(--accent)">
+  return pageHeader("Performance Pulse", `7-day rolling window · output: ${brand().rawDataFile}`) + `
+    <div class="card" style="margin-bottom:14px;border-color:var(--accent-2)">
       <div class="row"><strong>📊 Overall social media — 7-day aggregate</strong><span class="spacer"></span><span class="pill solid small">${PLATFORMS.length} platforms</span></div>
       <div class="grid grid-4" style="margin-top:10px">
         <div class="kpi"><div class="label">CES (avg)</div><div class="value">${overall.ces}</div>${wow(overall.cesWow)}</div>
@@ -1269,45 +1445,7 @@ views.l0a = () => {
       </table>
       <div class="muted small" style="margin-top:10px">📡 Live wiring: Vista Social API → auto-updates on every page load. Live data as of ${RUN_DATE}.</div>
     </div>
-
-    <!-- ─── merged Insight Synthesis section ─── -->
-    <div style="margin-top:22px;padding-top:6px">
-      <div class="row" style="margin-bottom:12px;gap:10px">
-        <span class="pill solid small">Insight Synthesis</span>
-        <strong style="color:var(--text)">What the numbers mean → next moves</strong>
-      </div>
-      <div class="grid grid-2">
-        <div class="card">
-          <h3>KPI gap status</h3>
-          <div class="sub">Per-platform health check vs target</div>
-          <table><thead><tr><th>Platform</th><th>Status</th></tr></thead><tbody>${kpiRows}</tbody></table>
-        </div>
-        <div class="card">
-          <h3>Pillar balance vs target</h3>
-          <div class="sub">Output mix this week vs editorial plan</div>
-          <table><thead><tr><th>Pillar</th><th>Actual</th><th>Target</th></tr></thead><tbody>${pillars}</tbody></table>
-        </div>
-      </div>
-      <div class="card" style="margin-top:14px">
-        <h3>ER × CES quadrant — reading guide</h3>
-        <div class="sub">High ER + low CES = viral reach with weak body. Low ER + high CES = quality content, scale cadence.</div>
-        <table><thead><tr><th>Platform</th><th>ER</th><th>CES</th><th>Read</th></tr></thead><tbody>${quad}</tbody></table>
-      </div>
-      <div class="grid grid-2" style="margin-top:14px">
-        <div class="card">
-          <h3>Repurpose candidates</h3>
-          <div class="sub">Top organic winners worth re-cutting</div>
-          <table><thead><tr><th>Source</th><th>vs avg ER</th><th>Shares</th><th>Why</th></tr></thead><tbody>${repurp}</tbody></table>
-        </div>
-        <div class="card">
-          <h3>Competitor format gaps</h3>
-          <div class="sub">Where rivals are winning that we aren't</div>
-          <ul style="margin:6px 0 0;padding-left:18px;color:var(--text-2)">${gaps}</ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:18px;border-left:4px solid var(--info)">
+    <div class="card" style="margin-top:14px;border-color:var(--accent-3)">
       <div class="row"><strong>⭐ Trustpilot daily summary</strong><span class="spacer"></span><span class="pill info small">Live scan of g2g.com + offgamers.com</span></div>
       <div class="grid grid-2" style="margin-top:10px">
         <div>
@@ -1321,8 +1459,7 @@ views.l0a = () => {
           <div class="muted small">New today: <strong style="color:var(--text)">+87</strong> reviews · 4.6★ avg · 0 flagged (clean day)</div>
         </div>
       </div>
-      <div class="muted small" style="margin-top:10px">🔌 Wiring: Trustpilot Business API + nightly scrape fallback. Replaces the old PPTX export step from v2.5.</div>
-    </div>`
+      <div class="muted small" style="margin-top:10px">🔌 Wiring: Trustpilot Business API + nightly scrape fallback. Replaces the old PPTX export step from v2.5.</div>`
 };
 views.l0b = () => {
   const tableFor = (rows, plat) => `
@@ -1350,86 +1487,37 @@ views.l0c = () => {
       <td><span class="pill ${t.reach === 'peak' ? 'ok' : t.reach === 'rising' ? 'warn' : 'muted'} small">${t.reach}</span></td>
       <td>${t.leverage}</td>
     </tr>`).join('');
-  return pageHeader("Trend Radar", `As of ${RUN_DATE} · 14-day look-ahead · gaming + social-platform trends`) + `
-    <div class="card" style="margin-bottom:14px;border-left:4px solid var(--accent)">
+  return pageHeader("Trend Radar", `As of ${RUN_DATE} · 14-day look-ahead · gaming + social-platform trends`)
+    + renderCuratorScanCard()
+    + renderTikTokLiveCard() + `
+    <div class="card" style="margin-bottom:14px;border-color:var(--accent)">
       <h3>🔥 Trending audio / bandwagon / conversations</h3>
-      <div class="sub">Per-platform trend pulse + how to leverage it for this week's content <span class="pill muted small">curated</span></div>
+      <div class="sub">Per-platform trend pulse + how to leverage it for this week's content</div>
       <table>
         <thead><tr><th>Platform</th><th>Kind</th><th>Trend</th><th>Reach</th><th>Leverage angle</th></tr></thead>
         <tbody>${social}</tbody>
       </table>
       <div class="muted small" style="margin-top:8px">⏱ Audio trend half-life ≈ 5-7 days — refresh daily.</div>
     </div>
-
-    <!-- ─── TikTok live signals (rebuilt) ─── -->
-    <div class="card" style="margin-bottom:14px">
-      <div class="row">
-        <h3 style="margin:0">📡 TikTok live signals — Malaysia</h3>
-        <span class="spacer"></span>
-        <span class="pill solid small">live</span>
-      </div>
-      <div class="sub">Direct from TikTok Business API v1.3 · region MY · period 7-day rolling</div>
-      <div class="grid grid-3" style="margin-top:10px">
-        <!-- Hashtag bucket — only live bucket in production -->
-        <div style="background:var(--bg-3);border:1px solid var(--line);border-radius:10px;padding:12px 14px">
-          <div class="row" style="margin-bottom:6px">
-            <strong>#&nbsp;Hashtags</strong>
-            <span class="spacer"></span>
-            <span class="pill ok small">live</span>
-          </div>
-          <div class="muted small" style="margin-bottom:8px">Top trending hashtags · live API</div>
-          <div id="tt-hashtags-body" class="small" style="display:flex;flex-direction:column;gap:6px">
-            <div class="muted">Loading…</div>
-          </div>
-        </div>
-        <!-- Audio bucket — endpoint disabled by TikTok -->
-        <div style="background:var(--bg-3);border:1px solid var(--line);border-radius:10px;padding:12px 14px;opacity:.75">
-          <div class="row" style="margin-bottom:6px">
-            <strong>♪&nbsp;Songs</strong>
-            <span class="spacer"></span>
-            <span class="pill muted small">unavailable</span>
-          </div>
-          <div class="muted small" style="margin-bottom:8px">SONG discovery_type</div>
-          <div class="small muted">Endpoint disabled on TikTok Business API v1.3 production. Use the <em>Trending audio</em> table above (curated) for sound picks this cycle.</div>
-        </div>
-        <!-- Creative bucket — endpoint disabled by TikTok -->
-        <div style="background:var(--bg-3);border:1px solid var(--line);border-radius:10px;padding:12px 14px;opacity:.75">
-          <div class="row" style="margin-bottom:6px">
-            <strong>🎬&nbsp;Creatives</strong>
-            <span class="spacer"></span>
-            <span class="pill muted small">unavailable</span>
-          </div>
-          <div class="muted small" style="margin-bottom:8px">INDUSTRY discovery_type</div>
-          <div class="small muted">Endpoint disabled on TikTok Business API v1.3 production. Falls back to <em>IG format trends</em> below for shape signal.</div>
-        </div>
-      </div>
-      <div class="muted small" style="margin-top:10px">🔌 Wiring: <code>POST /open_api/v1.3/discovery/trending_list/</code> with <code>discovery_type: HASHTAG</code>, <code>region: MY</code>, <code>period: 7</code>.</div>
-    </div>
-
     <div class="grid grid-2">
       <div class="card">
-        <div class="row"><h3 style="margin:0">Trending game titles</h3><span class="spacer"></span><span class="pill ok small">live</span></div>
-        <div class="sub">7-day window · pulled from <code>/api/drop-watch</code> · game-drop + patch themes</div>
+        <h3>Trending game titles</h3>
+        <div class="sub">14-day window</div>
         <table>
           <thead><tr><th>Title</th><th>Signal</th><th>Sources</th><th>Release</th></tr></thead>
-          <tbody id="trend-titles-body">
-            <tr><td colspan="4" class="muted small">Loading live drops…</td></tr>
-          </tbody>
+          <tbody>${TRENDS.trending_titles.map(t => `<tr><td><strong>${t.title}</strong></td><td><span class="pill ${t.signal === 'strong' ? 'solid' : t.signal === 'moderate' ? 'info' : 'muted'} small">${t.signal}</span></td><td class="num">${t.sources}</td><td class="muted">${t.release}</td></tr>`).join('')}</tbody>
         </table>
       </div>
       <div class="card">
-        <div class="row"><h3 style="margin:0">Industry events</h3><span class="spacer"></span><span class="pill ok small">live</span></div>
-        <div class="sub">14-day window · pulled from <code>/api/trend-radar</code> · industry theme</div>
+        <h3>Industry events</h3>
         <table>
           <thead><tr><th>Event</th><th>Dates</th><th>Angle</th></tr></thead>
-          <tbody id="trend-events-body">
-            <tr><td colspan="3" class="muted small">Loading live events…</td></tr>
-          </tbody>
+          <tbody>${TRENDS.events.map(e => `<tr><td><strong>${e.name}</strong></td><td class="muted">${e.dates}</td><td>${e.angle}</td></tr>`).join('')}</tbody>
         </table>
       </div>
     </div>
     <div class="card" style="margin-top:14px">
-      <div class="row"><h3 style="margin:0">IG format trends</h3><span class="spacer"></span><span class="pill muted small">curated</span></div>
+      <h3>IG format trends</h3>
       <table>
         <thead><tr><th>Format</th><th>Observed on</th><th>Strength</th></tr></thead>
         <tbody>${TRENDS.ig_format_trends.map(f => `<tr><td><strong>${f.format}</strong></td><td class="muted">${f.observed}</td><td><span class="pill ${f.strength === 'strong' ? 'solid' : 'info'} small">${f.strength}</span></td></tr>`).join('')}</tbody>
@@ -1596,126 +1684,6 @@ function attachDropActionHandlers() {
   });
 }
 
-/* ------------------------------------------------------------
-   Trend Radar (l0c) live wiring
-   - Trending game titles ← /api/drop-watch  (game-drop + patch themes, 7-day)
-   - Industry events       ← /api/trend-radar (industry theme, 14-day)
-   - TikTok hashtag bucket ← /api/tiktok-trends (HASHTAG / MY / 7-day)
-   ------------------------------------------------------------ */
-function _signalFromMomentum(m) {
-  const n = Number(m) || 0;
-  if (n >= 75) return "strong";
-  if (n >= 50) return "moderate";
-  return "low";
-}
-function _formatDropDate(s) {
-  if (!s) return "TBA";
-  try {
-    const d = new Date(s);
-    if (isNaN(d.getTime())) return s;
-    return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
-  } catch (_) { return s; }
-}
-async function attachL0cHandlers() {
-  const titlesBody = document.getElementById("trend-titles-body");
-  const eventsBody = document.getElementById("trend-events-body");
-  const hashBody   = document.getElementById("tt-hashtags-body");
-
-  // --- Trending game titles (drop-watch) ---
-  if (titlesBody) {
-    try {
-      const resp = await fetch("/api/drop-watch", { cache: "no-store" });
-      if (!resp.ok) throw new Error("HTTP " + resp.status);
-      const data = await resp.json();
-      const articles = Array.isArray(data) ? data : (data.articles || []);
-      const titles = articles
-        .filter(a => {
-          const theme = (a.theme || a.category || "").toLowerCase();
-          return theme.includes("drop") || theme.includes("patch") || theme.includes("release");
-        })
-        .slice(0, 6);
-      if (!titles.length) {
-        titlesBody.innerHTML = `<tr><td colspan="4" class="muted small">No fresh game drops in the last 7 days.</td></tr>`;
-      } else {
-        titlesBody.innerHTML = titles.map(t => {
-          const title    = escapeHtml(t.title || t.headline || t.game || "Untitled");
-          const signal   = _signalFromMomentum(t.momentum || t.score || 0);
-          const sources  = Number(t.sources || t.source_count || 1);
-          const release  = _formatDropDate(t.release_date || t.published_at || t.date);
-          const sigPill  = signal === "strong" ? "solid" : signal === "moderate" ? "info" : "muted";
-          return `<tr>
-            <td><strong>${title}</strong></td>
-            <td><span class="pill ${sigPill} small">${signal}</span></td>
-            <td class="num">${sources}</td>
-            <td class="muted">${escapeHtml(release)}</td>
-          </tr>`;
-        }).join("");
-      }
-    } catch (err) {
-      titlesBody.innerHTML = `<tr><td colspan="4" class="muted small">Live fetch failed (${escapeHtml(err.message)}). Showing nothing — refresh to retry.</td></tr>`;
-    }
-  }
-
-  // --- Industry events (trend-radar) ---
-  if (eventsBody) {
-    try {
-      const resp = await fetch("/api/trend-radar", { cache: "no-store" });
-      if (!resp.ok) throw new Error("HTTP " + resp.status);
-      const data = await resp.json();
-      const articles = Array.isArray(data) ? data : (data.articles || []);
-      const events = articles
-        .filter(a => {
-          const theme = (a.theme || a.category || "").toLowerCase();
-          return theme.includes("industry") || theme.includes("event") || theme.includes("conference");
-        })
-        .slice(0, 6);
-      if (!events.length) {
-        eventsBody.innerHTML = `<tr><td colspan="3" class="muted small">No industry events in the 14-day window.</td></tr>`;
-      } else {
-        eventsBody.innerHTML = events.map(e => {
-          const name  = escapeHtml(e.title || e.name || e.headline || "Untitled");
-          const dates = escapeHtml(e.dates || _formatDropDate(e.event_date || e.date || e.published_at));
-          const angle = escapeHtml(e.angle || e.summary || e.description || "—");
-          return `<tr>
-            <td><strong>${name}</strong></td>
-            <td class="muted">${dates}</td>
-            <td>${angle}</td>
-          </tr>`;
-        }).join("");
-      }
-    } catch (err) {
-      eventsBody.innerHTML = `<tr><td colspan="3" class="muted small">Live fetch failed (${escapeHtml(err.message)}). Showing nothing — refresh to retry.</td></tr>`;
-    }
-  }
-
-  // --- TikTok live hashtag signals (only working bucket on Business API v1.3) ---
-  if (hashBody) {
-    try {
-      const resp = await fetch("/api/tiktok-trends?type=hashtag&region=MY&period=7", { cache: "no-store" });
-      if (!resp.ok) throw new Error("HTTP " + resp.status);
-      const data = await resp.json();
-      const items = Array.isArray(data) ? data : (data.items || data.list || []);
-      if (!items.length) {
-        hashBody.innerHTML = `<div class="muted small">No live hashtags returned for MY.</div>`;
-      } else {
-        hashBody.innerHTML = items.slice(0, 6).map(it => {
-          const tag  = escapeHtml(it.hashtag_name || it.tag || it.name || "—");
-          const rank = it.rank != null ? `#${Number(it.rank)}` : "";
-          const pubs = it.publish_cnt != null ? Number(it.publish_cnt).toLocaleString() : "";
-          return `<div class="row" style="gap:8px">
-            <span class="pill solid small">${rank}</span>
-            <strong>${tag.startsWith('#') ? tag : '#' + tag}</strong>
-            <span class="spacer"></span>
-            <span class="muted small">${pubs ? pubs + ' posts' : ''}</span>
-          </div>`;
-        }).join("");
-      }
-    } catch (err) {
-      hashBody.innerHTML = `<div class="muted small">Live fetch failed: ${escapeHtml(err.message)}. Endpoint <code>/api/tiktok-trends</code> may not be deployed yet — that's fine, the rest of Trend Radar works without it.</div>`;
-    }
-  }
-}
-
 async function attachL0eHandlers() {
   const tbody = document.getElementById("drop-watch-body");
   const countEl = document.getElementById("drop-watch-count");
@@ -1771,539 +1739,827 @@ function escapeAttr(s) {
 }
 
 views.l1 = () => {
-  const kpiRows = Object.entries(ANALYSIS.kpi_status).map(([p,s]) => `
-    <tr><td><strong>${p}</strong></td><td><span class="pill ${s === 'on_track' ? 'ok' : s === 'at_risk' ? 'warn' : s === 'mixed' ? 'info' : 'bad'}">${s.replace('_',' ').toUpperCase()}</span></td></tr>`).join("");
-  const quad = ANALYSIS.er_ces_quadrant.map(q => `
-    <tr><td><strong>${q.p}</strong></td><td>${q.er}</td><td>${q.ces}</td><td>${q.read}</td></tr>`).join("");
-  const pillars = Object.entries(ANALYSIS.pillar_balance).map(([k,v]) => {
-    const t = ANALYSIS.pillar_targets[k];
-    return `<tr><td><strong>${k}</strong></td><td class="num">${v}%</td><td class="num muted">target ${t}%</td></tr>`;
+  // ── Live synthesis from PLATFORMS (the same array Performance Pulse uses) ──
+  // Every number on this page is computed at render time from the same source
+  // of truth as Performance Pulse. Switch brands → numbers update automatically.
+
+  const plats = PLATFORMS || [];
+  const median = (arr) => { const s = [...arr].sort((a,b)=>a-b); return s.length ? s[Math.floor(s.length/2)] : 0; };
+  const erMed  = median(plats.map(p => p.er));
+  const cesMed = median(plats.map(p => p.ces));
+
+  // KPI status — derived from posts/target ratio + ER vs erTarget + WoW
+  const kpiStatus = (p) => {
+    const cadenceHit = (p.posts / Math.max(p.postTarget, 1)) >= 0.9;
+    const erHit      = p.er >= (p.erTarget || 0);
+    const trendUp    = (p.wow?.eng || 0) >= 0;
+    const score = (cadenceHit ? 1 : 0) + (erHit ? 1 : 0) + (trendUp ? 1 : 0);
+    if (score >= 3) return { label: "on_track",   pill: "ok",   reason: "Cadence + ER + trend all positive" };
+    if (score === 2) return { label: "mixed",     pill: "info", reason: cadenceHit ? (erHit ? "Trend slipping" : "Trend ok, ER below target") : "Cadence light but quality holding" };
+    if (score === 1) return { label: "at_risk",   pill: "warn", reason: !cadenceHit && !erHit ? "Cadence + ER both below" : "Two of three signals failing" };
+    return            { label: "off_track", pill: "bad",  reason: "Cadence, ER and trend all below" };
+  };
+
+  // ER × CES quadrant read
+  const readQuad = (p) => {
+    const hiEr  = p.er  >= erMed;
+    const hiCes = p.ces >= cesMed;
+    if (hiEr  && hiCes)  return "Healthy — quality + reach align. Scale cadence here.";
+    if (hiEr  && !hiCes) return "Viral reach, weak body. Convert eyeballs → comments/saves.";
+    if (!hiEr && hiCes)  return "Quality is landing but reach is thin. Boost or repurpose.";
+    return                       "Underperforming on both. Audit content + cadence.";
+  };
+
+  const kpiRows = plats.map(p => {
+    const k = kpiStatus(p);
+    return `<tr>
+      <td><strong>${p.p}</strong><div class="muted small">${p.handle}</div></td>
+      <td><span class="pill ${k.pill}">${k.label.replace('_',' ').toUpperCase()}</span><div class="muted small">${k.reason}</div></td>
+      <td class="num">${p.posts}/${p.postTarget}</td>
+      <td class="num">${p.er}% <span class="muted small">(target ${p.erTarget || '—'}%)</span></td>
+      <td class="num">${p.ces} <span class="${cesTierClass ? cesTierClass(p.cesWow) : ''}" style="font-size:11px">${p.cesWow >= 0 ? '+' : ''}${p.cesWow}% WoW</span></td>
+    </tr>`;
   }).join("");
-  const repurp = ANALYSIS.repurpose.map(r => `<tr><td>${r.src}</td><td class="num">${r.reach_er}×</td><td class="num">${r.shares}</td><td class="muted">${r.reason}</td></tr>`).join("");
-  const gaps = ANALYSIS.competitor_gaps.map(g => `<li>${g}</li>`).join("");
-  return pageHeader("Layer 1 — Analysis Engine (KPI + CES)", `Week theme: <strong style="color:var(--text)">${ANALYSIS.week_theme}</strong>`) + `
-    <div class="grid grid-2">
-      <div class="card">
-        <h3>KPI gap status</h3>
-        <table><thead><tr><th>Platform</th><th>Status</th></tr></thead><tbody>${kpiRows}</tbody></table>
-      </div>
-      <div class="card">
-        <h3>Pillar balance vs target</h3>
-        <table><thead><tr><th>Pillar</th><th>Actual</th><th>Target</th></tr></thead><tbody>${pillars}</tbody></table>
-      </div>
+
+  const quad = plats.map(p => `
+    <tr><td><strong>${p.p}</strong></td><td class="num">${p.er}%</td><td class="num">${p.ces}</td><td>${readQuad(p)}</td></tr>`).join("");
+
+  // Winners — top 3 by CES + positive WoW
+  const winners = [...plats].sort((a,b) => b.ces - a.ces).slice(0, 3);
+  const winnersHtml = winners.map(p => `
+    <tr>
+      <td><strong>${p.p}</strong> <span class="muted small">${p.handle}</span></td>
+      <td class="num">${p.ces}</td>
+      <td class="num">${p.er}%</td>
+      <td>${p.top}</td>
+      <td><span class="muted small">${p.cesWow >= 0 ? `+${p.cesWow}% WoW — scale this format` : `${p.cesWow}% WoW — strong absolute but cooling`}</span></td>
+    </tr>`).join("");
+
+  // Losers — bottom 3 by WoW eng (steepest decliners)
+  const decliners = [...plats].sort((a,b) => (a.wow?.eng || 0) - (b.wow?.eng || 0)).slice(0, 3);
+  const declinersHtml = decliners.map(p => `
+    <tr>
+      <td><strong>${p.p}</strong> <span class="muted small">${p.handle}</span></td>
+      <td class="num">${p.wow?.eng >= 0 ? '+' : ''}${p.wow?.eng}%</td>
+      <td class="num">${p.wow?.imp >= 0 ? '+' : ''}${p.wow?.imp}%</td>
+      <td class="num">${p.posts}/${p.postTarget}</td>
+      <td><span class="muted small">${p.posts < p.postTarget ? 'Under cadence — schedule more' : 'Cadence ok — fix content quality'}</span></td>
+    </tr>`).join("");
+
+  // Auto-generated narrative — 3 bullets the moment the page loads
+  const topWinner = winners[0];
+  const topLoser  = decliners[0];
+  const totalPosts = plats.reduce((s,p)=>s+p.posts, 0);
+  const totalTarget = plats.reduce((s,p)=>s+p.postTarget, 0);
+  const cadencePct = totalTarget ? Math.round((totalPosts / totalTarget) * 100) : 0;
+  const narrative = [
+    topWinner ? `<strong>Double down on ${topWinner.p}</strong> — CES ${topWinner.ces}, ER ${topWinner.er}%, format <strong>${topWinner.top}</strong>. ${topWinner.cesWow >= 0 ? `+${topWinner.cesWow}% WoW.` : ''} Push 2× cadence next week.` : null,
+    topLoser ? `<strong>${topLoser.p} is bleeding</strong> — engagement ${topLoser.wow?.eng}% WoW. ${topLoser.posts < topLoser.postTarget ? 'Cadence is below target — schedule more.' : 'Cadence is on target — content quality is the issue, audit hooks.'}` : null,
+    `<strong>Overall cadence ${cadencePct}%</strong> of weekly target (${totalPosts}/${totalTarget} posts). ${cadencePct >= 95 ? 'You\'re hitting volume — focus on quality.' : 'Volume gap — schedule the remaining slots.'}`
+  ].filter(Boolean);
+
+  return pageHeader("Insight Synthesis (live)", `Computed from Performance Pulse · ${BRANDS_META[CURRENT_BRAND].name.replace(" Social AI","")} · ${plats.length} platforms`) + `
+    <div class="card" style="margin-bottom:14px;border-color:var(--accent)">
+      <h3>🎯 This week's read — auto-narrative</h3>
+      <ul style="margin:8px 0 0 0;padding-left:20px;line-height:1.7">
+        ${narrative.map(n => `<li>${n}</li>`).join("")}
+      </ul>
+      <div class="muted small" style="margin-top:10px">📡 Wired directly to PLATFORMS data — flip brand or wait for Vista Social refresh and these bullets update.</div>
     </div>
-    <div class="card" style="margin-top:16px">
+
+    <div class="card">
+      <h3>KPI gap status — derived live</h3>
+      <div class="sub">Status = cadence (posts vs target) + ER vs target + WoW engagement trend</div>
+      <table>
+        <thead><tr><th>Platform</th><th>Status</th><th>Posts</th><th>ER</th><th>CES (WoW)</th></tr></thead>
+        <tbody>${kpiRows}</tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:14px">
       <h3>ER × CES quadrant — reading guide</h3>
-      <div class="sub">High ER + low CES = viral reach with weak body. Low ER + high CES = quality content, scale cadence.</div>
-      <table><thead><tr><th>Platform</th><th>ER</th><th>CES</th><th>Read</th></tr></thead><tbody>${quad}</tbody></table>
+      <div class="sub">Thresholds are LIVE medians: ER median ${erMed.toFixed(1)}% · CES median ${cesMed.toFixed(0)}. High ER + low CES = viral reach with weak body. Low ER + high CES = quality content, scale cadence.</div>
+      <table>
+        <thead><tr><th>Platform</th><th>ER</th><th>CES</th><th>Read</th></tr></thead>
+        <tbody>${quad}</tbody>
+      </table>
     </div>
-    <div class="grid grid-2" style="margin-top:16px">
-      <div class="card">
-        <h3>Repurpose candidates</h3>
-        <table><thead><tr><th>Source</th><th>vs avg ER</th><th>Shares</th><th>Why</th></tr></thead><tbody>${repurp}</tbody></table>
+
+    <div class="grid grid-2" style="margin-top:14px">
+      <div class="card" style="border-color:var(--accent-2)">
+        <h3>🏆 What's working — scale these</h3>
+        <div class="sub">Top 3 by CES (live)</div>
+        <table>
+          <thead><tr><th>Platform</th><th>CES</th><th>ER</th><th>Top format</th><th>Read</th></tr></thead>
+          <tbody>${winnersHtml}</tbody>
+        </table>
       </div>
-      <div class="card">
-        <h3>Competitor format gaps</h3>
-        <ul>${gaps}</ul>
+      <div class="card" style="border-color:#a13f3f">
+        <h3>⚠️ What's bleeding — fix these</h3>
+        <div class="sub">Bottom 3 by engagement WoW (live)</div>
+        <table>
+          <thead><tr><th>Platform</th><th>Eng WoW</th><th>Imp WoW</th><th>Posts</th><th>Read</th></tr></thead>
+          <tbody>${declinersHtml}</tbody>
+        </table>
       </div>
     </div>`;
-};
-views.l2 = () => {
-  const cards = SLOTS.map(s => {
-    const ideas = (IDEAS[s.code] || []).map(i => `
-      <div class="idea">
-        <div class="idea-id">${i.id}${i.mia ? ' · 🌟 Mia' : ''}</div>
-        <div class="idea-title">${i.title}</div>
-        <div class="idea-hook">${i.hook}</div>
-        <div class="idea-foot"><span class="pill muted">KPI: ${i.kpi}</span><span class="pill muted">CTA</span></div>
-      </div>`).join("");
-    return `<div class="slot">
-      <div class="slot-head">
-        <span class="slot-code">${s.code}</span>
-        <span class="slot-title">${s.day} · ${s.pillar} · ${s.format}</span>
-        <span class="slot-meta">${s.intent} · routes to ${s.route === 'canva' ? 'Canva (static)' : 'Video lane'}</span>
-      </div>
-      <div class="ideas">${ideas}</div>
-    </div>`;
-  }).join("");
-  return pageHeader("Layer 2 — Calendar Recommendations", "11 slots · 3 ideas per slot · auto-shipped to production (no-approval v2.7)") + cards + `
-    <div class="card" style="margin-top:8px"><div class="row"><div>Recommendations ready. Move to <strong>Ship Bay</strong> to dispatch.</div><div class="spacer"></div><button class="btn primary" onclick="nav('ship_bay')">Open Ship Bay →</button></div></div>`;
 };
 /* ============================================================
-   SHIP BAY (no-approval flow · v2.7)
-   Replaces Gate 1 / Brief Generation / Gate 2. Strategy Engine output
-   auto-flows here. Each slot has a recommended pick (Mia-flagged → first idea
-   fallback); user can swap the pick or hold the slot. "Ship all" dispatches
-   straight to Asset Production — no human approval gate.
+   CURATOR SCAN — daily IG monitoring via Claude in Chrome
    ============================================================ */
-function autoSeedPicksAndBriefs() {
-  // Seed picks (Mia-preferred) only for slots that don't have one yet.
-  SLOTS.forEach(s => {
-    if (state.picks[s.code]) return;
-    const list = IDEAS[s.code] || [];
-    if (!list.length) return;
-    const mia = list.find(i => i.mia);
-    state.picks[s.code] = (mia || list[0]).id;
+function triggerCuratorScan() {
+  const ts = new Date().toISOString();
+  const handles = state.curators.map(c => c.handle).join(", ");
+  const prompt = `Run today's curator scan.
+
+Scan these 3 Instagram curators via Claude in Chrome (use my logged-in browser session):
+${state.curators.map(c => `• ${c.handle} — ${c.url}`).join("\n")}
+
+For each curator:
+1. Navigate to /reels/ and identify the 2-3 most recent posts (newest reel codes).
+2. For each new reel, extract: caption (full), audio (track name + artist), hook (first 1-2 seconds visual or text-overlay).
+3. Flag any explicit TREND CALL-OUTS in the caption (e.g. "X is blowing up", "NEW format you NEED").
+
+Then write a one-page Trend Radar update covering:
+- Audios converging on 2+ curators (high-confidence ride signal)
+- Hook formulas converging (e.g. BREAKING-NEWS, negative-open)
+- Format experiments flagged (e.g. horizontal vlogs, ultra-wide)
+- Cultural moments hot right now (peak vs. fading)
+
+Save the report to /sessions/charming-blissful-fermi/mnt/Desktop/ as trend-radar-${ts.split('T')[0]}.md and present me a computer:// link.
+
+(Triggered from Ship Bay dashboard · ${handles})`;
+  state.curatorScans.unshift({
+    ts,
+    triggered_by: "dashboard",
+    status: "triggered",
+    note: `Scan fired for ${state.curators.length} curators`,
   });
-  generateBriefs();
-  // Auto-approve every brief — there is no approval gate in v2.7.
-  Object.values(state.briefs).forEach(b => {
-    if (!state.gate2[b.id]) {
-      state.gate2[b.id] = { status: "approved", reason: "", approvedAt: Date.now(), approver: "auto-ship" };
+  if (typeof window.sendPrompt === "function") {
+    try {
+      window.sendPrompt(prompt);
+      toast("Curator scan triggered · check chat for progress", "ok");
+    } catch (e) {
+      console.error("sendPrompt failed", e);
+      toast("sendPrompt error · copying prompt to clipboard", "warn");
+      try { navigator.clipboard.writeText(prompt); } catch (_) {}
     }
-    if (!state.publishConfirms[b.id]) state.publishConfirms[b.id] = "pending";
-  });
+  } else {
+    // Standalone browser fallback
+    try {
+      navigator.clipboard.writeText(prompt);
+      toast("📋 Scan prompt copied · paste into Cowork chat", "ok");
+    } catch (e) {
+      toast("Could not copy · check console for prompt", "bad");
+      console.log("[curator-scan] prompt:", prompt);
+    }
+  }
+  renderMain();
 }
-views.ship_bay = () => {
-  autoSeedPicksAndBriefs();
-  const total = SLOTS.length;
-  const shipped = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === "approved").length;
-  const held = SLOTS.filter(s => !state.picks[s.code]).length;
-  const slotsHtml = SLOTS.map(s => {
-    const list = IDEAS[s.code] || [];
-    const pickedId = state.picks[s.code];
-    const pickedIdea = list.find(i => i.id === pickedId);
-    const alternatives = list.filter(i => i.id !== pickedId).slice(0, 2);
-    const altsHtml = alternatives.map(alt => `
-      <button class="btn ghost small" data-swap-slot="${s.code}" data-swap-idea="${alt.id}" title="${escapeHtml(alt.title)}">⇆ ${alt.id}${alt.mia ? ' · 🌟' : ''}</button>
-    `).join("");
-    return `<div class="slot ship-slot">
-      <div class="slot-head">
-        <span class="slot-code">${s.code}</span>
-        <span class="slot-title">${s.day} · ${s.pillar} · ${s.format}</span>
-        <span class="pill ${s.route === 'canva' ? 'info' : 'muted'} small">${s.route === 'canva' ? 'Canva lane' : 'Video lane'}</span>
-        <div class="spacer"></div>
-        ${pickedIdea
-          ? `<span class="pill ok small">Auto-shipped</span><button class="btn ghost small" data-hold="${s.code}" title="Hold this slot — pull from production">⏸ Hold</button>`
-          : `<span class="pill warn small">Held</span><button class="btn ghost small" data-resume="${s.code}" title="Resume — auto-pick recommended idea">▶ Resume</button>`
-        }
-      </div>
-      ${pickedIdea ? `
-        <div class="idea selected" style="margin-top:8px">
-          <div class="idea-id">${pickedIdea.id}${pickedIdea.mia ? ' · 🌟 Mia' : ''}</div>
-          <div class="idea-title">${escapeHtml(pickedIdea.title)}</div>
-          <div class="idea-hook">${escapeHtml(pickedIdea.hook)}</div>
-          <div class="idea-foot"><span class="pill muted small">KPI: ${pickedIdea.kpi}</span><span class="pill muted small">CTA: ${pickedIdea.cta || '—'}</span></div>
-        </div>
-        ${altsHtml ? `<div class="row" style="margin-top:8px;gap:6px"><span class="muted small">Swap to:</span>${altsHtml}</div>` : ''}
-      ` : `<div class="empty small">Slot held — no brief will be produced for ${s.day}.</div>`}
-    </div>`;
-  }).join("");
-  return pageHeader(
-    "Ship Bay — no-approval dispatch (v2.7)",
-    `${shipped} briefs auto-shipped · ${held} slots held · approval layer retired ${state.qaPass ? '· last QA: ' + new Date(state.qaPass.at).toLocaleString() : ''}`
-  ) + `
-    <div class="gate-banner" style="background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, var(--bg-2)), var(--bg-2)); border-left:3px solid var(--accent)">
-      <div class="icon">🚀</div>
-      <div class="text">
-        <strong>No-approval flow live.</strong>
-        <small>Strategy Engine picks auto-ship into Asset Production. Use <em>Hold</em> to pull a slot, or <em>Swap</em> to pick a different idea for that day.</small>
-      </div>
-      <button class="btn" id="ship-rotate-mia">🌟 Prefer Mia where possible</button>
-      <button class="btn" id="ship-hold-all">⏸ Hold all</button>
-      <button class="btn primary" id="ship-resume-all">▶ Resume all</button>
-    </div>
-    ${slotsHtml}
-    <div class="card" style="margin-top:12px"><div class="row"><div class="muted small">Briefs flow into <strong>Asset Production</strong> automatically. There is no approval gate.</div><div class="spacer"></div><button class="btn primary" onclick="nav('l4')">Open Asset Production →</button></div></div>
-  `;
-};
-function attachShipBayHandlers() {
-  document.querySelectorAll("[data-swap-slot]").forEach(el => {
-    el.onclick = () => {
-      const slot = el.dataset.swapSlot, idea = el.dataset.swapIdea;
-      // Drop the old brief for this slot so generateBriefs rebuilds it cleanly.
-      const oldPick = state.picks[slot];
-      if (oldPick && state.briefs[oldPick]) {
-        delete state.briefs[oldPick];
-        delete state.gate2[oldPick];
-        delete state.publishConfirms[oldPick];
-      }
-      state.picks[slot] = idea;
-      autoSeedPicksAndBriefs();
-      renderMain();
-      toast(`Swapped ${slot} → ${idea}`, "ok");
-    };
-  });
-  document.querySelectorAll("[data-hold]").forEach(el => {
-    el.onclick = () => {
-      const slot = el.dataset.hold;
-      const oldPick = state.picks[slot];
-      if (oldPick && state.briefs[oldPick]) {
-        delete state.briefs[oldPick];
-        delete state.gate2[oldPick];
-        delete state.publishConfirms[oldPick];
-      }
-      delete state.picks[slot];
-      renderMain();
-      toast(`${slot} held — pulled from production`, "ok");
-    };
-  });
-  document.querySelectorAll("[data-resume]").forEach(el => {
-    el.onclick = () => {
-      const slot = el.dataset.resume;
-      const list = IDEAS[slot] || [];
-      if (!list.length) { toast("No ideas available for this slot", "bad"); return; }
-      const mia = list.find(i => i.mia);
-      state.picks[slot] = (mia || list[0]).id;
-      autoSeedPicksAndBriefs();
-      renderMain();
-      toast(`${slot} resumed — auto-shipped`, "ok");
-    };
-  });
-  const rotate = document.getElementById("ship-rotate-mia");
-  if (rotate) rotate.onclick = () => {
-    SLOTS.forEach(s => {
-      const list = IDEAS[s.code] || [];
-      const mia = list.find(i => i.mia);
-      if (mia) {
-        const old = state.picks[s.code];
-        if (old && state.briefs[old]) {
-          delete state.briefs[old];
-          delete state.gate2[old];
-          delete state.publishConfirms[old];
-        }
-        state.picks[s.code] = mia.id;
-      }
+/* ============================================================
+   TIKTOK LIVE SIGNALS — pulls from /api/tiktok/trends
+   Endpoint is non-blocking: if it 5xx's or returns empty,
+   we degrade to "no fresh signal — fall back to curator scan".
+   ============================================================ */
+async function loadTikTokTrends(region) {
+  state.tikTokLive.loading = true;
+  state.tikTokLive.error = null;
+  renderMain();
+  try {
+    const r = region || state.tikTokLive.region || "MY";
+    const res = await fetch(`/api/tiktok/trends?region=${encodeURIComponent(r)}&limit=20`, {
+      headers: { "Accept": "application/json" }
     });
-    autoSeedPicksAndBriefs();
-    renderMain();
-    toast("Mia-preferred picks applied", "ok");
-  };
-  const holdAll = document.getElementById("ship-hold-all");
-  if (holdAll) holdAll.onclick = () => {
-    state.picks = {};
-    state.briefs = {};
-    state.gate2 = {};
-    state.publishConfirms = {};
-    renderMain();
-    toast("All slots held — production cleared", "bad");
-  };
-  const resumeAll = document.getElementById("ship-resume-all");
-  if (resumeAll) resumeAll.onclick = () => {
-    autoSeedPicksAndBriefs();
-    renderMain();
-    toast("All slots resumed — auto-shipped", "ok");
-  };
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const json = await res.json();
+    state.tikTokLive = {
+      loading: false,
+      error: null,
+      fetched_at: json.fetched_at || new Date().toISOString(),
+      region: json.region || r,
+      counts: json.counts || { hashtags: 0, audio: 0, creatives: 0, total: 0 },
+      signals: json.signals || [],
+      by_type: json.by_type || { hashtags: [], audio: [], creatives: [] },
+      degraded: !!(json.meta && json.meta.degraded),
+    };
+    if (typeof toast === "function") {
+      const c = state.tikTokLive.counts;
+      toast(`TikTok signals refreshed — ${c.hashtags} tags · ${c.audio} sounds · ${c.creatives} creatives`);
+    }
+  } catch (err) {
+    state.tikTokLive.loading = false;
+    state.tikTokLive.error = err.message || String(err);
+    if (typeof toast === "function") toast("TikTok fetch failed — using fallback", "warn");
+  }
+  renderMain();
 }
-function generateBriefs() {
-  state.briefs = {};
-  for (const [slotCode, ideaId] of Object.entries(state.picks)) {
-    const slot = SLOTS.find(s => s.code === slotCode);
-    const idea = (IDEAS[slotCode] || []).find(i => i.id === ideaId);
-    if (!slot || !idea) continue;
-    state.briefs[ideaId] = {
-      id: ideaId,
-      slot: slotCode,
-      day: slot.day,
-      pillar: slot.pillar,
-      format: slot.format,
-      route: slot.route,
-      topic: idea.title,
-      audience: defaultAudience(slot),
-      hook: idea.hook,
-      retention: defaultRetention(slot, idea),
-      kpi: idea.kpi,
-      cta: idea.cta || "—",
-      product: idea.product || null,
-      mia: !!idea.mia,
-      storyline: defaultStoryline(slot, idea),
-      script: defaultScript(slot, idea),
-      gleoArc: (CURRENT_BRAND === 'g2g' && slot.code === 'SAT') ? GLEO_SERIES_G2G : null,
+
+function renderTikTokLiveCard() {
+  const tl = state.tikTokLive || {};
+  const when = tl.fetched_at ? new Date(tl.fetched_at).toLocaleString() : "never";
+  const minsAgo = tl.fetched_at
+    ? Math.floor((Date.now() - new Date(tl.fetched_at).getTime()) / 60000)
+    : null;
+  const freshnessPill = !tl.fetched_at
+    ? `<span class="pill bad small">never fetched</span>`
+    : minsAgo < 30
+      ? `<span class="pill ok small">${minsAgo}m ago · live</span>`
+      : minsAgo < 24*60
+        ? `<span class="pill warn small">${Math.floor(minsAgo/60)}h ago</span>`
+        : `<span class="pill bad small">${Math.floor(minsAgo/(24*60))}d ago · stale</span>`;
+  const btnLabel = tl.loading ? "⏳ Fetching…" : "↻ Refresh TikTok signals";
+  const btnDisabled = tl.loading ? "disabled" : "";
+
+  // Empty state — first-load CTA
+  if (!tl.fetched_at && !tl.loading) {
+    return `
+      <div class="card" style="border-color:var(--accent);margin-bottom:14px">
+        <div class="row" style="align-items:center;gap:14px">
+          <div style="font-size:22px">🎵</div>
+          <div style="flex:1">
+            <strong style="color:white">TikTok Live Signals</strong>
+            <div class="muted small" style="margin-top:2px">Discovery + Music + Creative Recommendation · region ${tl.region || "MY"} · via your TREND SPOTTING app</div>
+          </div>
+          ${freshnessPill}
+          <button class="btn primary" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
+        </div>
+        <div class="muted small" style="margin-top:10px">💡 Click to fetch live trending hashtags, sounds, and top creatives. Falls back to manual curator scan if the API errors.</div>
+      </div>`;
+  }
+
+  // Error state
+  if (tl.error) {
+    return `
+      <div class="card" style="border-color:#a13f3f;margin-bottom:14px">
+        <div class="row" style="align-items:center;gap:14px">
+          <div style="font-size:22px">⚠️</div>
+          <div style="flex:1">
+            <strong style="color:white">TikTok Live Signals</strong>
+            <div class="muted small" style="margin-top:2px">Last fetch failed — ${escapeHtml(tl.error)}</div>
+          </div>
+          <button class="btn" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
+        </div>
+        <div class="muted small" style="margin-top:10px">Check TIKTOK_APP_ID / TIKTOK_APP_SECRET env vars on Vercel · or wait — TikTok's API is occasionally flaky.</div>
+      </div>`;
+  }
+
+  const renderBucket = (title, emoji, rows, max) => {
+    if (!rows || !rows.length) return `<div class="card" style="opacity:.5"><h3>${emoji} ${title}</h3><div class="muted small">No fresh data yet — refresh or wait for next cycle.</div></div>`;
+    const top = rows.slice(0, max || 8);
+    const items = top.map((s, i) => `
+      <div class="tk-row">
+        <span class="tk-rank">${i + 1}</span>
+        <span class="tk-label">${escapeHtml(s.label || '')}</span>
+        <span class="pill ${s.momentum === 'peak' ? 'ok' : s.momentum === 'rising' ? 'warn' : s.momentum === 'fading' ? 'bad' : 'muted'} small">${escapeHtml(s.momentum || 'watch')}</span>
+      </div>`).join("");
+    return `<div class="card"><h3>${emoji} ${title}</h3><div class="sub">${rows.length} signal${rows.length === 1 ? '' : 's'}</div>${items}</div>`;
+  };
+
+  return `
+    <div class="card" style="border-color:var(--accent);margin-bottom:14px">
+      <div class="row" style="align-items:center;gap:14px;margin-bottom:8px">
+        <div style="font-size:22px">🎵</div>
+        <div style="flex:1">
+          <strong style="color:white">TikTok Live Signals</strong>
+          <div class="muted small" style="margin-top:2px">${tl.counts.total} signals · region ${tl.region} · last ${when}${tl.degraded ? ' · <span style="color:#e8b945">partial data (some buckets failed)</span>' : ''}</div>
+        </div>
+        ${freshnessPill}
+        <button class="btn primary" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
+      </div>
+      <div class="grid grid-3" style="margin-top:10px">
+        ${renderBucket('Trending hashtags', '#️⃣', tl.by_type.hashtags, 8)}
+        ${renderBucket('Trending sounds', '🔊', tl.by_type.audio, 6)}
+        ${renderBucket('Top creatives', '🎨', tl.by_type.creatives, 5)}
+      </div>
+    </div>`;
+}
+
+function renderCuratorScanCard() {
+  const lastScan = state.curatorScans[0];
+  const lastWhen = lastScan
+    ? new Date(lastScan.ts).toLocaleString()
+    : "never";
+  const minutesAgo = lastScan
+    ? Math.floor((Date.now() - new Date(lastScan.ts).getTime()) / 60000)
+    : null;
+  const freshnessPill = !lastScan
+    ? `<span class="pill bad small">never run</span>`
+    : minutesAgo < 60
+      ? `<span class="pill ok small">${minutesAgo}m ago · fresh</span>`
+      : minutesAgo < 24 * 60
+        ? `<span class="pill warn small">${Math.floor(minutesAgo/60)}h ago · today</span>`
+        : `<span class="pill bad small">${Math.floor(minutesAgo/(24*60))}d ago · stale</span>`;
+  const handlesHtml = state.curators.map(c => `
+    <div class="curator-row">
+      <a href="${c.url}" target="_blank" rel="noopener" class="curator-handle">${escapeHtml(c.handle)}</a>
+      <span class="muted small">${escapeHtml(c.note)}</span>
+    </div>`).join("");
+  const recentScans = state.curatorScans.slice(0, 5).map(s =>
+    `<tr><td>${new Date(s.ts).toLocaleString()}</td><td><span class="pill ${s.status === 'completed' ? 'ok' : 'warn'} small">${s.status}</span></td><td class="muted">${escapeHtml(s.note || '')}</td></tr>`
+  ).join("");
+  return `
+    <div class="card curator-scan-card">
+      <div class="row" style="align-items:center;gap:14px;margin-bottom:12px">
+        <div style="font-size:22px">🔍</div>
+        <div style="flex:1">
+          <strong style="color:white">Daily IG Curator Scan</strong>
+          <div class="muted small" style="margin-top:2px">3 trusted strategists · monitored via Claude in Chrome · feeds Trend Radar signal pool</div>
+        </div>
+        ${freshnessPill}
+        <button class="btn primary" onclick="triggerCuratorScan()">↻ Run today's IG scan</button>
+      </div>
+      <div class="curator-list">${handlesHtml}</div>
+      ${state.curatorScans.length ? `
+      <details style="margin-top:12px">
+        <summary class="muted small" style="cursor:pointer">📋 Recent scan history (${state.curatorScans.length})</summary>
+        <table class="kv-table" style="margin-top:8px">
+          <thead><tr><th>When</th><th>Status</th><th>Note</th></tr></thead>
+          <tbody>${recentScans}</tbody>
+        </table>
+      </details>` : ''}
+      <div class="muted small" style="margin-top:10px">💡 Click triggers Claude to scan via your logged-in Chrome session. Results land in chat + saved as a dated markdown to your Desktop. Open in Cowork mode for one-click fire; otherwise the prompt is copied to clipboard.</div>
+    </div>`;
+}
+
+/* ============================================================
+   SHIP BAY — no-approval express lane (per-day, per-platform)
+   Bypasses Gate 1 / Gate 2. Brief preview + Ship to Higgsfield.
+   ============================================================ */
+const SHIPBAY_PLATFORMS = [
+  { id: "ig", label: "Instagram", emoji: "📱", default_duration: "30s",
+    style: "Polished reel · 30s · captions-heavy · all pillars allowed",
+    cuts: "0–3s hook · 3–8s setup · 8–25s payoff · 25–30s CTA + caption tease" },
+  { id: "tt", label: "TikTok",    emoji: "🎵", default_duration: "15s",
+    style: "Hook-first · 15s · trend-audio priority · NO PROMOTIONAL CONTENT (skipped if pillar=Promotional)",
+    cuts: "0–2s hook · 2–10s payoff · 10–15s CTA / loop tail" },
+  { id: "fb", label: "Facebook",  emoji: "📘", default_duration: "45s",
+    style: "Slightly more explanatory · 45s · older audience · all pillars allowed",
+    cuts: "0–3s hook · 3–12s context · 12–35s payoff · 35–45s soft CTA" },
+];
+function shipBayTodayCode() {
+  // Mon..Sun mapping — JS getDay(): 0=Sun..6=Sat
+  return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date().getDay()];
+}
+function shipBaySlotsForDay(dayShort) {
+  return SLOTS.filter(s => s.day === dayShort);
+}
+function shipBayAutoPickIdea(slotCode) {
+  // Weekly view auto-picks: prefer Mia idea, else first
+  const list = IDEAS[slotCode] || [];
+  return (list.find(i => i.mia) || list[0])?.id || null;
+}
+function shipBaySwitchTab(t) {
+  state.shipBay.tab = t;
+  renderMain();
+}
+function shipBayPickIdea(slotCode, ideaId) {
+  state.shipBay.dailyPicks[slotCode] = ideaId;
+  // Reset any expanded variants under this slot so they re-render fresh
+  Object.keys(state.shipBay.expanded).forEach(k => {
+    if (k.startsWith(slotCode + "::")) delete state.shipBay.expanded[k];
+  });
+  Object.keys(state.shipBay.briefs).forEach(k => {
+    if (k.startsWith(slotCode + "::")) delete state.shipBay.briefs[k];
+  });
+  renderMain();
+}
+function shipBayVariantKey(slotCode, ideaId, platformId) {
+  return `${slotCode}::${ideaId}::${platformId}`;
+}
+function shipBayToggleBrief(slotCode, ideaId, platformId) {
+  const key = shipBayVariantKey(slotCode, ideaId, platformId);
+  if (state.shipBay.expanded[key]) {
+    delete state.shipBay.expanded[key];
+  } else {
+    state.shipBay.expanded[key] = true;
+    if (!state.shipBay.briefs[key]) {
+      state.shipBay.briefs[key] = buildShipBayBrief(slotCode, ideaId, platformId);
+    }
+  }
+  renderMain();
+}
+function shipBayRefreshBrief(slotCode, ideaId, platformId) {
+  const key = shipBayVariantKey(slotCode, ideaId, platformId);
+  state.shipBay.briefs[key] = buildShipBayBrief(slotCode, ideaId, platformId, /*reshuffle*/true);
+  renderMain();
+  toast("Brief regenerated · " + platformId.toUpperCase(), "ok");
+}
+/* ── BRIEF BUILDER — generates JSX-style brief per platform ───────────────── */
+const SHIPBAY_GAMER_ANCHORS = [
+  "gacha pity — almost at the threshold, one more pull",
+  "pre-launch wallet panic — game drops in 3 hours",
+  "long-distance Discord squad — different timezones, same lobby",
+  "burnout-then-comfort — returning after weeks away",
+  "account-loss anxiety — locked out, progress gone",
+  "region-locked game — can't access from local store",
+  "forgotten birthday saved by a digital gift",
+  "carrying a friend through a hard rank grind",
+  "the solo player who finally joins a guild",
+  "spending saved money on a game instead of something 'responsible'",
+];
+const SHIPBAY_HOOKS = {
+  Informative:   ["I wasted 200 hours before someone told me this.","Nobody talks about what actually happens when your top-up fails.","Hot take: most gamers are buying gift cards wrong."],
+  Educational:   ["I almost lost my account because of this.","If you call yourself a [game] main and you don't know this, we need to talk.","Here's the exact red flag I missed last week."],
+  Entertainment: ["POV: it's payday and a 30GB patch just dropped.","When your mum thinks 'just one more game' means 10 minutes.","Tell me you're a gacha player without telling me."],
+  Promotional:   ["You're paying too much for your games. Here's why.","48-hour window. Then it's gone.","This is the price drop we've been waiting for."],
+  News:          ["The patch nobody saw coming dropped 6 hours ago.","Three things about this launch that the trailer didn't show.","If you missed the 24-hour window, here's what happened."],
+  Brand:         ["This is for the player who almost quit but didn't.","One quiet act of care. That's the whole video.","Some squads stay together because of moments like this."],
+  Affiliate:     ["Three creators just dropped takes on this. Here's mine.","I tried what [creator] said and it actually worked.","Stealing one trick from every top streamer this month."],
+};
+function shipBayCastFor(slot, idea, platform) {
+  // Mia is the default lead. Mascots for light/seasonal/brand on G2G.
+  if (idea.mia) return "@Mia (solo, talking-head/reaction)";
+  if (CURRENT_BRAND === "g2g" && (slot.pillar === "Brand" || slot.pillar === "Brand/Community")) return "@GLEO (solo, hero shots)";
+  if (CURRENT_BRAND === "offgamers" && (slot.pillar === "Brand" || slot.pillar === "Brand/Community")) return "@ORC-01 + @ORC-02 (alternating solo cuts)";
+  if (slot.pillar === "Educational" || slot.pillar === "News") return "@Mia (solo, friend-explaining tone)";
+  return "@Mia (solo)";
+}
+function shipBayDurationFor(slot, platform) {
+  if (slot.format === "STATIC") return "1 panel";
+  return platform.default_duration;
+}
+function shipBayPlatformAdapt(platform, slot, idea) {
+  // Returns platform-specific tweaks: hook style, copy length, audio approach, CTA
+  const base = {
+    ig: {
+      framing: "Vertical 9:16 reel. Caption-led. Hashtag stack: 5–8 niche tags.",
+      audio: "Trending IG audio or original VO. Captions burned-in (auto-captions off).",
+      cta_style: "Soft CTA in last 3s + caption: 'link in bio · save for later'",
+    },
+    tt: {
+      framing: "Vertical 9:16. Trend-audio first. Native TikTok captions on.",
+      audio: "Ride a current trending sound where it doesn't break the message. No original VO unless trend demands.",
+      cta_style: "Loop-back ending (last frame visually matches first) · CTA in caption only",
+    },
+    fb: {
+      framing: "Vertical OR square 1:1. Captions burned-in (most FB viewers mute).",
+      audio: "Original VO or licensed track. Trending audio matters less on FB.",
+      cta_style: "Explicit CTA in last 5s + first comment pinned with link",
+    },
+  };
+  return base[platform.id];
+}
+function buildShipBayBrief(slotCode, ideaId, platformId, reshuffle=false) {
+  const slot = SLOTS.find(s => s.code === slotCode);
+  const idea = (IDEAS[slotCode] || []).find(i => i.id === ideaId);
+  const platform = SHIPBAY_PLATFORMS.find(p => p.id === platformId);
+  if (!slot || !idea || !platform) return null;
+  // TikTok blocks promotional content per Lina's rule
+  const isBlocked = (platform.id === "tt" && slot.pillar === "Promotional");
+  if (isBlocked) {
+    return {
+      blocked: true,
+      reason: "TikTok skipped — no promotional content on TT (per content rules)",
+      slot, idea, platform,
     };
   }
-}
-function defaultAudience(slot) {
-  if (slot.pillar === "Brand" || slot.pillar === "Brand/Community") return brand().audienceCommunity;
-  if (slot.pillar === "News") return "Patch-day / launch-day gamers — high-intent news-seekers";
-  if (slot.pillar === "Promotional") return "Active buyers ready to convert this week";
-  if (slot.pillar === "Educational") return "First-purchase doubters — safety-conscious gamers";
-  if (slot.pillar === "Entertainment") return "Broad gaming audience scrolling for relatable cuts";
-  if (slot.pillar === "Affiliate") return "Existing creator audience overlap";
-  return "Core gamer audience (M 64% / F 34% / NB 2%)";
-}
-function defaultRetention(slot, idea) {
-  if (idea.mia) return "Mia's recurring presence builds episode-to-episode loyalty; viewers stay for the payoff card.";
-  if (slot.pillar === "Promotional") return "STATIC — single visual scan, urgency-led copy, clear price reduction.";
-  if (slot.format === "Video" && slot.pillar === "Informative") return "Hook with a surprising fact or bold claim in first 3s. Conversational delivery — feels like overhearing two smart people talk. Payoff must land before 60s. End on a question or tease next week.";
-if (slot.format === "Video") return "0–3s hook → 3–8s setup → 8–25s payoff → CTA card. Cut every 1.4s avg.";
-  return "Tight pacing, single visual idea per second, clear payoff before CTA.";
-}
-function defaultStoryline(slot, idea) {
-  const acts = [];
-  acts.push("Act 1 (0-3s) — HOOK: " + (idea.hook || "Open on a strong visual that earns 3 more seconds."));
+  const cast = shipBayCastFor(slot, idea, platform);
+  const duration = shipBayDurationFor(slot, platform);
+  const adapt = shipBayPlatformAdapt(platform, slot, idea);
+  const hookPool = SHIPBAY_HOOKS[slot.pillar] || SHIPBAY_HOOKS.Brand;
+  const hookIdx = reshuffle ? Math.floor(Math.random() * hookPool.length) : 0;
+  const hook = hookPool[hookIdx];
+  const anchor = SHIPBAY_GAMER_ANCHORS[Math.floor(Math.random() * SHIPBAY_GAMER_ANCHORS.length)];
+  // Scene plan — different per format
+  let scenes = [];
   if (slot.format === "STATIC") {
-    acts.push("Act 2 (single beat) — Visual hierarchy: hero image, headline, price/CTA, brand mark in that order.");
-    acts.push("Act 3 (scan-end) — CTA: " + (idea.cta || "Drive to G2G/OffGamers — link in bio."));
-  } else if (slot.pillar === "News") {
-    acts.push("Act 2 (3-15s) — DELIVER: 3 facts that actually matter, fast cuts, on-screen captions.");
-    acts.push("Act 3 (15-25s) — IMPLICATION: why this matters for the buyer (price window, region, urgency).");
-    acts.push("Act 4 (25-30s) — CTA: " + (idea.cta || "Stock up before the window closes."));
-  } else if (slot.pillar === "Educational") {
-    acts.push("Act 2 (3-12s) — TEACH: walk through the steps with screen captures or hand-held demo.");
-    acts.push("Act 3 (12-22s) — PAYOFF: \"this is the trap most people fall into\" + the fix.");
-    acts.push("Act 4 (22-30s) — CTA: " + (idea.cta || "Save this post + try it."));
-  } else if (slot.pillar === "Entertainment") {
-    acts.push("Act 2 (3-15s) — ESCALATE: each beat 1 step funnier or more relatable than the last.");
-    acts.push("Act 3 (15-25s) — RESOLVE: payoff card that makes the joke land or flips it.");
-    acts.push("Act 4 (25-30s) — CTA: " + (idea.cta || "Tag a friend who's been here."));
-  } else if (slot.pillar === "Brand" || slot.pillar === "Brand/Community") {
-    acts.push("Act 2 (3-18s) — STORY: introduce the conflict / character moment that builds attachment.");
-    acts.push("Act 3 (18-28s) — RESOLUTION: payoff that earns rewatch + community pride.");
-    acts.push("Act 4 (28-32s) — CTA: " + (idea.cta || "Tap to follow for next episode."));
- } else if (slot.pillar === "Informative") {
-    acts.push("Act 2 (3-30s) — DELIVER: conversational breakdown. Either solo host unpacking the topic with personality, or 2-host back-and-forth where one argues, one pushes back. Use the week's trending game/patch/news as the anchor.");
-    acts.push("Act 3 (30-50s) — TWIST or 'DID YOU KNOW': drop the surprising fact, stat, or angle that reframes everything.");
-    acts.push("Act 4 (50-60s) — OPEN LOOP CTA: " + (idea.cta || "Leave them wanting more — tease next week or ask for their take."));
+    scenes = [{
+      n: 1, title: "Single panel · hero composition",
+      duration: "static",
+      cast: cast.replace(" (solo)", " (single frame, no other characters)"),
+      setting: "Brand-coloured backdrop · clean negative space · headline weight on left, CTA bottom-right",
+      action: idea.cta ? `Hero visual + headline overlay: "${(idea.hook || idea.title)}"` : `Hero visual + headline overlay`,
+      dialogue: "No dialogue (STATIC)",
+      camera: "Static composition · 1080×1350 (IG) / 1080×1920 (FB story)",
+      image_prompt: `${cast.split(" (")[0]} hero shot, ${slot.pillar.toLowerCase()} mood, ${BRANDS_META[CURRENT_BRAND].palette}, headline space top-third, CTA space bottom-right, ultra-clean composition`,
+      video_prompt: "N/A · STATIC format",
+      transition: "—",
+    }];
   } else {
-    acts.push("Act 2 (3-15s) — DELIVER: core idea, fast cuts.");
-    acts.push("Act 3 (15-25s) — PAYOFF + CTA: " + (idea.cta || "Drive to site."));
+    const sceneCount = platform.id === "tt" ? 3 : (platform.id === "fb" ? 5 : 4);
+    const beats = ["HOOK", "SETUP", "PAYOFF", "CTA", "TAIL"];
+    for (let i = 0; i < sceneCount; i++) {
+      const beat = beats[i] || "BEAT";
+      const isHook = i === 0;
+      const isCTA = i === sceneCount - 1;
+      scenes.push({
+        n: i + 1,
+        title: `${beat} — ${isHook ? "Scroll-stopper" : isCTA ? "Land the CTA" : i === 1 ? "Build the tension" : "Deliver the truth"}`,
+        duration: `${Math.round(parseInt(duration) / sceneCount)}s`,
+        cast,
+        setting: isHook ? "Tight close-up · natural light · phone-shot feel" : isCTA ? "Slight pull-back · CTA card overlay" : "Mid shot · environment hints at the anchor (gaming-life setting)",
+        action: isHook ? `Open on a confident still moment. ${cast.split(" (")[0]} delivers the hook with direct eye-contact.` : isCTA ? `${cast.split(" (")[0]} lands the close-out beat. ${adapt.cta_style.split("·")[0].trim()}.` : `${cast.split(" (")[0]} delivers the next escalation — ${anchor}`,
+        dialogue: isHook ? `"${hook}"` : isCTA ? (idea.cta ? `"${idea.cta}"` : `"You know what to do."`) : (i === 1 ? `"Here's what nobody is telling you..."` : `"And this is the part that actually matters."`),
+        camera: isHook ? "Static close-up · subtle handheld breath" : isCTA ? "Slow push-in · ends on CTA overlay" : "Locked mid · slight rule-of-thirds reframe between beats",
+        image_prompt: `${cast.split(" (")[0]} ${isHook ? "direct-to-camera close-up" : isCTA ? "wider, with CTA overlay space top-right" : "mid-shot, expressive"}, ${BRANDS_META[CURRENT_BRAND].palette}, naturalistic light, mobile-first 9:16 frame`,
+        video_prompt: `${cast.split(" (")[0]} ${isHook ? "leans in slightly, eyes locked on lens, lips move with the line: " + JSON.stringify(hook) : isCTA ? "delivers final beat with a small smile, hands relaxed, says: " + (idea.cta ? JSON.stringify(idea.cta) : '"You know what to do."') : "delivers the next beat naturally, slight head tilt, says: " + JSON.stringify(i === 1 ? "Here's what nobody is telling you..." : "And this is the part that actually matters.")}, ${adapt.framing.toLowerCase()}, ${adapt.audio.toLowerCase()}, mood: ${slot.pillar.toLowerCase()}, one character per frame`,
+        transition: isCTA ? "Hold last frame 0.5s" : "Hard cut",
+      });
+    }
   }
-  return acts.join("\n");
+  return {
+    blocked: false,
+    slot, idea, platform, cast, duration, hook, anchor,
+    framing: adapt.framing,
+    audio: adapt.audio,
+    cta_style: adapt.cta_style,
+    scenes,
+    integration: `${BRANDS_META[CURRENT_BRAND].name.replace(" Social AI","")} appears at 60–80% runtime as the natural enabler — ${slot.pillar === "Promotional" ? "explicit offer + price drop" : "ambient credit (gift card / top-up unlocks the moment)"}.`,
+    visual_style: `${BRANDS_META[CURRENT_BRAND].palette}. Mobile-first vertical. ${platform.cuts}.`,
+    built_at: new Date().toISOString(),
+  };
 }
-function defaultScript(slot, idea) {
-  if (slot.format === "STATIC") {
-    return "[STATIC — no spoken script]\nOn-screen text: " + (idea.title || "—") +
-           "\nSubhead: " + (idea.hook || "—").replace(/STATIC:\s*/i, "") +
-           "\nCTA: " + (idea.cta || "—");
+function formatShipBayBrief(brief) {
+  if (!brief) return '<div class="muted">Brief not ready.</div>';
+  if (brief.blocked) {
+    return `<div class="card" style="background:#fff3e0;border-color:#ffa726"><strong>🚫 ${brief.reason}</strong><div class="muted small" style="margin-top:6px">This day will not generate a TikTok variant. Use the IG or FB variants instead, or change the slot pillar.</div></div>`;
   }
-  // Video script — voiceover beats matched to act timing
+  const s = brief.slot, i = brief.idea, p = brief.platform;
+  const sceneHtml = brief.scenes.map(sc => `
+    <div class="shipbay-scene">
+      <div class="shipbay-scene-head"><strong>Scene ${sc.n} — ${sc.title}</strong><span class="pill muted">${sc.duration}</span></div>
+      <div class="shipbay-scene-grid">
+        <div><span class="kv-k">Character in shot</span><div class="kv-v">${escapeHtml(sc.cast)}</div></div>
+        <div><span class="kv-k">Setting</span><div class="kv-v">${escapeHtml(sc.setting)}</div></div>
+        <div><span class="kv-k">Action</span><div class="kv-v">${escapeHtml(sc.action)}</div></div>
+        <div><span class="kv-k">Dialogue</span><div class="kv-v">${escapeHtml(sc.dialogue)}</div></div>
+        <div><span class="kv-k">Camera</span><div class="kv-v">${escapeHtml(sc.camera)}</div></div>
+        <div><span class="kv-k">Transition</span><div class="kv-v">${escapeHtml(sc.transition)}</div></div>
+      </div>
+      <div class="shipbay-prompts">
+        <div class="shipbay-prompt"><span class="prompt-label">🖼️ HIGGSFIELD IMAGE PROMPT</span><pre>${escapeHtml(sc.image_prompt)}</pre></div>
+        <div class="shipbay-prompt"><span class="prompt-label">🎬 HIGGSFIELD VIDEO PROMPT</span><pre>${escapeHtml(sc.video_prompt)}</pre></div>
+      </div>
+    </div>`).join("");
+  return `
+    <div class="shipbay-brief">
+      <div class="shipbay-brief-head">
+        <div><div class="brief-title">${escapeHtml(i.title)}</div>
+          <div class="brief-meta">${escapeHtml(s.day)} · ${escapeHtml(s.pillar)} · ${escapeHtml(s.format)} · ${p.emoji} ${escapeHtml(p.label)} · ${escapeHtml(brief.duration)}</div></div>
+        <span class="pill ok">${escapeHtml(brief.cast)}</span>
+      </div>
+      <div class="shipbay-brief-section">
+        <div class="section-h">🎯 BRIEF OVERVIEW</div>
+        <div class="kv-row"><span class="kv-k">Brand</span><span>${escapeHtml(BRANDS_META[CURRENT_BRAND].name.replace(" Social AI",""))}</span></div>
+        <div class="kv-row"><span class="kv-k">Pillar</span><span>${escapeHtml(s.pillar)}</span></div>
+        <div class="kv-row"><span class="kv-k">Format</span><span>${escapeHtml(s.format)}</span></div>
+        <div class="kv-row"><span class="kv-k">Platform</span><span>${p.emoji} ${escapeHtml(p.label)}</span></div>
+        <div class="kv-row"><span class="kv-k">Duration</span><span>${escapeHtml(brief.duration)}</span></div>
+        <div class="kv-row"><span class="kv-k">Cast</span><span>${escapeHtml(brief.cast)}</span></div>
+        <div class="kv-row"><span class="kv-k">Gamer-life anchor</span><span>${escapeHtml(brief.anchor)}</span></div>
+      </div>
+      <div class="shipbay-brief-section">
+        <div class="section-h">🎣 3-SECOND HOOK</div>
+        <div class="hook-line">"${escapeHtml(brief.hook)}"</div>
+      </div>
+      <div class="shipbay-brief-section">
+        <div class="section-h">🎬 SCENE BREAKDOWN</div>
+        ${sceneHtml}
+      </div>
+      <div class="shipbay-brief-section">
+        <div class="section-h">🎨 VISUAL & TONAL STYLE</div>
+        <div>${escapeHtml(brief.visual_style)}</div>
+      </div>
+      <div class="shipbay-brief-section">
+        <div class="section-h">🛒 INTEGRATION MOMENT</div>
+        <div>${escapeHtml(brief.integration)}</div>
+      </div>
+      <div class="shipbay-brief-section">
+        <div class="section-h">📦 PLATFORM SPEC</div>
+        <div class="kv-row"><span class="kv-k">Framing</span><span>${escapeHtml(brief.framing)}</span></div>
+        <div class="kv-row"><span class="kv-k">Audio</span><span>${escapeHtml(brief.audio)}</span></div>
+        <div class="kv-row"><span class="kv-k">CTA style</span><span>${escapeHtml(brief.cta_style)}</span></div>
+      </div>
+    </div>`;
+}
+function shipBayBriefAsText(brief) {
+  // Plain text version for sending to Higgsfield via sendPrompt
+  if (!brief || brief.blocked) return "";
+  const s = brief.slot, i = brief.idea, p = brief.platform;
   const lines = [];
-  lines.push("[V/O]   " + (idea.hook || "Open on a strong visual."));
-  if (slot.pillar === "News") {
-    lines.push("[V/O]   Here are the 3 things that actually matter.");
-    lines.push("[V/O]   One — release window. Two — region restriction. Three — price floor.");
-    lines.push("[V/O]   You've got " + (slot.code === "THU_1" ? "until launch day" : "the rest of the week") + ".");
-    lines.push("[CTA]   " + (idea.cta || "Stock up at OffGamers — link in bio."));
-  } else if (slot.pillar === "Educational") {
-    lines.push("[V/O]   Here's what most people miss.");
-    lines.push("[V/O]   Step one — open the platform. Step two — verify region. Step three — confirm before paying.");
-    lines.push("[V/O]   That's the difference between a $40 win and a $300 mistake.");
-    lines.push("[CTA]   " + (idea.cta || "Save this. Share with the squad."));
-  } else if (slot.pillar === "Brand" || slot.pillar === "Brand/Community") {
-    lines.push("[CHAR]  " + (idea.mia ? "Mia: opens the scene with the line that pulls you in." : "Hero character lands the opening beat."));
-    lines.push("[BEAT]  Conflict / discovery / payoff cycle in 3 cuts.");
-    lines.push("[CHAR]  Closing line that earns the rewatch and seeds next episode.");
-    lines.push("[CTA]   " + (idea.cta || "Follow for next episode."));
-  } else if (slot.pillar === "Entertainment") {
-    lines.push("[V/O]   Setup — relatable scenario.");
-    lines.push("[V/O]   Escalation — twist or exaggeration.");
-    lines.push("[V/O]   Punchline — payoff card or visual flip.");
-    lines.push("[CTA]   " + (idea.cta || "Tag a friend."));
-  } else if (slot.pillar === "Informative") {
-    const trendingTopic = TRENDS.trending_titles && TRENDS.trending_titles[0] ? TRENDS.trending_titles[0].title : "this week's big release";
-    const isBackAndForth = Math.random() > 0.5;
-    if (isBackAndForth) {
-      lines.push("[HOST 1] 'Okay so — did you know that [surprising fact about " + trendingTopic + "]?'");
-      lines.push("[HOST 2] 'Wait, seriously? Because everyone I know thinks it's the opposite.'");
-      lines.push("[HOST 1] 'That's exactly the point. Here's why...' — delivers the reframe in 2 punchy sentences.");
-      lines.push("[HOST 2] 'So what you're saying is...' — lands the takeaway cleanly.");
-      lines.push("[BOTH / HOST 1] " + (idea.cta || "Drop your take below. See you next Thursday."));
-    } else {
-      lines.push("[HOST]  'Nobody's talking about this — but they should be.' — opens on the hook.");
-      lines.push("[HOST]  Delivers the Did You Know fact or hot take in 2-3 conversational sentences. No jargon. Talks like a friend.");
-      lines.push("[HOST]  'And here's the part that actually matters for you as a gamer...' — bridges to the relevant angle.");
-      lines.push("[HOST]  Drops the open loop or surprising twist that earns the follow.");
-      lines.push("[CTA]   " + (idea.cta || "Follow for next Thursday's drop."));
-    }
-  } else if (slot.pillar === "Informative") {
-    const trendingTopic = TRENDS.trending_titles && TRENDS.trending_titles[0] ? TRENDS.trending_titles[0].title : "this week's big release";
-    const isBackAndForth = Math.random() > 0.5;
-    if (isBackAndForth) {
-      lines.push("[HOST 1] 'Okay so — did you know that [surprising fact about " + trendingTopic + "]?'");
-      lines.push("[HOST 2] 'Wait, seriously? Because everyone I know thinks it's the opposite.'");
-      lines.push("[HOST 1] 'That's exactly the point. Here's why...' — delivers the reframe in 2 punchy sentences.");
-      lines.push("[HOST 2] 'So what you're saying is...' — lands the takeaway cleanly.");
-      lines.push("[BOTH]   " + (idea.cta || "Drop your take below. See you next Thursday."));
-    } else {
-      lines.push("[HOST]   'Nobody's talking about this — but they should be.' — opens on the hook.");
-      lines.push("[HOST]   Delivers the Did You Know fact or hot take in 2-3 conversational sentences. No jargon. Talks like a friend.");
-      lines.push("[HOST]   'And here's the part that actually matters for you as a gamer...' — bridges to relevant angle.");
-      lines.push("[HOST]   Drops the open loop or surprising twist that earns the follow.");
-      lines.push("[CTA]    " + (idea.cta || "Follow for next Thursday's drop."));
-    }
-  } else if (slot.pillar === "Informative") {
-    const trendingTopic = TRENDS.trending_titles && TRENDS.trending_titles[0] ? TRENDS.trending_titles[0].title : "this week's big release";
-    const isBackAndForth = Math.random() > 0.5;
-    if (isBackAndForth) {
-      lines.push("[HOST 1] 'Okay so — did you know that [surprising fact about " + trendingTopic + "]?'");
-      lines.push("[HOST 2] 'Wait, seriously? Because everyone I know thinks it's the opposite.'");
-      lines.push("[HOST 1] 'That's exactly the point. Here's why...' — delivers the reframe in 2 punchy sentences.");
-      lines.push("[HOST 2] 'So what you're saying is...' — lands the takeaway cleanly.");
-      lines.push("[BOTH]   " + (idea.cta || "Drop your take below. See you next Thursday."));
-    } else {
-      lines.push("[HOST]   'Nobody's talking about this — but they should be.'");
-      lines.push("[HOST]   Delivers the Did You Know fact in 2-3 conversational sentences. No jargon.");
-      lines.push("[HOST]   'And here's the part that actually matters for you as a gamer...'");
-      lines.push("[HOST]   Drops the open loop or surprising twist that earns the follow.");
-      lines.push("[CTA]    " + (idea.cta || "Follow for next Thursday's drop."));
-    }
-  } else {
-    lines.push("[V/O]   Core message in 2 sentences.");
-    lines.push("[V/O]   Reinforce why this matters now.");
-    lines.push("[CTA]   " + (idea.cta || "Drive to site."));
-  }
+  lines.push(`# HIGGSFIELD BRIEF — ${i.title}`);
+  lines.push(`${s.day} · ${s.pillar} · ${s.format} · ${p.label} · ${brief.duration}`);
+  lines.push(`Brand: ${BRANDS_META[CURRENT_BRAND].name.replace(" Social AI","")}`);
+  lines.push(`Cast: ${brief.cast}`);
+  lines.push(`Anchor: ${brief.anchor}`);
+  lines.push(``);
+  lines.push(`## 3-SECOND HOOK`);
+  lines.push(`"${brief.hook}"`);
+  lines.push(``);
+  lines.push(`## SCENE BREAKDOWN`);
+  brief.scenes.forEach(sc => {
+    lines.push(``);
+    lines.push(`### SCENE ${sc.n} — ${sc.title}  (${sc.duration})`);
+    lines.push(`Character in shot: ${sc.cast}`);
+    lines.push(`Setting: ${sc.setting}`);
+    lines.push(`Action: ${sc.action}`);
+    lines.push(`Dialogue: ${sc.dialogue}`);
+    lines.push(`Camera: ${sc.camera}`);
+    lines.push(`Transition: ${sc.transition}`);
+    lines.push(`HIGGSFIELD IMAGE PROMPT: ${sc.image_prompt}`);
+    lines.push(`HIGGSFIELD VIDEO PROMPT: ${sc.video_prompt}`);
+  });
+  lines.push(``);
+  lines.push(`## VISUAL & TONAL STYLE`);
+  lines.push(brief.visual_style);
+  lines.push(``);
+  lines.push(`## INTEGRATION MOMENT`);
+  lines.push(brief.integration);
+  lines.push(``);
+  lines.push(`## PLATFORM SPEC`);
+  lines.push(`Framing: ${brief.framing}`);
+  lines.push(`Audio: ${brief.audio}`);
+  lines.push(`CTA style: ${brief.cta_style}`);
   return lines.join("\n");
 }
-async function generateAIScript(briefId) {
-  const brief = state.briefs[briefId];
-  if (!brief) return;
-  const btn = document.querySelector(`[data-ai-script="${briefId}"]`);
-  if (btn) { btn.textContent = '⏳ Generating...'; btn.disabled = true; }
-  try {
-    const payload = {
-      model: "claude-sonnet-4-5",
-      max_tokens: 2000,
-      system: "You are a social media video script writer for gaming brands. Write complete, punchy scripts for 60-90 second social media videos. Respond ONLY with a valid JSON object, no markdown, no backticks, no extra text.",
-      messages: [{
-        role: "user",
-        content: `Write a production script for this brief:
-BRAND: ${CURRENT_BRAND === 'g2g' ? 'G2G (game key marketplace)' : 'OffGamers (gaming top-up store)'}
-TOPIC: ${brief.topic}
-HOOK: ${brief.hook}
-PILLAR: ${brief.pillar}
-CTA: ${brief.cta}
-KPI: ${brief.kpi}
-Return ONLY this JSON with no other text:
-{"facts":["fact 1","fact 2","fact 3"],"scenes":[{"ts":"0:00-0:03","scene":"scene name","script":"complete dialogue here","prompt":"detailed Higgsfield prompt here"}]}`
-      }]
-    };
-    console.log('Payload:', JSON.stringify(payload));
-    const response = await fetch("/api/claude", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    console.log('Response status:', response.status);
-    const data = await response.json();
-    console.log('Response data:', JSON.stringify(data));
-    const textContent = data.content.filter(c => c.type === 'text').map(c => c.text).join('');
-    const clean = textContent.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
-    state.aiScripts = state.aiScripts || {};
-    state.aiScripts[briefId] = parsed;
-    toast('✅ AI script generated!', 'ok');
-    renderMain();
-  } catch (err) {
-    console.error('AI script error:', err);
-    toast('Script generation failed — try again', 'bad');
-    if (btn) { btn.textContent = '✨ Generate AI Script'; btn.disabled = false; }
-  }
+/* ── SHIP MECHANICS ─────────────────────────────────────────────────────── */
+function shipBayShip(slotCode, ideaId, platformId) {
+  const key = shipBayVariantKey(slotCode, ideaId, platformId);
+  const brief = state.shipBay.briefs[key];
+  if (!brief || brief.blocked) { toast("Brief not ready or platform blocked", "bad"); return; }
+  if (state.shipBay.pendingShips[key]) { toast("Already queued — wait or cancel first", "warn"); return; }
+  const confirmMsg = `Ship "${brief.idea.title}" (${brief.platform.label}) to Higgsfield?\n\nThis will consume Higgsfield credits. You have 30s to cancel after shipping.`;
+  if (!confirm(confirmMsg)) return;
+  // Push to shipping log immediately with QUEUED status
+  const logEntry = {
+    ts: new Date().toISOString(),
+    day: brief.slot.day,
+    slotCode: brief.slot.code,
+    platform: brief.platform.label,
+    platformId: brief.platform.id,
+    ideaId: brief.idea.id,
+    title: brief.idea.title,
+    status: "queued",
+    key,
+  };
+  state.shipBay.shipLog.unshift(logEntry);
+  // 30-second cancel window
+  const timeoutId = setTimeout(() => {
+    delete state.shipBay.pendingShips[key];
+    shipBayFire(key, brief);
+  }, 30000);
+  state.shipBay.pendingShips[key] = timeoutId;
+  toast(`Queued · ${brief.platform.label} · 30s to cancel`, "ok");
+  renderMain();
 }
-function generateTimestampTable(b) {
-  const pillar = b.pillar || "Informative";
-  const trendingTopic = TRENDS.trending_titles && TRENDS.trending_titles[0] ? TRENDS.trending_titles[0].title : "this week's big release";
-  const isBackAndForth = pillar === "Informative" && Math.random() > 0.5;
-  const scenes = [];
-  if (pillar === "Informative") {
-    scenes.push({ ts: "0:00–0:03", scene: "Hook — host opens strong",
-      script: isBackAndForth ? `[HOST 1] 'Okay so — did you know that [surprising fact about ${trendingTopic}]?'` : `[HOST] 'Nobody's talking about this — but they should be.'`,
-      prompt: "ECU host face, rack focus reveal, calm-authoritative tone. Subtle push-in 1.0→1.05x. Warm key light. No music yet — let the silence land the hook." });
-    scenes.push({ ts: "0:03–0:20", scene: "Deliver the fact",
-      script: isBackAndForth ? `[HOST 2] 'Wait, seriously? Because everyone I know thinks it's the opposite.'\n[HOST 1] 'That's exactly the point. Here's why...'` : `[HOST] Delivers the Did You Know fact in 2-3 conversational sentences. No jargon.`,
-      prompt: `Medium 2-shot or single MCU. Data overlay lower-third animates in. Cross-cut b-roll of ${trendingTopic}. UI graphic wipes on. Pacing: deliberate, 1 cut per 4-5s.` });
-    scenes.push({ ts: "0:20–0:40", scene: "Twist / Did You Know moment",
-      script: isBackAndForth ? `[HOST 2] 'So what you're saying is...' — lands the takeaway.\n[HOST 1] 'Exactly. And most people miss this because...'` : `[HOST] 'And here's the part that actually matters for you as a gamer...' — drops the surprising twist.`,
-      prompt: "Push-in on host at twist moment. Light bloom flash on the key stat. Animated text overlay of the surprising number. Score swells subtly. Camera holds." });
-    scenes.push({ ts: "0:40–0:55", scene: "Payoff + brand moment",
-      script: isBackAndForth ? `[HOST 1] 'Bottom line — [one sentence takeaway tied to ${trendingTopic}].'\n[HOST 2] 'If you're a gamer and you didn't know this, now you do.'` : `[HOST] Drops the open loop — teases next week or asks for the viewer's take.`,
-      prompt: "Pull back to wider shot. Brand lower-third fades in. Clean composition. Logo sting at end of sentence. Warm grade." });
-    scenes.push({ ts: "0:55–1:00", scene: "CTA card",
-      script: isBackAndForth ? `[BOTH] '${b.cta || "Drop your take below. See you next Thursday."}'` : `[HOST] '${b.cta || "Follow for next Thursday's drop."}'`,
-      prompt: "Static brand card. Logo centred. CTA text animates in. Hold 4s. Fade out. No music tail — clean cut to black." });
-  } else if (pillar === "Entertainment") {
-    scenes.push({ ts: "0:00–0:02", scene: "Cold open — hook",
-      script: `[V/O] ${b.hook || "Opens on the relatable scenario."}`,
-      prompt: "Whip-pan entry, dutch angle ~25°. Speed ramp deceleration + heavy motion blur. Explosive entry." });
-    scenes.push({ ts: "0:02–0:08", scene: "Setup — relatable scenario",
-      script: "[V/O] Setup beat — the situation every gamer recognises.",
-      prompt: "Handheld POV, low angle. Digital zoom pump 1.0→1.25x. Fast cut every 1.4s. Saturated grade, neon highlights." });
-    scenes.push({ ts: "0:08–0:18", scene: "Escalation — twist",
-      script: "[V/O] Escalation — each beat 1 step funnier or more relatable than the last.",
-      prompt: "Speed ramp acceleration. Reaction beat with jitter. Multi-exposure clone moment at peak energy." });
-    scenes.push({ ts: "0:18–0:25", scene: "Punchline — payoff",
-      script: "[V/O] Punchline lands. Visual flip or freeze on the reaction.",
-      prompt: "Speed ramp deceleration + light streak. Freeze-frame to title. Tracking dolly slows to 25% across 0.8s." });
-    scenes.push({ ts: "0:25–0:30", scene: "CTA",
-      script: `[CTA] ${b.cta || "Tag a friend who's been here."}`,
-      prompt: "Logo reveal + clean fade. Centred composition. Brand card hold 3s. Fade out." });
-  } else if (pillar === "Educational") {
-    scenes.push({ ts: "0:00–0:03", scene: "Problem hook",
-      script: `[V/O] ${b.hook || "Opens on the problem most people face."}`,
-      prompt: "Smash-cut text overlay. Medium shot frustrated reaction. Hard cut to demo setup." });
-    scenes.push({ ts: "0:03–0:12", scene: "Step-by-step demo",
-      script: "[V/O] 'Here's what most people miss.' — Step 1, Step 2, Step 3.",
-      prompt: "Top-down lock-off overhead. UI annotation overlay + arrow pointer. Screen-record insert with push-in. Graphic wipe between steps." });
-    scenes.push({ ts: "0:12–0:22", scene: "Payoff — the fix",
-      script: "[V/O] 'That's the difference between a $40 win and a $300 mistake.'",
-      prompt: "Slow-motion payoff success state. Pull-back from detail to subject reaction. Freeze on smile. Split-screen before/after." });
-    scenes.push({ ts: "0:22–0:30", scene: "Recap + CTA",
-      script: `[CTA] ${b.cta || "Save this. Share with the squad."}`,
-      prompt: "Bullet text animation 3 lines. Static graphic frame. Brand card + URL stamp. Hold + fade." });
-  } else if (pillar === "Promotional") {
-    scenes.push({ ts: "0:00–0:02", scene: "Price stamp open",
-      script: `[V/O] ${b.hook || "Deal opens with impact."}`,
-      prompt: "Hard zoom-in + impact frame flash. Static product centre, 1.0→1.4x in 0.3s. Smash cut." });
-    scenes.push({ ts: "0:02–0:08", scene: "Product hero",
-      script: `[V/O] '${b.product || "Product"} — here's what you get.'`,
-      prompt: "360° turntable + soft bloom. Orbit dolly around product. Big-type kinetic text price + %. Fade through brand colour." });
-    scenes.push({ ts: "0:08–0:15", scene: "Urgency + social proof",
-      script: "[V/O] 'Limited time. Here's why this matters right now.'",
-      prompt: "Countdown overlay + scanline. Subject + ticker composite. Quick cut montage 3 reactions. Ticker slams off-screen." });
-    scenes.push({ ts: "0:15–0:20", scene: "CTA stamp",
-      script: `[CTA] ${b.cta || "Link in bio. Ends tonight."}`,
-      prompt: "Logo + button graphic + price seal. Centred lock-off. Hold for read. Brand card hold + fade." });
+function shipBayCancelShip(key) {
+  const tid = state.shipBay.pendingShips[key];
+  if (!tid) return;
+  clearTimeout(tid);
+  delete state.shipBay.pendingShips[key];
+  const entry = state.shipBay.shipLog.find(e => e.key === key && e.status === "queued");
+  if (entry) entry.status = "cancelled";
+  toast("Ship cancelled · credits saved", "ok");
+  renderMain();
+}
+function shipBayFire(key, brief) {
+  const briefText = shipBayBriefAsText(brief);
+  const entry = state.shipBay.shipLog.find(e => e.key === key && e.status === "queued");
+  if (entry) entry.status = "shipped";
+  // Cowork bridge: sendPrompt fires higgsfield-film-execution skill in chat
+  const prompt = `execute brief on higgsfield\n\n${briefText}`;
+  if (typeof window.sendPrompt === "function") {
+    try { window.sendPrompt(prompt); }
+    catch (e) { console.error("sendPrompt failed", e); }
   } else {
-    scenes.push({ ts: "0:00–0:03", scene: "Hook",
-      script: `[V/O] ${b.hook || "Opens strong."}`,
-      prompt: "Strong visual entry. Camera movement establishes tone. Hook lands in first 2s." });
-    scenes.push({ ts: "0:03–0:20", scene: "Core delivery",
-      script: "[V/O] Core message delivered in 2-3 punchy sentences.",
-      prompt: "Medium shot, deliberate pacing. B-roll cutaways. Clean cuts every 3-4s." });
-    scenes.push({ ts: "0:20–0:28", scene: "Payoff",
-      script: "[V/O] The takeaway that earns the save or share.",
-      prompt: "Push-in on key moment. Text overlay reinforces the point. Score swell." });
-    scenes.push({ ts: "0:28–0:30", scene: "CTA",
-      script: `[CTA] ${b.cta || "Drive to site."}`,
-      prompt: "Brand card. Logo + URL. Hold 3s. Fade out." });
+    // Fallback: copy to clipboard so user can paste into Cowork chat
+    try {
+      navigator.clipboard.writeText(prompt);
+      toast(`📋 Brief copied · paste into Cowork chat to execute`, "ok");
+    } catch (e) { /* ignore */ }
   }
-  const aiScript = (state.aiScripts || {})[b.id];
-  const displayScenes = aiScript ? aiScript.scenes : scenes;
-  return displayScenes.map(s => `
-    <tr>
-      <td style="color:var(--accent-2);font-family:'IBM Plex Mono',monospace;font-size:11px;white-space:nowrap">${s.ts}</td>
-      <td style="font-weight:600;font-size:12px">${s.scene}</td>
-      <td style="font-size:12px;color:var(--text-2)"><pre style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;white-space:pre-wrap;background:var(--bg-3);padding:6px 8px;border-radius:4px">${s.script}</pre></td>
-      <td style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace"><pre style="margin:0;white-space:pre-wrap;background:rgba(94,220,192,.05);padding:6px 8px;border-radius:4px;border:1px solid rgba(94,220,192,.12)">${s.prompt}</pre></td>
-    </tr>`).join('');
+  renderMain();
 }
-// ─── Rule 4 — Phonetic Guide (TTS pronunciation sidecar) ──────────────────────
-const PHONETIC_GUIDE = {
-  "Hiyuki": "Hee-YOO-kee", "Wuthering Waves": "WUTH-ering Waves", "WuWa": "WOO-wah",
-  "Honkai": "HON-kai", "HSR": "H-S-R", "Genshin": "GHEN-shin", "Fontaine": "fon-TAYN",
-  "Sumeru": "soo-MAY-roo", "Mondstadt": "MOND-shtaht", "Inazuma": "ee-nah-ZOO-mah",
-  "Liyue": "lee-YOO-ay", "Natlan": "NAHT-lahn", "Mihoyo": "ME-hoy-yoh",
-  "HoYoverse": "HOY-oh-verse", "Kuro": "KOO-roh", "Zenless": "Zenless Zone Zero",
-  "ZZZ": "Zenless Zone Zero", "Saber": "SAY-bur", "Nahida": "nah-HEE-dah",
-  "Furina": "foo-REE-nah", "Yelan": "YEH-lahn", "Codashop": "KOH-dah-shop", "Eneba": "EN-eh-bah"
-};
-function detectGachaTerms(brief) {
-  const haystack = [brief.topic, brief.hook, brief.script, brief.storyline].filter(Boolean).join(" \n ");
-  const found = [];
-  for (const [term, phon] of Object.entries(PHONETIC_GUIDE)) {
-    const re = new RegExp("\\b" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i");
-    if (re.test(haystack)) {
-      const where = re.test(brief.topic || "") ? "topic"
-                  : re.test(brief.hook  || "") ? "hook"
-                  : re.test(brief.script|| "") ? "script" : "storyline";
-      found.push({ term, phonetic: phon, where });
+/* ── RENDER FUNCTIONS ───────────────────────────────────────────────────── */
+function renderShipBayDailyTab() {
+  const today = shipBayTodayCode();
+  const todaySlots = shipBaySlotsForDay(today);
+  if (!todaySlots.length) {
+    return `<div class="card"><div class="muted">No slots configured for today (${today}) in ${BRANDS_META[CURRENT_BRAND].name}.</div></div>`;
+  }
+  const slotsHtml = todaySlots.map(slot => {
+    const ideas = IDEAS[slot.code] || [];
+    const pickedId = state.shipBay.dailyPicks[slot.code];
+    const ideaCards = ideas.map(idea => `
+      <div class="shipbay-idea ${pickedId === idea.id ? 'selected' : ''}" onclick="shipBayPickIdea('${slot.code}','${idea.id}')">
+        <div class="idea-id">${idea.id}${idea.mia ? ' · 🌟 Mia' : ''}</div>
+        <div class="idea-title">${escapeHtml(idea.title)}</div>
+        <div class="idea-hook">${escapeHtml(idea.hook || '')}</div>
+        <div class="idea-foot"><span class="pill muted">KPI: ${escapeHtml(idea.kpi || '—')}</span></div>
+      </div>`).join("");
+    let variantsHtml = "";
+    if (pickedId) {
+      const picked = ideas.find(i => i.id === pickedId);
+      variantsHtml = `<div class="shipbay-variants-head">✓ Picked <strong>${escapeHtml(picked.title)}</strong> — platform variants:</div>` +
+        SHIPBAY_PLATFORMS.map(p => renderShipBayVariantCard(slot.code, pickedId, p.id)).join("");
     }
-  }
-  return found;
+    return `<div class="shipbay-slot">
+      <div class="slot-head">
+        <span class="slot-code">${slot.code}</span>
+        <span class="slot-title">${slot.day} · ${slot.pillar} · ${slot.format}</span>
+        <span class="slot-meta">${escapeHtml(slot.intent || '')}</span>
+      </div>
+      <div class="shipbay-ideas">${ideaCards}</div>
+      ${variantsHtml}
+    </div>`;
+  }).join("");
+  return `<div class="card shipbay-info">
+    <div class="row"><div class="icon">📅</div><div class="text"><strong>Today: ${today}</strong><small>Pick 1 of 3 per slot · review the brief · ship to Higgsfield. No approval gate.</small></div></div>
+  </div>${slotsHtml}`;
 }
-/* views.l3 / views.g2 / attachGate2Handlers removed — approval layer retired in v2.7. */
-/* Briefs now auto-flow from Ship Bay into Asset Production with no human gate. */
+function renderShipBayWeeklyTab() {
+  const dayOrder = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const dayCards = dayOrder.map(day => {
+    const daySlots = shipBaySlotsForDay(day);
+    if (!daySlots.length) return "";
+    const slotBlocks = daySlots.map(slot => {
+      const autoPickedId = shipBayAutoPickIdea(slot.code);
+      if (!autoPickedId) return `<div class="shipbay-slot muted">${slot.code} — no ideas defined</div>`;
+      const idea = (IDEAS[slot.code] || []).find(i => i.id === autoPickedId);
+      const variants = SHIPBAY_PLATFORMS.map(p => renderShipBayVariantCard(slot.code, autoPickedId, p.id)).join("");
+      return `<div class="shipbay-slot">
+        <div class="slot-head">
+          <span class="slot-code">${slot.code}</span>
+          <span class="slot-title">${slot.day} · ${slot.pillar} · ${slot.format}</span>
+          <span class="pill ok">auto-pick: ${escapeHtml(idea.id)}${idea.mia ? ' 🌟' : ''}</span>
+        </div>
+        <div class="shipbay-idea-locked">
+          <div class="idea-title">${escapeHtml(idea.title)}</div>
+          <div class="idea-hook muted">${escapeHtml(idea.hook || '')}</div>
+        </div>
+        ${variants}
+      </div>`;
+    }).join("");
+    return `<div class="shipbay-day"><h3 class="shipbay-day-h">${day}</h3>${slotBlocks}</div>`;
+  }).join("");
+  return `<div class="card shipbay-info">
+    <div class="row"><div class="icon">📆</div><div class="text"><strong>Week 1 mode · per-day buttons only · no auto-ship</strong><small>Each day's top idea (★ Mia preferred) is locked. Open any variant to preview the brief, then ship one platform at a time.</small></div></div>
+  </div>${dayCards}`;
+}
+function renderShipBayVariantCard(slotCode, ideaId, platformId) {
+  const key = shipBayVariantKey(slotCode, ideaId, platformId);
+  const platform = SHIPBAY_PLATFORMS.find(p => p.id === platformId);
+  const expanded = !!state.shipBay.expanded[key];
+  const brief = state.shipBay.briefs[key];
+  const isBlocked = brief && brief.blocked;
+  const pending = !!state.shipBay.pendingShips[key];
+  const logEntry = state.shipBay.shipLog.find(e => e.key === key);
+  const status = logEntry?.status; // queued | shipped | cancelled
+  let statusPill = "";
+  if (pending) statusPill = `<span class="pill warn">⏱ queued · cancel within 30s</span>`;
+  else if (status === "shipped") statusPill = `<span class="pill ok">✓ shipped</span>`;
+  else if (status === "cancelled") statusPill = `<span class="pill bad">✕ cancelled</span>`;
+  const buttons = isBlocked
+    ? `<button class="btn ghost small" disabled>🚫 Blocked — see brief</button>`
+    : pending
+      ? `<button class="btn reject small" onclick="shipBayCancelShip('${key}')">✕ Cancel ship (30s)</button>`
+      : `<button class="btn primary small" onclick="shipBayShip('${slotCode}','${ideaId}','${platformId}')">🚀 Ship to Higgsfield</button>
+         <button class="btn small" onclick="shipBayRefreshBrief('${slotCode}','${ideaId}','${platformId}')">↻ Refresh</button>`;
+  return `<div class="shipbay-variant ${expanded ? 'expanded' : ''} ${isBlocked ? 'blocked' : ''}">
+    <div class="shipbay-variant-head" onclick="shipBayToggleBrief('${slotCode}','${ideaId}','${platformId}')">
+      <span class="platform-badge">${platform.emoji} ${platform.label}</span>
+      <span class="muted small">${escapeHtml(platform.default_duration)} · ${escapeHtml(platform.style.split("·")[0].trim())}</span>
+      <span class="spacer"></span>
+      ${statusPill}
+      <span class="chevron">${expanded ? '▲' : '▼ View brief'}</span>
+    </div>
+    ${expanded ? `<div class="shipbay-variant-body">
+      ${formatShipBayBrief(brief)}
+      <div class="shipbay-variant-actions">${buttons}</div>
+    </div>` : ''}
+  </div>`;
+}
+function renderShipBayLog() {
+  if (!state.shipBay.shipLog.length) return "";
+  const rows = state.shipBay.shipLog.slice(0, 20).map(e => {
+    const t = new Date(e.ts);
+    const time = t.toLocaleString();
+    const statusPill =
+      e.status === "queued"    ? `<span class="pill warn">⏱ queued</span>` :
+      e.status === "shipped"   ? `<span class="pill ok">✓ shipped</span>` :
+      e.status === "cancelled" ? `<span class="pill bad">✕ cancelled</span>` :
+                                 `<span class="pill muted">${escapeHtml(e.status)}</span>`;
+    return `<tr><td>${time}</td><td>${escapeHtml(e.day)} · ${escapeHtml(e.slotCode)}</td><td>${escapeHtml(e.platform)}</td><td>${escapeHtml(e.title)}</td><td>${statusPill}</td></tr>`;
+  }).join("");
+  return `<div class="card shipbay-log">
+    <div class="row"><strong>📋 Shipping Log</strong><span class="muted small">last ${Math.min(state.shipBay.shipLog.length, 20)} events</span></div>
+    <table class="kv-table"><thead><tr><th>Time</th><th>Day · Slot</th><th>Platform</th><th>Idea</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>
+  </div>`;
+}
+views.shipbay = () => {
+  const tab = state.shipBay.tab || "daily";
+  const tabBar = `<div class="card shipbay-tabbar">
+    <button class="btn ${tab==='daily'?'primary':''}" onclick="shipBaySwitchTab('daily')">📅 Daily — Today</button>
+    <button class="btn ${tab==='weekly'?'primary':''}" onclick="shipBaySwitchTab('weekly')">📆 Weekly — All 7 days × 3 platforms</button>
+  </div>`;
+  const body = tab === "daily" ? renderShipBayDailyTab() : renderShipBayWeeklyTab();
+  return pageHeader("🚀 Ship Bay — No-Approval Express",
+    `Pick idea → preview brief → ship to Higgsfield · ${BRANDS_META[CURRENT_BRAND].name.replace(" Social AI","")} · per-day buttons · no auto-ship`)
+    + tabBar + body + renderShipBayLog();
+};
+
 views.l4 = () => {
-  autoSeedPicksAndBriefs();  // no-approval v2.7 — auto-ship
+  if (!state.gate2Submitted) return pageHeader("Asset Production", "Locked") + `<div class="empty">Finalise Gate 2 first.</div>`;
   const approved = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === "approved");
   const canva = approved.filter(b => b.route === "canva");
   const video = approved.filter(b => b.route === "video");
@@ -2359,14 +2615,14 @@ views.l4 = () => {
     </div>
     <div class="lane">
       <div class="lane-head"><span class="lane-title">🎬 Video Lane</span><span class="lane-cap">R1: generate ALL prompts upfront for review · R8: refuses renders on briefs older than 24h</span><span class="spacer"></span><button class="btn primary small" id="l4-gen-all">⚡ Generate ALL Seedance prompts (R1)</button></div>
-      <div class="muted small" style="padding:0 14px 8px">Rule 1 — review all prompts in one pass before any render fires. Catches prompt-quality issues that would otherwise burn 8–72 credits per scene. Rule 8 — stale-brief guard refuses renders if Ship Bay dispatch is &gt;24h old.</div>
+      <div class="muted small" style="padding:0 14px 8px">Rule 1 — review all prompts in one pass before any render fires. Catches prompt-quality issues that would otherwise burn 8–72 credits per scene. Rule 8 — stale-brief guard refuses renders if Gate 2 approval is &gt;24h old.</div>
       ${videoRows}
     </div>
     ${hfPanel}
     <div class="card" style="margin-top:16px"><div class="row"><div>Once Vista Social schedules the assets, monitor in <strong>Layer 5</strong>.</div><div class="spacer"></div><button class="btn primary" onclick="nav('l5')">Go to Layer 5 →</button></div></div>`;
 };
 views.l5 = () => {
-  autoSeedPicksAndBriefs();  // no-approval v2.7 — auto-ship
+  if (!state.gate2Submitted) return pageHeader("Live Postsation", "Locked") + `<div class="empty">Finalise Gate 2 first.</div>`;
   const approved = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === "approved");
   const rows = approved.map(b => {
     const status = state.publishConfirms[b.id] || "pending";
@@ -2432,7 +2688,7 @@ function attachL5Handlers() {
   });
 }
 views.l6 = () => {
-  autoSeedPicksAndBriefs();  // no-approval v2.7 — auto-ship
+  if (!state.gate2Submitted) return pageHeader("Learnings Loop", "Locked") + `<div class="empty">Finalise Gate 2 first.</div>`;
   const approved = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === "approved");
   const rows = approved.map(b => {
     const status = state.publishConfirms[b.id] || "pending";
@@ -2466,7 +2722,7 @@ function attachL4Handlers() {
       const id = btn.dataset.videoPrompt;
       const brief = state.briefs[id];
       if (!brief) { toast("Brief not found", "bad"); return; }
-      // Rule 8 — stale-brief check (>24h since Ship Bay dispatch)
+      // Rule 8 — stale-brief check (>24h since Gate 2 approval)
       const decision = state.gate2[id];
       if (decision && decision.approvedAt) {
         const ageH = (Date.now() - decision.approvedAt) / 36e5;
@@ -2777,8 +3033,6 @@ function toast(msg, kind = "") {
   setTimeout(() => t.remove(), 2400);
 }
 applyBrandChrome();
-// v2.7 — seed Ship Bay before first render so Asset Production / Publish / Live / Learnings views aren't empty.
-autoSeedPicksAndBriefs();
 renderSidebar();
 renderMain();
 function regenerateBrief(briefId, reason) {
@@ -2823,9 +3077,9 @@ function copyCanvaFields() {
   navigator.clipboard.writeText(out).then(() => toast("Canva fields copied to clipboard"));
 }
 views.l4_5 = () => {
-  autoSeedPicksAndBriefs();  // no-approval v2.7 — auto-ship
+  if (!state.gate2Submitted) return pageHeader("Publish Schedule", "Locked") + `<div class="empty">Finalise Gate 2 first.</div>`;
   const briefs = Object.values(state.briefs).filter(b => state.gate2[b.id]?.status === 'approved');
-  if (!briefs.length) return pageHeader("Publish Schedule", "No briefs queued") + `<div class="empty">Resume slots in <a onclick="nav('ship_bay')">Ship Bay</a> to schedule.</div>`;
+  if (!briefs.length) return pageHeader("Publish Schedule", "No approved briefs yet") + `<div class="empty">Approve briefs at Gate 2 to schedule.</div>`;
   const sched = briefs.map(b => {
     const slot = SLOTS.find(s => s.code === b.slot);
     const status = (state.scheduledPosts && state.scheduledPosts[b.id]) || { state: 'queued', publishAt: '—', vistaJobId: '—' };
