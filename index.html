@@ -2758,30 +2758,59 @@ function renderShipBayDailyTab() {
    + TikTok Live in parallel, then re-renders so Ship Bay picks up new data. */
 async function refreshShipBayLiveSignals() {
   toast("Refreshing live signals…");
+  // Use the DOM-independent fetcher — the Trend Radar's drop-watch-body
+  // element isn't on the Ship Bay view, so populateDropWatch would no-op.
   await Promise.all([
-    populateDropWatch().catch(e => console.error("[dropwatch] failed:", e)),
+    fetchDropWatchCache().catch(e => console.error("[dropwatch] failed:", e)),
     loadTikTokTrends().catch(e => console.error("[tiktok] failed:", e)),
   ]);
-  renderMain();
+  if (state.current === "shipbay") renderMain();
   toast("Live signals refreshed · Ship Bay updated", "ok");
+}
+/* DOM-independent Drop Watch fetcher — used when priming Ship Bay (where the
+   drop-watch-body table doesn't exist). Caches articles on state without
+   touching the DOM. */
+async function fetchDropWatchCache() {
+  try {
+    const resp = await fetch("/api/drop-watch", { cache: "no-store" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const data = await resp.json();
+    const articles = Array.isArray(data) ? data : (data.articles || []);
+    state.dropWatchCache = articles;
+    state.dropWatchFetchedAt = Date.now();
+  } catch (err) {
+    console.error("[drop-watch] prime fetch failed:", err);
+  }
 }
 /* Auto-prime live signals when Ship Bay first opens — so the master idea +
    per-platform tailoring reflect fresh Trend Radar + Drop Watch data without
-   the user having to click anything. Only fires if data is missing or stale. */
+   the user having to click anything. Only fires if data is missing or stale.
+   Re-entrance guarded so the renderMain() inside loadTikTokTrends doesn't
+   spawn a recursive loop. */
 async function primeShipBaySignalsIfStale() {
-  const tl = state.tikTokLive || {};
-  const tlAge = tl.fetched_at ? (Date.now() - new Date(tl.fetched_at).getTime()) / 60000 : Infinity;
-  const dwAge = state.dropWatchFetchedAt ? (Date.now() - state.dropWatchFetchedAt) / 60000 : Infinity;
-  const tasks = [];
-  if (!(state.dropWatchCache || []).length || dwAge > 60) {
-    tasks.push(populateDropWatch().then(() => { state.dropWatchFetchedAt = Date.now(); }).catch(() => {}));
-  }
-  if (!tl.fetched_at || tlAge > 60) {
-    tasks.push(loadTikTokTrends().catch(() => {}));
-  }
-  if (tasks.length) {
-    await Promise.all(tasks);
-    renderMain();
+  if (state._shipBayPriming) return;          // re-entrance guard — prevents freeze
+  state._shipBayPriming = true;
+  try {
+    const tl = state.tikTokLive || {};
+    const tlAge = tl.fetched_at ? (Date.now() - new Date(tl.fetched_at).getTime()) / 60000 : Infinity;
+    const dwAge = state.dropWatchFetchedAt ? (Date.now() - state.dropWatchFetchedAt) / 60000 : Infinity;
+    const tasks = [];
+    if (!(state.dropWatchCache || []).length || dwAge > 60) {
+      tasks.push(fetchDropWatchCache());
+    }
+    // Skip if a TikTok fetch is already in-flight (loading=true) — prevents
+    // duplicate fetches from racing each other.
+    if ((!tl.fetched_at || tlAge > 60) && !tl.loading) {
+      tasks.push(loadTikTokTrends().catch(() => {}));
+    }
+    if (tasks.length) {
+      await Promise.all(tasks);
+      // Re-render Ship Bay if we're still on it. Safe to call even if
+      // loadTikTokTrends already rendered — the priming guard blocks recursion.
+      if (state.current === "shipbay") renderMain();
+    }
+  } finally {
+    state._shipBayPriming = false;
   }
 }
 function renderShipBayWeeklyTab() {
