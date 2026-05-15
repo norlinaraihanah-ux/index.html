@@ -638,7 +638,7 @@ function cesTierClass(n) {
 }
 const LAYERS = [
   { cadence: "Daily", id: "l0a",  group: "l0",  label: "Performance Pulse",  status: "done" },
-  { cadence: "Weekly", id: "l0b",  group: "l0",  label: "Competitor Watch", status: "done" },
+  // l0b removed — Competitor Watch scrapped per Lina request
   { cadence: "Daily", id: "l0c",  group: "l0",  label: "Trend Radar",      status: "done" },
   { cadence: "Weekly", id: "l0d",  group: "l0",  label: "Audience Atlas",     status: "done" },
   { cadence: "Daily",  id: "l1",   group: "l12", label: "Insight Synthesis (live)", status: "done" },
@@ -685,16 +685,16 @@ const BRANDS_META = {
 };
 /* ---- Layer 0a — Vista Social, KPI snapshot per platform ---- */
 const _PLATFORMS_G2G = [
-  { p: "Instagram", handle: "@g2g_global",  posts: 23, postTarget: 20, er: 2.9, erTarget: 5.0, ces: 38, cesWow: -4, impressions: 142300, engagement: 4127,  top: "Reel",    wow: { imp: +12, eng: -8 } },
-  { p: "TikTok",    handle: "@gamer2gamer", posts: 7,  postTarget: 6,  er: 6.4, erTarget: 5.0, ces: 72, cesWow: +9, impressions: 98200,  engagement: 12880, top: "Video",   wow: { imp: +44, eng: +52 } },
-  { p: "LinkedIn",  handle: "G2G page",     posts: 3,  postTarget: 4,  er: 3.9, erTarget: 3.0, ces: 58, cesWow: +2, impressions: 11700,  engagement: 456,   top: "Article", wow: { imp: -3,  eng: +6 } },
-  { p: "Facebook",  handle: "@G2Gdotcom",   posts: 6,  postTarget: 10, er: 0.7, erTarget: 1.0, ces: 12, cesWow: -6, impressions: 24100,  engagement: 168,   top: "Post",    wow: { imp: -15, eng: -22 } },
+  { p: "Instagram", handle: "@g2g_global",  posts: 11, postTarget: 10, er: 2.9, erTarget: 5.0, ces: 38, cesWow: -4, impressions: 142300, engagement: 4127,  top: "Reel",    wow: { imp: +12, eng: -8 } },
+  { p: "TikTok",    handle: "@gamer2gamer", posts: 4,  postTarget: 3,  er: 6.4, erTarget: 5.0, ces: 72, cesWow: +9, impressions: 98200,  engagement: 12880, top: "Video",   wow: { imp: +44, eng: +52 } },
+  { p: "LinkedIn",  handle: "G2G page",     posts: 2,  postTarget: 2,  er: 3.9, erTarget: 3.0, ces: 58, cesWow: +2, impressions: 11700,  engagement: 456,   top: "Article", wow: { imp: -3,  eng: +6 } },
+  { p: "Facebook",  handle: "@G2Gdotcom",   posts: 3,  postTarget: 5,  er: 0.7, erTarget: 1.0, ces: 12, cesWow: -6, impressions: 24100,  engagement: 168,   top: "Post",    wow: { imp: -15, eng: -22 } },
 ];
 const _PLATFORMS_OG = [
-  { p: "Instagram", handle: "@offgamers",            posts: 11, postTarget: 11, er: 4.6, erTarget: 5.0, ces: 64, cesWow: +7, impressions: 71200, engagement: 3275, top: "Reel",  wow: { imp: +18, eng: +9 } },
-  { p: "TikTok",    handle: "@offgamers_official",   posts: 5,  postTarget: 5,  er: 7.1, erTarget: 5.0, ces: 78, cesWow: +11,impressions: 54800, engagement: 7820, top: "Video", wow: { imp: +33, eng: +27 } },
-  { p: "LinkedIn",  handle: "OffGamers page",        posts: 1,  postTarget: 2,  er: 2.4, erTarget: 3.0, ces: 41, cesWow: -3, impressions: 4200,  engagement: 101,  top: "Post",  wow: { imp: -6,  eng: -2 } },
-  { p: "Facebook",  handle: "@OffGamersStore",       posts: 8,  postTarget: 8,  er: 1.6, erTarget: 1.0, ces: 46, cesWow: +4, impressions: 32100, engagement: 514,  top: "Post",  wow: { imp: +4,  eng: +12 } },
+  { p: "Instagram", handle: "@offgamers",  posts: 9,  postTarget: 8,  er: 4.6, erTarget: 5.0, ces: 64, cesWow: +7, impressions: 71200, engagement: 3275, top: "Reel",  wow: { imp: +18, eng: +9 } },
+  { p: "TikTok",    handle: "@OffGamers",  posts: 4,  postTarget: 4,  er: 7.1, erTarget: 5.0, ces: 78, cesWow: +11,impressions: 54800, engagement: 7820, top: "Video", wow: { imp: +33, eng: +27 } },
+  { p: "LinkedIn",  handle: "OffGamers",   posts: 1,  postTarget: 2,  er: 2.4, erTarget: 3.0, ces: 41, cesWow: -3, impressions: 4200,  engagement: 101,  top: "Post",  wow: { imp: -6,  eng: -2 } },
+  { p: "Facebook",  handle: "@OffGamers",  posts: 6,  postTarget: 6,  er: 1.6, erTarget: 1.0, ces: 46, cesWow: +4, impressions: 32100, engagement: 514,  top: "Post",  wow: { imp: +4,  eng: +12 } },
 ];
 let PLATFORMS = _PLATFORMS_G2G;
 /* ---- Layer 0b — Competitor scrape ---- */
@@ -1218,7 +1218,19 @@ const BRANDS_DATA = {
     AUDIENCE: _AUDIENCE_OG, ANALYSIS: _ANALYSIS_OG, SLOTS: _SLOTS_OG, IDEAS: _IDEAS_OG,
   },
 };
+/* Restore last active brand from localStorage so refresh keeps the user on
+   the tab they were on (G2G or OffGamers). Falls back to g2g on first load
+   or if storage is blocked. */
 let CURRENT_BRAND = "g2g";
+try {
+  const _savedBrand = localStorage.getItem("activeBrand");
+  if (_savedBrand && BRANDS_DATA[_savedBrand]) {
+    CURRENT_BRAND = _savedBrand;
+    const _d = BRANDS_DATA[_savedBrand];
+    PLATFORMS = _d.PLATFORMS; COMPETITORS = _d.COMPETITORS; TRENDS = _d.TRENDS;
+    AUDIENCE = _d.AUDIENCE;   ANALYSIS = _d.ANALYSIS;       SLOTS = _d.SLOTS;   IDEAS = _d.IDEAS;
+  }
+} catch (e) { /* localStorage blocked — stay on default */ }
 function brand() { return BRANDS_META[CURRENT_BRAND]; }
 function loadBrand(key) {
   if (!BRANDS_DATA[key]) return;
@@ -1238,6 +1250,7 @@ function loadBrand(key) {
   };
   // 2. swap data
   CURRENT_BRAND = key;
+  try { localStorage.setItem("activeBrand", key); } catch (e) { /* storage blocked */ }
   const d = BRANDS_DATA[key];
   PLATFORMS = d.PLATFORMS; COMPETITORS = d.COMPETITORS; TRENDS = d.TRENDS;
   AUDIENCE = d.AUDIENCE;   ANALYSIS = d.ANALYSIS;       SLOTS = d.SLOTS;   IDEAS = d.IDEAS;
@@ -1365,6 +1378,7 @@ function renderMain() {
   if (state.current === "l4") attachL4Handlers();
   if (state.current === "l0c") attachL0cHandlers();
   if (state.current === "l5") attachL5Handlers();
+  if (state.current === "shipbay") primeShipBaySignalsIfStale();
 }
 /* ============================================================
    PAGE HEADERS
@@ -1444,23 +1458,7 @@ views.l0a = () => {
       </div>
       <div class="muted small" style="margin-top:10px">🔌 Wiring: Trustpilot Business API + nightly scrape fallback. Replaces the old PPTX export step from v2.5.</div>`
 };
-views.l0b = () => {
-  const tableFor = (rows, plat) => `
-    <div class="card" style="margin-bottom:12px">
-      <h3>${plat} competitor scrape</h3>
-      <div class="sub">5 competitors · last 7 days</div>
-      <table>
-        <thead><tr><th>Brand</th><th>Handle</th><th>Followers</th><th>Strategy</th></tr></thead>
-        <tbody>${rows.map(c => `<tr><td><strong>${c.brand}</strong></td><td class="muted">${c.handle}</td><td class="num">${c.followers.toLocaleString()}</td><td>${c.strategy}</td></tr>`).join('')}</tbody>
-      </table>
-    </div>`;
-  return pageHeader("Competitor Watch", `Live scrape across IG / TikTok / LinkedIn · logged in as ${brand().igScrapeAs} · output: ${brand().competitorFile}`) + `
-    <div class="grid grid-2" style="align-items:start">
-      ${tableFor(COMPETITORS, "Instagram")}
-      ${tableFor(COMPETITORS_TT, "TikTok")}
-    </div>
-    ${tableFor(COMPETITORS_LI, "LinkedIn")}`;
-};
+// views.l0b removed — Competitor Watch section scrapped per Lina request
 views.l0c = () => {
   return pageHeader("Trend Radar", `As of ${RUN_DATE} · 14-day look-ahead · gaming + social-platform trends`) + `
     <div class="grid grid-3" style="margin-bottom:14px;align-items:start">
@@ -2446,11 +2444,100 @@ function shipBayLeverageFor(slot, idea, platform) {
     cast: "No on-screen presenter · b-roll only",
   };
 }
-/* Pick ONE master idea for today — preferred pillar order favours Mia-led
-   informative/educational content because it's the most repurposable across
-   all three platforms. Falls back gracefully if today's slots don't include
-   the preferred pillars. */
-function shipBayPickMasterIdea(todaySlots) {
+/* ── LIVE CONTEXT ────────────────────────────────────────────────────────
+   Aggregates every signal that should influence today's master idea + the
+   per-platform treatments. Reads from:
+     • state.tikTokLive   — top trending audio + hashtag (TikTok Live Signals)
+     • state.dropWatchCache — fresh gaming-news drops (Drop Watch)
+     • state.curatorScans — most recent IG strategist findings (Curator Scan)
+     • PLATFORMS          — performance KPIs (ER vs target, top-performing format)
+   Result is passed into the master-idea picker and platform tailors so the
+   recommendations auto-reflect whatever is live + performing. */
+function shipBayLiveContext() {
+  const tl = state.tikTokLive || {};
+  const topAudio    = (tl.by_type?.audio || [])[0] || null;
+  const topHashtag  = (tl.by_type?.hashtags || [])[0] || null;
+  const topCreative = (tl.by_type?.creatives || [])[0] || null;
+  const dropWatch = state.dropWatchCache || [];
+  // Find the highest-momentum drop (breaking > peak > rising > fading)
+  const momentumRank = { breaking: 4, peak: 3, rising: 2, fading: 1 };
+  const hotDrop = [...dropWatch].sort((a, b) => {
+    const ra = momentumRank[momentumLabel(a.momentum)] || 0;
+    const rb = momentumRank[momentumLabel(b.momentum)] || 0;
+    return rb - ra;
+  })[0] || null;
+  const hotDropIsBreaking = hotDrop && (momentumLabel(hotDrop.momentum) === "breaking" || momentumLabel(hotDrop.momentum) === "peak");
+  const lastScan = (state.curatorScans || [])[0] || null;
+  // Performance — pick the over-performing platform (ER > target by widest %)
+  const ranked = (PLATFORMS || []).map(p => ({
+    ...p,
+    ratio: p.erTarget ? (p.er / p.erTarget) : 0,
+  })).sort((a, b) => b.ratio - a.ratio);
+  const bestPerformer = ranked[0] || null;
+  const worstPerformer = ranked[ranked.length - 1] || null;
+  // Map best-performing format to its likely content pillar
+  // (Video/Reel → Entertainment, Article → Informative/Educational, Post → Brand/Promotional)
+  const formatToPillarHint = {
+    Reel: "Entertainment",
+    Video: "Entertainment",
+    Article: "Informative",
+    Post: "Brand",
+  };
+  const performanceFavoredPillar = bestPerformer ? (formatToPillarHint[bestPerformer.top] || null) : null;
+  return {
+    topAudio,
+    topHashtag,
+    topCreative,
+    hotDrop,
+    hotDropIsBreaking,
+    lastScan,
+    bestPerformer,
+    worstPerformer,
+    performanceFavoredPillar,
+    // Convenience: a stamp summarizing what data is live right now
+    sources: {
+      tiktok: !!tl.fetched_at,
+      dropWatch: !!dropWatch.length,
+      curator: !!lastScan,
+      performance: !!bestPerformer,
+    },
+  };
+}
+/* Pick ONE master idea for today, biased by live signals + performance:
+     1. If Drop Watch has a "breaking" item AND today has a News slot →
+        synthesise the breaking drop as the master idea (overrides static)
+     2. If Performance Pulse favours a specific pillar AND that pillar is in
+        today's slots → pick from that slot
+     3. Else fall back to Mia/Informative/Educational preference order */
+function shipBayPickMasterIdea(todaySlots, liveCtx) {
+  liveCtx = liveCtx || shipBayLiveContext();
+  // ── Rule 1: breaking news overrides ──
+  const newsSlot = todaySlots.find(s => s.pillar === "News");
+  if (liveCtx.hotDropIsBreaking && newsSlot) {
+    const baseIdea = (IDEAS[newsSlot.code] || [])[0] || { id: "live-drop", mia: true };
+    const drop = liveCtx.hotDrop;
+    return {
+      slot: newsSlot,
+      idea: {
+        ...baseIdea,
+        id: baseIdea.id || "live-drop",
+        title: drop.title || "Breaking gaming news",
+        hook: drop.summary || drop.suggested_action || "Fresh out of the news cycle — react before it cools.",
+        liveOverride: true,
+        liveOverrideSource: `Drop Watch · ${dropWatchSourceLabel(drop.domain || "")}`,
+      },
+    };
+  }
+  // ── Rule 2: performance-favoured pillar ──
+  if (liveCtx.performanceFavoredPillar) {
+    const slot = todaySlots.find(s => s.pillar === liveCtx.performanceFavoredPillar);
+    if (slot) {
+      const ideas = IDEAS[slot.code] || [];
+      const idea = ideas.find(i => i.mia) || ideas[0];
+      if (idea) return { slot, idea };
+    }
+  }
+  // ── Rule 3: default Mia/Informative preference order ──
   const preferredPillars = ["Informative", "Educational", "News", "Entertainment", "Brand", "Promotional"];
   for (const pillar of preferredPillars) {
     const slot = todaySlots.find(s => s.pillar === pillar);
@@ -2468,33 +2555,79 @@ function shipBayPickMasterIdea(todaySlots) {
   return null;
 }
 /* Platform-tailored treatment of the SAME master idea — different hook angle,
-   different format/cadence, different leverage approach. */
-function shipBayTailorForPlatform(slot, idea, platform) {
+   different format/cadence, different leverage approach. Live signals from
+   liveCtx are injected so the recommendations auto-reflect Trend Radar +
+   Performance Pulse. */
+function shipBayTailorForPlatform(slot, idea, platform, liveCtx) {
+  liveCtx = liveCtx || shipBayLiveContext();
   const leverage = shipBayLeverageFor(slot, idea, platform);
+  // Per-platform performance KPIs — surfaces "this platform is over/under target"
+  const perf = (PLATFORMS || []).find(p => {
+    if (platform.id === "ig") return p.p === "Instagram";
+    if (platform.id === "tt") return p.p === "TikTok";
+    if (platform.id === "fb") return p.p === "Facebook";
+    return false;
+  });
+  const perfNote = perf
+    ? `${perf.p} ER ${perf.er}% vs target ${perf.erTarget}% · WoW eng ${perf.wow?.eng >= 0 ? '+' : ''}${perf.wow?.eng}% · top format: ${perf.top}`
+    : null;
+  // Live signal references — name actual trending audio / drop / curator finding
+  const tiktokAudioRef = liveCtx.topAudio
+    ? `<strong>${escapeHtml(liveCtx.topAudio.label)}</strong> (${escapeHtml(liveCtx.topAudio.momentum || 'rising')}, from TikTok Live Signals)`
+    : null;
+  const tiktokHashtagRef = liveCtx.topHashtag
+    ? `<strong>${escapeHtml(liveCtx.topHashtag.label)}</strong>`
+    : null;
+  const dropRef = liveCtx.hotDrop
+    ? `<strong>${escapeHtml(liveCtx.hotDrop.title)}</strong>`
+    : null;
+  const curatorRef = liveCtx.lastScan && liveCtx.lastScan.note
+    ? `<strong>${escapeHtml(liveCtx.lastScan.note)}</strong>`
+    : null;
+  // Build platform-specific tailoring with live data woven in
+  const igHook = `Open on Mia direct-to-camera: "${escapeHtml(idea.hook || idea.title)}" — captions burned-in, no music for first 0.8s to stop the scroll.`;
+  const igHookWithCurator = curatorRef
+    ? `${igHook}<div class="muted small" style="margin-top:6px">📡 Curator scan signal: ${curatorRef} — fold this hook formula into the opening 2s.</div>`
+    : igHook;
+  const ttHook = tiktokAudioRef
+    ? `Open on a fast game-scene cut tied to the idea — no talking-head. Ride ${tiktokAudioRef} · let the audio carry the message.`
+    : `Open on a fast game-scene cut tied to the idea — no talking-head. Native TikTok captions only. Sound carries the message.`;
+  const ttHookWithHashtag = tiktokHashtagRef
+    ? `${ttHook}<div class="muted small" style="margin-top:6px">📡 Stack hashtag: ${tiktokHashtagRef} (live signal).</div>`
+    : ttHook;
+  const fbHook = `Open on Mia mid-shot with a more setup-heavy intro — FB skews older, they tolerate a 2–3s build before the payoff.`;
+  const fbHookWithDrop = (dropRef && (slot.pillar === "News" || slot.pillar === "Informative"))
+    ? `${fbHook}<div class="muted small" style="margin-top:6px">📡 Hook this to the live drop: ${dropRef} — gives FB the context older users want.</div>`
+    : fbHook;
   const base = {
     ig: {
       angle: "Caption-led explainer",
-      hookStyle: `Open on Mia direct-to-camera: "${escapeHtml(idea.hook || idea.title)}" — captions burned-in, no music for first 0.8s to stop the scroll.`,
+      hookStyle: igHookWithCurator,
       structure: "Carousel-friendly · 30s reel · hook (0–3s) → setup (3–8s) → payoff (8–25s) → CTA (25–30s)",
       cta: "'Save for later · link in bio' overlay + caption tease",
       audio: "Original Mia VO OR trending IG audio if it fits the message",
       caption: `Long-form caption (4–6 lines) unpacking the idea + 5–8 niche gaming hashtags. Pin first comment with link.`,
+      perfNote,
     },
     tt: {
       angle: "Trend-audio-first compilation",
-      hookStyle: `Open on a fast game-scene cut tied to the idea — no talking-head. Native TikTok captions only. Sound carries the message.`,
+      hookStyle: ttHookWithHashtag,
       structure: "15s · hook (0–2s) → payoff (2–10s) → loop-tail (10–15s) · 3 fast cuts",
       cta: "Loop-back ending (last frame visually matches first) · CTA in caption only",
-      audio: leverage.mode === "audio_compilation" ? `Ride trending TikTok sound (see live signal in Trend Radar)` : "Pick the freshest trending sound · do NOT use IG audio here",
+      audio: tiktokAudioRef
+        ? `LIVE: ride ${tiktokAudioRef}`
+        : (leverage.mode === "audio_compilation" ? `Ride trending TikTok sound (see live signal in Trend Radar)` : "Pick the freshest trending sound · do NOT use IG audio here"),
       caption: `Short caption · 1 line · 3 hashtags max · CTA copy in caption since native TT users skip in-video CTAs.`,
+      perfNote,
     },
     fb: {
       angle: "Explanatory · slightly longer",
-      hookStyle: `Open on Mia mid-shot with a more setup-heavy intro — FB skews older, they tolerate a 2–3s build before the payoff.`,
+      hookStyle: fbHookWithDrop,
       structure: "45s · hook (0–3s) → context (3–12s) → payoff (12–35s) → soft CTA (35–45s)",
       cta: "Explicit CTA in last 5s + first comment pinned with link",
       audio: "Original VO or licensed track · captions burned-in (most FB viewers mute)",
       caption: `Medium caption (2–3 lines) · explain the value · ask a discussion-prompt question to drive comments.`,
+      perfNote,
     },
   };
   const tailor = base[platform.id];
@@ -2506,7 +2639,8 @@ function renderShipBayDailyTab() {
   if (!todaySlots.length) {
     return `<div class="card"><div class="muted">No slots configured for today (${today}) in ${BRANDS_META[CURRENT_BRAND].name}.</div></div>`;
   }
-  const master = shipBayPickMasterIdea(todaySlots);
+  const liveCtx = shipBayLiveContext();
+  const master = shipBayPickMasterIdea(todaySlots, liveCtx);
   if (!master) {
     return `<div class="card"><div class="muted">No ideas defined in today's slots — check the content calendar.</div></div>`;
   }
@@ -2524,7 +2658,7 @@ function renderShipBayDailyTab() {
         <div class="muted small">TikTok skipped — today's master idea is Promotional. Run a non-promo idea on TT instead.</div>
       </div>`;
     }
-    const tailor = shipBayTailorForPlatform(slot, idea, platform);
+    const tailor = shipBayTailorForPlatform(slot, idea, platform, liveCtx);
     const key = shipBayVariantKey(slot.code, idea.id, platform.id);
     const expanded = !!state.shipBay.expanded[key];
     const pending = !!state.shipBay.pendingShips[key];
@@ -2567,9 +2701,10 @@ function renderShipBayDailyTab() {
         </div>
         <div class="small" style="color:var(--text-2);line-height:1.4;margin-bottom:6px">${tailor.hookStyle}</div>
         <div class="muted small" style="font-size:11px"><strong>Structure:</strong> ${escapeHtml(tailor.structure)}</div>
-        <div class="muted small" style="font-size:11px"><strong>Audio:</strong> ${escapeHtml(tailor.audio)}</div>
+        <div class="muted small" style="font-size:11px"><strong>Audio:</strong> ${tailor.audio.includes('<strong>') ? tailor.audio : escapeHtml(tailor.audio)}</div>
         <div class="muted small" style="font-size:11px"><strong>CTA:</strong> ${escapeHtml(tailor.cta)}</div>
         <div class="muted small" style="font-size:11px;margin-top:4px"><strong>Caption:</strong> ${escapeHtml(tailor.caption)}</div>
+        ${tailor.perfNote ? `<div class="muted small" style="font-size:10px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)">📊 ${escapeHtml(tailor.perfNote)}</div>` : ''}
       </div>
       <div class="shipbay-variant-head" onclick="shipBayToggleBrief('${slot.code}','${idea.id}','${platform.id}')" style="cursor:pointer;padding:6px 0;border-top:1px solid rgba(255,255,255,.06)">
         <span class="muted small">${expanded ? '▲ Hide full Higgsfield brief' : '▼ View full Higgsfield brief'}</span>
@@ -2577,20 +2712,77 @@ function renderShipBayDailyTab() {
       ${briefBody}
     </div>`;
   }).join("");
+  // Live-signals banner — surfaces exactly which data is powering today's brief
+  const srcPills = [
+    liveCtx.sources.tiktok      ? `<span class="pill ok small">🎵 TikTok Live · live</span>`     : `<span class="pill muted small">🎵 TikTok · no data</span>`,
+    liveCtx.sources.dropWatch   ? `<span class="pill ok small">🆕 Drop Watch · live</span>`      : `<span class="pill muted small">🆕 Drop Watch · loading…</span>`,
+    liveCtx.sources.curator     ? `<span class="pill ok small">🔍 Curator Scan · live</span>`    : `<span class="pill muted small">🔍 Curator · never run</span>`,
+    liveCtx.sources.performance ? `<span class="pill ok small">📊 Performance · live</span>`     : `<span class="pill muted small">📊 Performance · no data</span>`,
+  ].join("");
+  const livePoints = [];
+  if (liveCtx.hotDrop)     livePoints.push(`🆕 Hottest drop: <strong>${escapeHtml(liveCtx.hotDrop.title)}</strong> (${escapeHtml(momentumLabel(liveCtx.hotDrop.momentum))})`);
+  if (liveCtx.topAudio)    livePoints.push(`🎵 Top TikTok audio: <strong>${escapeHtml(liveCtx.topAudio.label)}</strong> (${escapeHtml(liveCtx.topAudio.momentum || 'rising')})`);
+  if (liveCtx.topHashtag)  livePoints.push(`#️⃣ Top hashtag: <strong>${escapeHtml(liveCtx.topHashtag.label)}</strong>`);
+  if (liveCtx.bestPerformer) livePoints.push(`📊 Top-performing channel: <strong>${escapeHtml(liveCtx.bestPerformer.p)}</strong> · ER ${liveCtx.bestPerformer.er}% (target ${liveCtx.bestPerformer.erTarget}%)${liveCtx.performanceFavoredPillar ? ` · favours <strong>${escapeHtml(liveCtx.performanceFavoredPillar)}</strong>` : ''}`);
+  if (liveCtx.worstPerformer && liveCtx.worstPerformer !== liveCtx.bestPerformer) livePoints.push(`📉 Under-performing: <strong>${escapeHtml(liveCtx.worstPerformer.p)}</strong> · ER ${liveCtx.worstPerformer.er}% (target ${liveCtx.worstPerformer.erTarget}%)`);
+  const liveSignalsBanner = `<div class="card" style="border-color:var(--accent-2);margin-bottom:14px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-size:22px">🟢</span>
+      <strong style="color:white;flex:1">Live signals powering today's brief</strong>
+      <button class="btn small" onclick="refreshShipBayLiveSignals()">↻ Refresh signals</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">${srcPills}</div>
+    ${livePoints.length ? `<ul style="margin:0 0 0 18px;padding:0;color:var(--text-2);font-size:12px;line-height:1.7">${livePoints.map(p => `<li>${p}</li>`).join("")}</ul>` : `<div class="muted small">No live signals yet — click ↻ Refresh signals or open Trend Radar.</div>`}
+    <div class="muted small" style="margin-top:8px;font-size:10px">Master idea + each platform's hook automatically reflect these signals.</div>
+  </div>`;
+  const overrideTag = idea.liveOverride
+    ? `<span class="pill ok small" style="margin-left:8px">🟢 LIVE OVERRIDE · ${escapeHtml(idea.liveOverrideSource || 'live signal')}</span>`
+    : '';
   return `<div class="card shipbay-info">
-    <div class="row"><div class="icon">📅</div><div class="text"><strong>Today: ${today}</strong><small>One master idea · repurposed three ways. No manual picking.</small></div></div>
+    <div class="row"><div class="icon">📅</div><div class="text"><strong>Today: ${today}</strong><small>One master idea · repurposed three ways · auto-reflects Trend Radar + Performance Pulse.</small></div></div>
   </div>
+  ${liveSignalsBanner}
   <div class="card" style="border-color:var(--accent);margin-bottom:14px">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
       <span style="font-size:22px">${idea.mia ? '🌟' : '💡'}</span>
       <div style="flex:1">
-        <div class="muted small" style="text-transform:uppercase;letter-spacing:.4px;font-size:10px">Master idea · ${escapeHtml(slot.code)} · ${escapeHtml(slot.pillar)} · ${escapeHtml(slot.format)}</div>
+        <div class="muted small" style="text-transform:uppercase;letter-spacing:.4px;font-size:10px">Master idea · ${escapeHtml(slot.code)} · ${escapeHtml(slot.pillar)} · ${escapeHtml(slot.format)}${overrideTag}</div>
         <strong style="color:white;font-size:16px">${escapeHtml(idea.title)}</strong>
       </div>
     </div>
     <div class="muted small" style="line-height:1.5">${escapeHtml(idea.hook || '')}</div>
   </div>
   <div class="grid grid-3" style="align-items:start">${platformCards}</div>`;
+}
+/* Manually refresh all the live signals feeding Ship Bay. Fetches Drop Watch
+   + TikTok Live in parallel, then re-renders so Ship Bay picks up new data. */
+async function refreshShipBayLiveSignals() {
+  toast("Refreshing live signals…");
+  await Promise.all([
+    populateDropWatch().catch(e => console.error("[dropwatch] failed:", e)),
+    loadTikTokTrends().catch(e => console.error("[tiktok] failed:", e)),
+  ]);
+  renderMain();
+  toast("Live signals refreshed · Ship Bay updated", "ok");
+}
+/* Auto-prime live signals when Ship Bay first opens — so the master idea +
+   per-platform tailoring reflect fresh Trend Radar + Drop Watch data without
+   the user having to click anything. Only fires if data is missing or stale. */
+async function primeShipBaySignalsIfStale() {
+  const tl = state.tikTokLive || {};
+  const tlAge = tl.fetched_at ? (Date.now() - new Date(tl.fetched_at).getTime()) / 60000 : Infinity;
+  const dwAge = state.dropWatchFetchedAt ? (Date.now() - state.dropWatchFetchedAt) / 60000 : Infinity;
+  const tasks = [];
+  if (!(state.dropWatchCache || []).length || dwAge > 60) {
+    tasks.push(populateDropWatch().then(() => { state.dropWatchFetchedAt = Date.now(); }).catch(() => {}));
+  }
+  if (!tl.fetched_at || tlAge > 60) {
+    tasks.push(loadTikTokTrends().catch(() => {}));
+  }
+  if (tasks.length) {
+    await Promise.all(tasks);
+    renderMain();
+  }
 }
 function renderShipBayWeeklyTab() {
   const dayOrder = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
