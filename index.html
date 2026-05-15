@@ -2357,7 +2357,8 @@ async function populateDropWatch() {
     const resp = await fetchWithRetry("/api/drop-watch", { cache: "no-store" });
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const data = await resp.json();
-    const articles = Array.isArray(data) ? data : (data.articles || []);
+    const rawArticles = Array.isArray(data) ? data : (data.articles || []);
+    const articles = validateAndFilter(SCHEMA_DROP_WATCH, rawArticles, "drop-watch");
     state.dropWatchCache = articles; // cache for the live-social aggregator
     if (!articles.length) {
       tbody.innerHTML = `<tr><td colspan="3" class="muted" style="padding:14px;text-align:center">No drops yet — the cron populates overnight.</td></tr>`;
@@ -2372,7 +2373,7 @@ async function populateDropWatch() {
       const fit   = (a.brand_fit || "BOTH").toUpperCase();
       const title = a.title || '';
       const linkedTitle = a.url
-        ? `<a href="${escapeAttr(a.url)}" target="_blank" rel="noopener" style="color:inherit"><strong>${escapeHtml(title)}</strong></a>`
+        ? `<a href="${sanitizeUrl(a.url)}" target="_blank" rel="noopener noreferrer" style="color:inherit"><strong>${escapeHtml(title)}</strong></a>`
         : `<strong>${escapeHtml(title)}</strong>`;
       return `
         <tr>
@@ -2483,6 +2484,87 @@ function escapeHtml(s) {
 }
 function escapeAttr(s) {
   return escapeHtml(s);
+}
+// Lightweight schema validator for API payloads.
+// Hard-fail (drop record): missing required fields, wrong type.
+// Soft-fail (keep record, log + truncate): length overflow, enum mismatch.
+// Designed to keep the UI rendering with whatever survives rather than blank-screening
+// the whole layer when one bad entry slips through.
+function validateRecord(spec, rec) {
+  const errors = [];
+  const warnings = [];
+  for (const [key, rule] of Object.entries(spec)) {
+    let val = rec[key];
+    if (val === undefined || val === null) {
+      if (rule.required) errors.push(key + ": missing");
+      continue;
+    }
+    if (typeof val !== rule.type) {
+      errors.push(key + ": expected " + rule.type + ", got " + typeof val);
+      continue;
+    }
+    if (rule.type === "string") {
+      if (rule.maxLen && val.length > rule.maxLen) {
+        rec[key] = val.slice(0, rule.maxLen);
+        warnings.push(key + ": truncated " + val.length + "→" + rule.maxLen);
+      }
+      if (rule.enum && rule.enum.indexOf(val) === -1) {
+        warnings.push(key + ': enum-miss "' + val + '"');
+      }
+    }
+  }
+  return { errors, warnings };
+}
+function validateAndFilter(spec, arr, source) {
+  if (!Array.isArray(arr)) {
+    console.warn("[schema] " + source + " expected array, got " + (arr === null ? "null" : typeof arr));
+    return [];
+  }
+  const valid = [];
+  const dropped = [];
+  const warned = [];
+  arr.forEach((rec, i) => {
+    if (!rec || typeof rec !== "object") { dropped.push({ i: i, reason: "not an object" }); return; }
+    const { errors, warnings } = validateRecord(spec, rec);
+    if (errors.length) { dropped.push({ i: i, reason: errors.join("; ") }); return; }
+    if (warnings.length) warned.push({ i: i, warnings: warnings });
+    valid.push(rec);
+  });
+  if (dropped.length) console.warn("[schema] " + source + ": dropped " + dropped.length + "/" + arr.length + " records:", dropped.slice(0, 5));
+  if (warned.length)  console.info("[schema] " + source + ": " + warned.length + " records had soft warnings");
+  return valid;
+}
+const SCHEMA_DROP_WATCH = {
+  title:            { type: "string", required: true,  maxLen: 500 },
+  url:              { type: "string", required: false, maxLen: 2000 },
+  domain:           { type: "string", required: false, maxLen: 200 },
+  momentum:         { type: "string", required: false, maxLen: 50,  enum: ["breaking","peak","rising","fading","watch","new","hot","trending"] },
+  brand_fit:        { type: "string", required: false, maxLen: 50,  enum: ["G2G","OG","OFFGAMERS","BOTH","NONE","g2g","og","offgamers","both","none"] },
+  summary:          { type: "string", required: false, maxLen: 4000 },
+  suggested_action: { type: "string", required: false, maxLen: 500 },
+};
+const SCHEMA_TIKTOK_ITEM = {
+  label:    { type: "string", required: true,  maxLen: 300 },
+  momentum: { type: "string", required: false, maxLen: 50, enum: ["peak","rising","fading","watch","breaking","new","hot","trending"] },
+};
+// XSS guard for URLs that land in href/src — blocks javascript:, data:, vbscript:, file:.
+// Only http(s):, mailto:, and relative URLs ("/foo", "#bar") are allowed through.
+// Returns "#" for anything suspicious so the link is inert rather than executing script.
+function sanitizeUrl(u) {
+  if (u == null) return "#";
+  const raw = String(u).trim();
+  if (!raw) return "#";
+  // Allow relative paths and fragments outright
+  if (raw[0] === "/" || raw[0] === "#" || raw[0] === "?") return escapeAttr(raw);
+  // Strip control chars + tabs that could hide a dangerous scheme (e.g. "java\tscript:")
+  const cleaned = raw.replace(/[\u0000-\u001F\u007F]/g, "").toLowerCase();
+  if (/^(javascript|data|vbscript|file):/i.test(cleaned)) return "#";
+  // Only allow http(s) and mailto for absolute URLs
+  if (/^(https?:|mailto:)/i.test(cleaned)) return escapeAttr(raw);
+  // Anything without a scheme (e.g. "example.com/foo") — treat as relative-ish, safe to escape
+  if (!/^[a-z][a-z0-9+.\-]*:/i.test(cleaned)) return escapeAttr(raw);
+  // Unknown scheme — inert
+  return "#";
 }
 views.l1 = () => {
   // ── Live synthesis from PLATFORMS (the same array Performance Pulse uses) ──
@@ -2661,19 +2743,39 @@ async function loadTikTokTrends(region) {
     });
     if (!res.ok) throw new Error("HTTP " + res.status);
     const json = await res.json();
+    // Validate each sub-array via SCHEMA_TIKTOK_ITEM — bad records dropped, long strings truncated.
+    const rawBT = json.by_type || { hashtags: [], audio: [], creatives: [] };
+    const by_type = {
+      hashtags:  validateAndFilter(SCHEMA_TIKTOK_ITEM, rawBT.hashtags || [],  "tiktok.hashtags"),
+      audio:     validateAndFilter(SCHEMA_TIKTOK_ITEM, rawBT.audio || [],     "tiktok.audio"),
+      creatives: validateAndFilter(SCHEMA_TIKTOK_ITEM, rawBT.creatives || [], "tiktok.creatives"),
+    };
+    // Recompute counts from validated arrays so the UI never claims more than survives.
+    const counts = {
+      hashtags:  by_type.hashtags.length,
+      audio:     by_type.audio.length,
+      creatives: by_type.creatives.length,
+      total:     by_type.hashtags.length + by_type.audio.length + by_type.creatives.length,
+    };
+    // Flag degraded if the API said so OR if validation dropped >25% of any sub-array.
+    const apiDegraded = !!(json.meta && json.meta.degraded);
+    const rawTotal = (rawBT.hashtags || []).length + (rawBT.audio || []).length + (rawBT.creatives || []).length;
+    const validationDegraded = rawTotal > 0 && counts.total / rawTotal < 0.75;
     state.tikTokLive = {
       loading: false,
       error: null,
       fetched_at: json.fetched_at || new Date().toISOString(),
       region: json.region || r,
-      counts: json.counts || { hashtags: 0, audio: 0, creatives: 0, total: 0 },
-      signals: json.signals || [],
-      by_type: json.by_type || { hashtags: [], audio: [], creatives: [] },
-      degraded: !!(json.meta && json.meta.degraded),
+      counts: counts,
+      signals: Array.isArray(json.signals) ? json.signals : [],
+      by_type: by_type,
+      degraded: apiDegraded || validationDegraded,
     };
     if (typeof toast === "function") {
-      const c = state.tikTokLive.counts;
-      toast(`TikTok signals refreshed — ${c.hashtags} tags · ${c.audio} sounds · ${c.creatives} creatives`);
+      const c = counts;
+      const degradeNote = validationDegraded ? " · ⚠ schema drops" : "";
+      toast(`TikTok signals refreshed — ${c.hashtags} tags · ${c.audio} sounds · ${c.creatives} creatives${degradeNote}`,
+            validationDegraded ? "warn" : "");
     }
   } catch (err) {
     state.tikTokLive.loading = false;
@@ -2777,7 +2879,7 @@ function renderCuratorScanCard() {
         : `<span class="pill bad small">${Math.floor(minutesAgo/(24*60))}d · stale</span>`;
   const handlesHtml = state.curators.map(c => `
     <div class="curator-row" style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
-      <a href="${escapeAttr(c.url)}" target="_blank" rel="noopener" class="curator-handle" style="font-weight:600;font-size:12px">${escapeHtml(c.handle)}</a>
+      <a href="${sanitizeUrl(c.url)}" target="_blank" rel="noopener noreferrer" class="curator-handle" style="font-weight:600;font-size:12px">${escapeHtml(c.handle)}</a>
       <div class="muted small" style="margin-top:2px">${escapeHtml(c.note)}</div>
     </div>`).join("");
   return `
@@ -2985,12 +3087,12 @@ function buildShipBayBrief(slotCode, ideaId, platformId, reshuffle=false) {
 function formatShipBayBrief(brief) {
   if (!brief) return '<div class="muted">Brief not ready.</div>';
   if (brief.blocked) {
-    return `<div class="card" style="background:#fff3e0;border-color:#ffa726"><strong>🚫 ${brief.reason}</strong><div class="muted small" style="margin-top:6px">This day will not generate a TikTok variant. Use the IG or FB variants instead, or change the slot pillar.</div></div>`;
+    return `<div class="card" style="background:#fff3e0;border-color:#ffa726"><strong>🚫 ${escapeHtml(brief.reason)}</strong><div class="muted small" style="margin-top:6px">This day will not generate a TikTok variant. Use the IG or FB variants instead, or change the slot pillar.</div></div>`;
   }
   const s = brief.slot, i = brief.idea, p = brief.platform;
   const sceneHtml = brief.scenes.map(sc => `
     <div class="shipbay-scene">
-      <div class="shipbay-scene-head"><strong>Scene ${sc.n} — ${sc.title}</strong><span class="pill muted">${sc.duration}</span></div>
+      <div class="shipbay-scene-head"><strong>Scene ${escapeHtml(sc.n)} — ${escapeHtml(sc.title)}</strong><span class="pill muted">${escapeHtml(sc.duration)}</span></div>
       <div class="shipbay-scene-grid">
         <div><span class="kv-k">Character in shot</span><div class="kv-v">${escapeHtml(sc.cast)}</div></div>
         <div><span class="kv-k">Setting</span><div class="kv-v">${escapeHtml(sc.setting)}</div></div>
@@ -3689,20 +3791,20 @@ views.l4 = () => {
         const pillCls = j.status === 'ready' ? 'ok' : j.status === 'rendering' ? 'warn' : 'info';
         const eta = j.status === 'ready' ? `done · ${(j.completedAt - j.createdAt)/1000 | 0}s` : j.status === 'rendering' ? `~${Math.max(1, ((100 - pct) * 0.6) | 0)}s left` : 'queued';
         const action = j.status === 'ready'
-          ? `<a class="btn primary" href="${j.previewUrl}" target="_blank" rel="noopener">View ↗</a>`
-          : `<a class="btn" href="https://higgsfield.ai/" target="_blank" rel="noopener">Open ↗</a>`;
+          ? `<a class="btn primary" href="${sanitizeUrl(j.previewUrl)}" target="_blank" rel="noopener noreferrer">View ↗</a>`
+          : `<a class="btn" href="https://higgsfield.ai/" target="_blank" rel="noopener noreferrer">Open ↗</a>`;
         return `<div class="hf-row">
-          <div class="hf-id">${j.id}</div>
-          <div><strong>${brief.topic || '—'}</strong><div class="muted small">${brief.slot || ''} · ${brief.pillar || ''}</div></div>
-          <div><span class="pill ${pillCls}">${j.status}</span></div>
+          <div class="hf-id">${escapeHtml(j.id)}</div>
+          <div><strong>${escapeHtml(brief.topic || '—')}</strong><div class="muted small">${escapeHtml(brief.slot || '')} · ${escapeHtml(brief.pillar || '')}</div></div>
+          <div><span class="pill ${pillCls}">${escapeHtml(j.status)}</span></div>
           <div class="hf-progress"><span style="width:${pct}%"></span></div>
-          <div class="hf-eta">${eta}</div>
+          <div class="hf-eta">${escapeHtml(eta)}</div>
         </div>`;
       }).join('')}
     </div>` ;
   return pageHeader("Layer 4 — Production Routing", `${canva.length} Canva job(s) · ${video.length} video lane brief(s)`) + `
     <div class="lane">
-      <div class="lane-head"><span class="lane-title">🎨 Canva Static Lane (Promotional only)</span><span class="lane-cap">→ template ${brand().canvaTemplate}</span></div>    <div class="card" style="margin-top:10px;border-color:var(--accent);background:rgba(124,92,255,.04)">     <div class="row" style="margin-bottom:8px"><strong>📋 Canva field-map (template-ready)</strong><span class="spacer"></span><span class="pill warn small">Manual paste — Canva Connect API not wired</span></div>     <table>      <thead><tr><th>Template field</th><th>Value to paste</th></tr></thead>      <tbody>       ${canva.map(b => `        <tr><td colspan="2" style="background:var(--bg-3);font-weight:600">${b.slot} · ${b.topic}</td></tr>        <tr><td>{{HEADLINE}}</td><td><code>${(b.topic || '').slice(0,80)}</code></td></tr>        <tr><td>{{SUBHEAD}}</td><td><code>${(b.hook || '').replace(/STATIC:\s*/i, '').slice(0,100)}</code></td></tr>        <tr><td>{{HERO_IMAGE}}</td><td><code>${(b.product || 'product hero').slice(0,60)}</code></td></tr>        <tr><td>{{PALETTE}}</td><td><code>${brand().palette}</code></td></tr>        <tr><td>{{CTA}}</td><td><code>${b.cta || '—'}</code></td></tr>       `).join('')}      </tbody>     </table>     <div class="btn-row" style="margin-top:10px">      <button class="btn primary" onclick="window.open('https://canva.link/1rop6yg5zpr2ni3','_blank')">📐 Open Canva template</button>      <button class="btn" onclick="copyCanvaFields()">📋 Copy all field values</button>     </div>     <div class="muted small" style="margin-top:8px">For real auto-edit: requires Canva Connect API + OAuth + Netlify Function. Right now this is a structured handoff so the human paste in Canva takes ~30s instead of layout-from-scratch.</div>    </div> 
+      <div class="lane-head"><span class="lane-title">🎨 Canva Static Lane (Promotional only)</span><span class="lane-cap">→ template ${brand().canvaTemplate}</span></div>    <div class="card" style="margin-top:10px;border-color:var(--accent);background:rgba(124,92,255,.04)">     <div class="row" style="margin-bottom:8px"><strong>📋 Canva field-map (template-ready)</strong><span class="spacer"></span><span class="pill warn small">Manual paste — Canva Connect API not wired</span></div>     <table>      <thead><tr><th>Template field</th><th>Value to paste</th></tr></thead>      <tbody>       ${canva.map(b => `        <tr><td colspan="2" style="background:var(--bg-3);font-weight:600">${escapeHtml(b.slot)} · ${escapeHtml(b.topic)}</td></tr>        <tr><td>{{HEADLINE}}</td><td><code>${escapeHtml((b.topic || '').slice(0,80))}</code></td></tr>        <tr><td>{{SUBHEAD}}</td><td><code>${escapeHtml((b.hook || '').replace(/STATIC:\s*/i, '').slice(0,100))}</code></td></tr>        <tr><td>{{HERO_IMAGE}}</td><td><code>${escapeHtml((b.product || 'product hero').slice(0,60))}</code></td></tr>        <tr><td>{{PALETTE}}</td><td><code>${escapeHtml(brand().palette)}</code></td></tr>        <tr><td>{{CTA}}</td><td><code>${escapeHtml(b.cta || '—')}</code></td></tr>       `).join('')}      </tbody>     </table>     <div class="btn-row" style="margin-top:10px">      <button class="btn primary" onclick="window.open('https://canva.link/1rop6yg5zpr2ni3','_blank')">📐 Open Canva template</button>      <button class="btn" onclick="copyCanvaFields()">📋 Copy all field values</button>     </div>     <div class="muted small" style="margin-top:8px">For real auto-edit: requires Canva Connect API + OAuth + Netlify Function. Right now this is a structured handoff so the human paste in Canva takes ~30s instead of layout-from-scratch.</div>    </div> 
       ${canvaRows}
     </div>
     <div class="lane">
