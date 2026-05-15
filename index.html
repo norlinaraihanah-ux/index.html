@@ -112,7 +112,11 @@
     display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px;
     cursor: pointer; color: var(--text-2); border: 1px solid transparent; transition: all .15s;
     position: relative;
+    /* Reset default <button> styles since we now use real buttons for a11y */
+    background: none; font: inherit; text-align: left; width: 100%;
   }
+  .nav-item:focus-visible { outline: 2px solid var(--accent-3); outline-offset: 2px; }
+  .nav-item[aria-disabled="true"] { opacity: .55; }
   .nav-item:hover { background: rgba(124,232,255,.05); color: var(--text); border-color: var(--line); }
   .nav-item.active {
     background: linear-gradient(90deg, rgba(124,92,255,.14), rgba(0,255,209,.04));
@@ -253,7 +257,16 @@
     position: relative;
   }
   .btn:hover { background: rgba(124,232,255,.08); border-color: var(--line-3); color: var(--accent-2); box-shadow: 0 0 12px rgba(0,255,209,.18); }
+  .btn:focus-visible { outline: 2px solid var(--accent-3); outline-offset: 2px; }
   .btn:active { transform: translateY(1px); }
+  .btn[disabled], .btn:disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
+  /* Skip link — only visible on focus, for keyboard users to jump past the sidebar */
+  .skip-link {
+    position: absolute; left: -9999px; top: 8px;
+    background: var(--accent); color: white; padding: 8px 14px; border-radius: 6px;
+    font-size: 13px; z-index: 300;
+  }
+  .skip-link:focus { left: 8px; }
   .btn.primary {
     background: linear-gradient(135deg, var(--accent), var(--accent-3));
     border-color: transparent; color: #050810; font-weight: 700;
@@ -408,8 +421,8 @@
   .modal-pane.active { display: block; }
   .seedance { font-family: "IBM Plex Mono", "JetBrains Mono", monospace; font-size: 12px; line-height: 1.55; white-space: pre-wrap; color: #b3f5e8; margin: 0; }
   .modal-foot { padding: 12px 20px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 8px; }
-  /* Toast */
-  .toasts { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; z-index: 100; }
+  /* Toast — queued, max 4 visible, FIFO eviction. Types: info (default) / ok / warn / bad */
+  .toasts { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; z-index: 100; max-width: 360px; }
   .toast {
     background: linear-gradient(180deg, rgba(15,23,46,.95), rgba(10,16,32,.92));
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -417,10 +430,139 @@
     font-size: 13px; min-width: 240px;
     box-shadow: 0 10px 30px rgba(0,0,0,.5), var(--glow-violet);
     animation: slideIn .3s cubic-bezier(.2,.8,.2,1);
+    display: flex; align-items: flex-start; gap: 10px;
   }
-  .toast.ok  { border-color: var(--ok);  box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 16px rgba(46,229,166,.35); }
-  .toast.bad { border-color: var(--bad); box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 16px rgba(255,77,109,.35); }
-  @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  .toast .toast-icon  { flex: 0 0 auto; font-size: 14px; line-height: 1.4; }
+  .toast .toast-msg   { flex: 1; word-break: break-word; }
+  .toast.fade-out     { animation: slideOut .25s ease-out forwards; }
+  .toast.ok   { border-color: var(--ok);  box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 16px rgba(46,229,166,.35); }
+  .toast.ok   .toast-icon { color: var(--ok); }
+  .toast.bad  { border-color: var(--bad); box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 16px rgba(255,77,109,.35); }
+  .toast.bad  .toast-icon { color: var(--bad); }
+  .toast.warn { border-color: rgba(255,170,60,.55); box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 16px rgba(255,170,60,.30); }
+  .toast.warn .toast-icon { color: #ffd28a; }
+  .toast.info .toast-icon { color: var(--accent-3); }
+  @keyframes slideIn  { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(20px); opacity: 0; } }
+  /* Skeleton loader — shimmer block used while async data is in-flight.
+     Variants: .skel.short (40%), .skel.med (70%), .skel.long (90%). */
+  .skel {
+    display: inline-block; height: 12px; border-radius: 4px; vertical-align: middle;
+    background: linear-gradient(90deg, rgba(255,255,255,.04) 0%, rgba(255,255,255,.12) 50%, rgba(255,255,255,.04) 100%);
+    background-size: 200% 100%;
+    animation: skelShimmer 1.4s ease-in-out infinite;
+  }
+  .skel.short { width: 40%; }
+  .skel.med   { width: 70%; }
+  .skel.long  { width: 90%; }
+  .skel.full  { width: 100%; }
+  .skel.pill  { height: 18px; border-radius: 999px; width: 60px; }
+  .skel.title { height: 16px; }
+  .skel-row { display: flex; gap: 10px; align-items: center; padding: 8px 0; }
+  @keyframes skelShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  /* Offline banner — thin red strip at the very top of the viewport when offline */
+  .offline-banner {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: linear-gradient(90deg, rgba(220,40,60,.95), rgba(180,30,50,.95));
+    color: white; font-size: 12px; padding: 6px 16px;
+    display: flex; align-items: center; gap: 10px; justify-content: center;
+    box-shadow: 0 2px 12px rgba(220,40,60,.4);
+    animation: slideDown .25s ease-out;
+  }
+  .offline-banner .offline-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: white;
+    box-shadow: 0 0 8px white;
+    animation: pulseDot 1.4s ease-in-out infinite;
+  }
+  @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+  @keyframes pulseDot  { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+  /* Keyboard shortcut help overlay */
+  .kbd-help {
+    position: fixed; inset: 0; background: rgba(2,4,8,.85);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    display: none; align-items: center; justify-content: center; z-index: 250;
+  }
+  .kbd-help[style*="display: flex"] { display: flex !important; }
+  .kbd-help-card {
+    background: linear-gradient(180deg, rgba(15,23,46,.98), rgba(10,16,32,.96));
+    border: 1px solid var(--line-3); border-radius: 12px;
+    padding: 20px 24px; min-width: 380px; max-width: 520px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), var(--glow-violet);
+  }
+  .kbd-help table { width: 100%; border-collapse: collapse; }
+  .kbd-help td { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,.05); font-size: 13px; }
+  .kbd-help td:first-child { width: 100px; }
+  kbd {
+    display: inline-block; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    background: rgba(124,232,255,.08); border: 1px solid var(--line-3);
+    border-bottom-width: 2px; border-radius: 4px;
+    padding: 1px 6px; font-size: 11px; color: var(--accent-2);
+    min-width: 18px; text-align: center;
+  }
+  /* Mobile hamburger toggle — hidden on desktop, shown < 900px */
+  .mobile-menu-btn {
+    display: none;
+    position: fixed; top: 12px; left: 12px; z-index: 150;
+    background: rgba(15,23,46,.92); border: 1px solid var(--line-3);
+    border-radius: 8px; width: 40px; height: 40px;
+    color: var(--text); font-size: 18px; cursor: pointer;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  }
+  .sidebar-scrim {
+    display: none; position: fixed; inset: 0;
+    background: rgba(2,4,8,.6); z-index: 140;
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  }
+  .sidebar-scrim.open { display: block; }
+  /* ── Responsive: < 900px ─────────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 145;
+      transform: translateX(-100%); transition: transform .25s ease;
+      height: 100vh; box-shadow: 4px 0 30px rgba(0,0,0,.5);
+    }
+    .sidebar.mobile-open { transform: translateX(0); }
+    .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+    .main { padding: 60px 16px 80px; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+    .grid-3, .grid-2 { grid-template-columns: 1fr !important; }
+    .trend-col { grid-column: 1 / -1; }
+    h1 { font-size: 22px !important; }
+    table { font-size: 12px; }
+    .modal { width: 95vw !important; max-width: none !important; }
+  }
+  @media (max-width: 560px) {
+    .grid-4 { grid-template-columns: 1fr !important; }
+    .main { padding: 60px 12px 60px; }
+  }
+  /* ── Print stylesheet — exports/reports go to white paper ────────────────── */
+  @media print {
+    /* Kill the background animations, dark theme, sidebar, etc. */
+    body::before, body::after { display: none !important; }
+    body { background: white !important; color: #111 !important; }
+    .sidebar, .mobile-menu-btn, .sidebar-scrim, .toasts, .offline-banner, .modal-backdrop, .skip-link, #kbd-help { display: none !important; }
+    .app { display: block !important; }
+    .main { padding: 16px !important; max-width: none !important; }
+    .card {
+      background: white !important; color: #111 !important; border: 1px solid #ccc !important;
+      box-shadow: none !important; page-break-inside: avoid;
+    }
+    .card h3, .page-header h1, strong { color: #111 !important; }
+    .muted, .small, .sub { color: #555 !important; }
+    .pill, .kpi .label, .nav-cadence { background: #f4f4f4 !important; color: #222 !important; border-color: #ccc !important; box-shadow: none !important; }
+    table { border-collapse: collapse; }
+    table th, table td { border: 1px solid #ddd; padding: 4px 6px; color: #111 !important; }
+    a { color: #1450aa !important; text-decoration: underline; }
+    /* Force-show fixture badges so printed reports are honest about provenance */
+    [title*="fixture"], [title*="Placeholder"] {
+      background: #fff8dc !important; color: #7a5500 !important; border: 1px solid #d4a900 !important;
+    }
+    /* Page-break hints */
+    h1, h2, h3 { page-break-after: avoid; }
+    .grid-2, .grid-3, .grid-4 { display: block !important; }
+    .grid-2 > *, .grid-3 > *, .grid-4 > * { margin-bottom: 10px; }
+  }
   /* Misc */
   .muted { color: var(--muted); }
   .small { font-size: 12px; }
@@ -557,8 +699,15 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-controls="sidebar" aria-expanded="false">☰</button>
+<div class="sidebar-scrim" id="sidebar-scrim" aria-hidden="true"></div>
+<div id="offline-banner" class="offline-banner" style="display:none" role="status" aria-live="polite">
+  <span class="offline-dot"></span>
+  <span><strong>You're offline.</strong> Live signals + Drop Watch + Trustpilot won't refresh until you're back. Your saved work is safe.</span>
+</div>
 <div class="app">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
     <div class="brand">
       <div class="brand-logo">G2</div>
       <div>
@@ -592,20 +741,21 @@
       Cadence: D=Daily / W=Weekly / E=Event
     </div>
     <div class="small muted" style="padding: 10px 8px 0; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-      <span id="persist-status" title="Auto-saved to localStorage">💾 <span id="persist-status-text">saved</span></span>
-      <button onclick="resetPersistedState()" title="Clear all saved state and reload"
+      <span id="persist-status" title="Auto-saved to localStorage" role="status" aria-live="polite" aria-label="Persistence status">💾 <span id="persist-status-text">saved</span></span>
+      <button data-action="persist.reset" title="Clear all saved state and reload" aria-label="Reset all saved state"
               style="background:none;border:1px solid rgba(255,255,255,.1);color:var(--text-2);padding:2px 8px;border-radius:4px;font-size:10px;cursor:pointer;margin-left:auto">
         ⟲ reset
       </button>
     </div>
     <div class="small muted" style="padding: 4px 8px 0; font-size:10px; opacity:.55;">
       <span id="build-stamp">v2.7 · build —</span> · schema v1
-      &nbsp;·&nbsp;<a href="#/diagnostic" onclick="event.preventDefault(); nav('diagnostic')" style="color:var(--text-2); text-decoration:underline; text-decoration-style:dotted">diagnostics</a>
+      &nbsp;·&nbsp;<a href="#/diagnostic" data-action="nav" data-layer="diagnostic" style="color:var(--text-2); text-decoration:underline; text-decoration-style:dotted">diagnostics</a>
+      &nbsp;·&nbsp;<a href="#" data-action="help.open" style="color:var(--text-2); text-decoration:underline; text-decoration-style:dotted" aria-label="Show keyboard shortcuts">⌨ shortcuts</a>
     </div>
   </aside>
-  <main class="main" id="main"></main>
+  <main class="main" id="main" tabindex="-1" role="main"></main>
 </div>
-<div class="toasts" id="toasts"></div>
+<div class="toasts" id="toasts" role="region" aria-live="polite" aria-label="Notifications"></div>
 <div class="modal-backdrop" id="video-modal" role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
   <div class="modal">
     <div class="modal-head">
@@ -1299,7 +1449,8 @@ function loadBrand(key) {
   renderSidebar();
   renderMain();
   schedulePersist();                    // 7. save the switch
-  toast("Switched to " + brand().name);
+  audit("brand.switch", { to: CURRENT_BRAND });
+  toast("Switched to " + brand().name, "ok");
 }
 function applyBrandChrome() {
   const m = brand();
@@ -1360,11 +1511,62 @@ const state = {
   // ── Diagnostics ring buffer ───────────────────────────────────────────────
   // Cap at 50 entries to keep memory bounded. Surfaced in #/diagnostic view.
   errorLog: [],
+  // ── Audit log ring buffer ─────────────────────────────────────────────────
+  // Tracks meaningful user actions (gate submits, brand switches, ships,
+  // schedules, regenerates, manual resets). Capped at 200, surfaced in
+  // #/diagnostic, persisted with brand state so it survives refreshes.
+  auditLog: [],
   // ── API health ping cache ─────────────────────────────────────────────────
   // Populated by checkApiHealth() in the diagnostic view. Each entry:
   //   { url, status: 'ok'|'fail'|'pending', code, latencyMs, checkedAt }
   apiHealth: {},
 };
+/* ============================================================
+   RESILIENT FETCH — wraps fetch() with timeout + retry/backoff
+   ─────────────────────────────────────────────────────────────
+   fetchWithRetry(url, opts)
+     opts.timeout   — ms before AbortController fires (default 8000)
+     opts.retries   — how many extra tries on failure (default 2)
+     opts.backoff   — base backoff ms; doubles each retry (default 500)
+     opts.signal    — caller can still pass an external signal
+   Returns the Response. Only retries on network errors and 5xx;
+   4xx is treated as fatal (no point retrying a 404).
+   ============================================================ */
+async function fetchWithRetry(url, opts = {}) {
+  const { timeout = 8000, retries = 2, backoff = 500, ...rest } = opts;
+  let lastErr;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(new Error("timeout")), timeout);
+    // If caller passed a signal, abort our controller too when theirs fires
+    if (rest.signal) {
+      if (rest.signal.aborted) { clearTimeout(timer); throw new Error("aborted"); }
+      rest.signal.addEventListener("abort", () => ctrl.abort(rest.signal.reason), { once: true });
+    }
+    try {
+      const resp = await fetch(url, { ...rest, signal: ctrl.signal });
+      clearTimeout(timer);
+      // 4xx — fatal. Don't retry. Caller decides.
+      if (resp.status >= 400 && resp.status < 500) return resp;
+      // 5xx — retry if we have tries left
+      if (resp.status >= 500 && attempt < retries) {
+        lastErr = new Error("HTTP " + resp.status);
+      } else {
+        return resp;
+      }
+    } catch (err) {
+      clearTimeout(timer);
+      lastErr = err;
+      // Don't retry on user-initiated abort (external signal)
+      if (rest.signal && rest.signal.aborted) throw err;
+      if (attempt >= retries) throw err;
+    }
+    // Exponential backoff with jitter
+    const delay = backoff * Math.pow(2, attempt) + Math.random() * 200;
+    await new Promise(r => setTimeout(r, delay));
+  }
+  throw lastErr || new Error("fetch failed after retries");
+}
 /* Error ring buffer — wraps console.error/warn so the diagnostic panel can
    surface crashes without needing the user to keep DevTools open. Caps at 50
    entries; old entries fall off the front. */
@@ -1389,6 +1591,30 @@ const state = {
   window.addEventListener("error", (e) => push("error", [e.message || "uncaught error", e.filename, e.lineno]));
   window.addEventListener("unhandledrejection", (e) => push("error", ["unhandled rejection:", e.reason]));
 })();
+/* audit(action, detail) — append a record to the audit log.
+   action: short verb like "gate1.submit", "brand.switch", "ship.queued"
+   detail: optional small object with context (briefId, slot, etc.) — kept tiny
+   Captures timestamp + active brand automatically.
+   Ring-buffered at 200 entries; debounced persist fires via schedulePersist. */
+function audit(action, detail) {
+  try {
+    if (!state.auditLog) state.auditLog = [];
+    const entry = { at: Date.now(), brand: CURRENT_BRAND, action: String(action) };
+    if (detail && typeof detail === "object") {
+      // Only keep small primitive fields — don't bloat the log with nested objects
+      const small = {};
+      for (const [k, v] of Object.entries(detail)) {
+        if (v == null) continue;
+        if (typeof v === "string") small[k] = v.length > 80 ? v.slice(0, 80) + "…" : v;
+        else if (typeof v === "number" || typeof v === "boolean") small[k] = v;
+      }
+      if (Object.keys(small).length) entry.detail = small;
+    }
+    state.auditLog.push(entry);
+    if (state.auditLog.length > 200) state.auditLog.splice(0, state.auditLog.length - 200);
+    if (typeof schedulePersist === "function") schedulePersist();
+  } catch (e) { /* swallow — audit must never crash the app */ }
+}
 /* ============================================================
    PERSISTENCE LAYER — localStorage-backed
    ─────────────────────────────────────────────────────────────
@@ -1412,7 +1638,7 @@ function persistState() {
   try {
     snapshotActiveBrandToBrandStates();
     const payload = {
-      _v: 1,
+      _v: CURRENT_SCHEMA,
       _savedAt: Date.now(),
       _brand: CURRENT_BRAND,
       brandStates: state.brandStates,
@@ -1420,6 +1646,7 @@ function persistState() {
       tikTokLive: state.tikTokLive ? { ...state.tikTokLive, loading: false } : null,
       dropWatchCache: state.dropWatchCache || [],
       dropWatchFetchedAt: state.dropWatchFetchedAt || null,
+      auditLog: state.auditLog || [],
     };
     localStorage.setItem(PERSIST_KEY, JSON.stringify(payload));
     updatePersistStatus("saved");
@@ -1441,12 +1668,53 @@ function updatePersistStatus(label, isError) {
     updatePersistStatus._t = setTimeout(() => { wrap.style.opacity = "0.5"; }, 600);
   }
 }
+/* Schema migration registry.
+   ─────────────────────────────────────────────────────────────
+   CURRENT_SCHEMA — bump this whenever the persisted shape changes.
+   MIGRATIONS[N]  — function that takes a v(N-1) payload and returns
+                    a v(N) payload. Run sequentially.
+   Returns null if the payload is so old we can't safely migrate.
+   Adding a migration in the future:
+     1. Bump CURRENT_SCHEMA to N
+     2. Add MIGRATIONS[N] = (p) => ({ ...p, _v: N,  ...changes })
+     3. Update persistState() — it stamps _v: CURRENT_SCHEMA automatically. */
+const CURRENT_SCHEMA = 1;
+const MIGRATIONS = {
+  // 1: (p) => ({ ...p, _v: 1 }),  // example future migration
+};
+function migrate(p) {
+  if (!p || typeof p._v !== "number") return null;
+  let cur = p;
+  while (cur._v < CURRENT_SCHEMA) {
+    const next = cur._v + 1;
+    const fn = MIGRATIONS[next];
+    if (!fn) {
+      console.warn("[persist] no migration path from v" + cur._v + " to v" + next + " — discarding");
+      return null;
+    }
+    try {
+      cur = fn(cur);
+      if (cur._v !== next) cur._v = next; // safety: ensure migrator set _v
+      console.info("[persist] migrated to v" + cur._v);
+    } catch (e) {
+      console.error("[persist] migration v" + cur._v + "→v" + next + " failed:", e);
+      return null;
+    }
+  }
+  if (cur._v > CURRENT_SCHEMA) {
+    // Newer than us — refuse rather than corrupt
+    console.warn("[persist] payload v" + cur._v + " is newer than dashboard v" + CURRENT_SCHEMA + " — refusing");
+    return null;
+  }
+  return cur;
+}
 function restoreState() {
   try {
     const raw = localStorage.getItem(PERSIST_KEY);
     if (!raw) return false;
-    const p = JSON.parse(raw);
-    if (!p || p._v !== 1) return false;
+    const parsed = JSON.parse(raw);
+    const p = migrate(parsed);
+    if (!p) return false;
     if (p._savedAt && (Date.now() - p._savedAt) > PERSIST_TTL_MS) {
       console.info("[persist] cached state expired — discarding");
       localStorage.removeItem(PERSIST_KEY);
@@ -1467,6 +1735,7 @@ function restoreState() {
     if (p.tikTokLive) state.tikTokLive = { ...p.tikTokLive, loading: false };
     if (Array.isArray(p.dropWatchCache)) state.dropWatchCache = p.dropWatchCache;
     if (p.dropWatchFetchedAt) state.dropWatchFetchedAt = p.dropWatchFetchedAt;
+    if (Array.isArray(p.auditLog)) state.auditLog = p.auditLog;
     return true;
   } catch (e) {
     console.warn("[persist] restore failed:", e);
@@ -1475,6 +1744,7 @@ function restoreState() {
 }
 function resetPersistedState() {
   if (!confirm("Reset all saved state? This clears every brief, pick, schedule and approval across both brands. Cannot be undone.")) return;
+  audit("persist.reset");
   try { localStorage.removeItem(PERSIST_KEY); } catch (e) {}
   try { localStorage.removeItem("activeBrand"); } catch (e) {} // legacy key
   location.reload();
@@ -1552,12 +1822,19 @@ function renderSidebar() {
   const groups = { l0: "nav-l0", l12: "nav-l12", prod: "nav-prod", loop: "nav-loop" };
   for (const g of Object.keys(groups)) document.getElementById(groups[g]).innerHTML = "";
   for (const l of LAYERS) {
-    const el = document.createElement("div");
-    el.className = `nav-item s-${l.status} ${state.current === l.id ? "active" : ""}`;
+    const isActive = state.current === l.id;
+    const isLocked = l.status === "locked";
+    // Use real <button> for proper keyboard / screen-reader semantics
+    const el = document.createElement("button");
+    el.type = "button";
+    el.className = `nav-item s-${l.status} ${isActive ? "active" : ""}`;
     el.dataset.layer = l.id;
-    el.innerHTML = `<span class="dot"></span><span class="nav-label">${l.label}</span><span class="nav-cadence" data-c="${l.cadence || ''}" title="${l.cadence || ''} refresh">${l.cadence ? l.cadence[0] : ''}</span><span class="nav-tag">${l.status === 'done' ? '✓' : l.status === 'progress' ? '…' : ''}</span>`;
-    el.onclick = () => { if (l.status !== "locked") nav(l.id); };
-    if (l.status === "locked") el.style.cursor = "not-allowed";
+    if (isActive) el.setAttribute("aria-current", "page");
+    if (isLocked) { el.setAttribute("aria-disabled", "true"); el.disabled = true; }
+    el.setAttribute("aria-label", `${l.label}${l.cadence ? " · " + l.cadence : ""}${isLocked ? " (locked)" : ""}`);
+    el.innerHTML = `<span class="dot" aria-hidden="true"></span><span class="nav-label">${l.label}</span><span class="nav-cadence" data-c="${l.cadence || ''}" title="${l.cadence || ''} refresh" aria-hidden="true">${l.cadence ? l.cadence[0] : ''}</span><span class="nav-tag" aria-hidden="true">${l.status === 'done' ? '✓' : l.status === 'progress' ? '…' : ''}</span>`;
+    el.onclick = () => { if (!isLocked) nav(l.id); };
+    if (isLocked) el.style.cursor = "not-allowed";
     document.getElementById(groups[l.group]).appendChild(el);
   }
 }
@@ -1587,9 +1864,9 @@ function renderMain() {
       <div class="muted small" style="margin-bottom:10px">View: <code>${escapeHtml(state.current)}</code> · ${escapeHtml(new Date().toLocaleString())}</div>
       <pre style="background:rgba(0,0,0,0.45);padding:10px;border-radius:6px;overflow:auto;font-size:11px;max-height:240px;white-space:pre-wrap;word-break:break-word">${escapeHtml(err && (err.stack || err.message) || String(err))}</pre>
       <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn small" onclick="nav('l0a')">← Go to Performance Pulse</button>
+        <button class="btn small" data-action="nav" data-layer="l0a">← Go to Performance Pulse</button>
         <button class="btn small" onclick="renderMain()">↻ Retry this view</button>
-        <button class="btn small" style="border-color:rgba(255,80,80,0.5);color:#ff8080" onclick="resetPersistedState()">⨯ Reset all saved state</button>
+        <button class="btn small" style="border-color:rgba(255,80,80,0.5);color:#ff8080" data-action="persist.reset">⨯ Reset all saved state</button>
       </div>
     </div>`;
     return; // skip handler attachment for the crashed view
@@ -1729,8 +2006,13 @@ async function pingApi(label, url) {
   state.apiHealth[label] = { url, status: "pending", checkedAt: Date.now() };
   renderMain();
   const t0 = performance.now();
+  // Use raw fetch (not fetchWithRetry) here — the diagnostic panel should show
+  // the actual transient state, not the after-retry-success result.
   try {
-    const resp = await fetch(url, { method: "GET", cache: "no-store" });
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(new Error("timeout")), 8000);
+    const resp = await fetch(url, { method: "GET", cache: "no-store", signal: ctrl.signal });
+    clearTimeout(timer);
     const latency = Math.round(performance.now() - t0);
     state.apiHealth[label] = {
       url, status: resp.ok ? "ok" : "fail", code: resp.status, latencyMs: latency, checkedAt: Date.now(),
@@ -1762,11 +2044,12 @@ function copyDiagnostics() {
     tikTokSignals: state.tikTokLive && state.tikTokLive.counts && state.tikTokLive.counts.total,
     briefsByBrand: Object.fromEntries(Object.entries(state.brandStates || {}).map(([b, s]) => [b, Object.keys((s && s.briefs) || {}).length])),
     errorLog: state.errorLog.slice(-20),
+    auditLog: (state.auditLog || []).slice(-30),
   };
   const text = JSON.stringify(dump, null, 2);
   try {
     navigator.clipboard.writeText(text);
-    toast("Diagnostic report copied to clipboard");
+    toast("Diagnostic report copied to clipboard", "ok");
   } catch (e) {
     toast("Copy failed — see DevTools console", "warn");
     console.log("[diagnostic dump]", text);
@@ -1774,7 +2057,14 @@ function copyDiagnostics() {
 }
 function clearErrorLog() {
   state.errorLog = [];
-  toast("Error log cleared");
+  toast("Error log cleared", "ok");
+  renderMain();
+}
+function clearAuditLog() {
+  if (!confirm("Clear the audit log? This wipes the action history for both brands.")) return;
+  state.auditLog = [];
+  schedulePersist();
+  toast("Audit log cleared", "ok");
   renderMain();
 }
 views.diagnostic = () => {
@@ -1805,8 +2095,8 @@ views.diagnostic = () => {
   return pageHeader("🩺 Diagnostics", "Admin · API health, cache freshness, persistence, error log") + `
     <div class="card" style="margin-bottom:14px;border-color:var(--accent-2)">
       <div class="row" style="align-items:center"><strong>System summary</strong><span class="spacer"></span>
-        <button class="btn small" onclick="pingAllApis()">↻ Ping APIs</button>
-        <button class="btn small" onclick="copyDiagnostics()" style="margin-left:6px">📋 Copy report</button>
+        <button class="btn small" data-action="diagnostic.ping">↻ Ping APIs</button>
+        <button class="btn small" data-action="diagnostic.copy" style="margin-left:6px">📋 Copy report</button>
       </div>
       <div class="grid grid-4" style="margin-top:10px">
         <div class="kpi"><div class="label">Active brand</div><div class="value" style="font-size:18px">${escapeHtml(CURRENT_BRAND)}</div><div class="muted small">view: ${escapeHtml(state.current)}</div></div>
@@ -1856,11 +2146,25 @@ views.diagnostic = () => {
     </div>
     <div class="card">
       <div class="row" style="align-items:center"><h3 style="margin:0">Error & warning log <span class="muted small" style="font-weight:400">(last ${errors.length} of ${(state.errorLog || []).length})</span></h3><span class="spacer"></span>
-        <button class="btn small" onclick="clearErrorLog()" ${errors.length ? '' : 'disabled style="opacity:.5"'}>🗑 Clear log</button>
+        <button class="btn small" data-action="diagnostic.clearErr" ${errors.length ? '' : 'disabled style="opacity:.5"'}>🗑 Clear log</button>
       </div>
       <div class="muted small" style="margin-top:6px">Ring buffer of the last 50 console.error / console.warn / uncaught errors. Wraps automatically. Cleared on reset.</div>
       <table style="margin-top:10px"><thead><tr><th style="width:90px">When</th><th style="width:60px">Level</th><th>Message</th></tr></thead><tbody>${errorRows}</tbody></table>
     </div>
+    ${(() => {
+      const audits = (state.auditLog || []).slice(-50).reverse();
+      const auditRows = audits.length ? audits.map(a => {
+        const detail = a.detail ? Object.entries(a.detail).map(([k, v]) => `${escapeHtml(k)}=<code>${escapeHtml(String(v))}</code>`).join(" · ") : "";
+        return `<tr><td class="muted small" style="white-space:nowrap">${_humanAgo(a.at)}</td><td><span class="pill small" style="background:rgba(124,92,255,.15);border-color:rgba(124,92,255,.4)">${escapeHtml(a.brand)}</span></td><td><code style="font-size:11px">${escapeHtml(a.action)}</code></td><td class="muted small">${detail}</td></tr>`;
+      }).join("") : `<tr><td colspan="4" class="muted" style="padding:18px;text-align:center">No actions logged yet.</td></tr>`;
+      return `<div class="card" style="margin-top:14px">
+        <div class="row" style="align-items:center"><h3 style="margin:0">Audit log <span class="muted small" style="font-weight:400">(last ${audits.length} of ${(state.auditLog || []).length})</span></h3><span class="spacer"></span>
+          <button class="btn small" data-action="diagnostic.clearAudit" ${audits.length ? '' : 'disabled style=\"opacity:.5\"'}>🗑 Clear</button>
+        </div>
+        <div class="muted small" style="margin-top:6px">Tracks brand switches, ships, schedules, regenerates. Capped at 200 entries, persisted across refreshes.</div>
+        <table style="margin-top:10px"><thead><tr><th style="width:90px">When</th><th style="width:80px">Brand</th><th>Action</th><th>Detail</th></tr></thead><tbody>${auditRows}</tbody></table>
+      </div>`;
+    })()}
     <div class="card" style="margin-top:14px;border-color:rgba(255,255,255,.05);background:rgba(255,255,255,.02)">
       <div class="muted small">
         <strong>How to read this page</strong> · Use this when something feels off (numbers stale, view crashed, button not responding).
@@ -1886,7 +2190,16 @@ views.l0c = () => {
       <div class="sub">Live · auto-aggregated from Curator Scan + TikTok Live Signals + Drop Watch</div>
       <table>
         <thead><tr><th>Platform</th><th>Kind</th><th>Trend</th><th>Reach</th><th>Leverage angle</th></tr></thead>
-        <tbody id="live-social-body"><tr><td colspan="5" class="muted" style="padding:18px;text-align:center">Aggregating signals from Curator Scan + TikTok + Drop Watch…</td></tr></tbody>
+        <tbody id="live-social-body">
+          ${[1,2,3,4].map(() => `
+            <tr>
+              <td><span class="skel pill"></span></td>
+              <td><span class="skel short"></span></td>
+              <td><span class="skel med"></span></td>
+              <td><span class="skel short"></span></td>
+              <td><span class="skel long"></span></td>
+            </tr>`).join("")}
+        </tbody>
       </table>
       <div class="muted small" style="margin-top:8px">⏱ Refreshes when any of the three source cards update. Audio trend half-life ≈ 5–7 days.</div>
     </div>`;
@@ -2001,7 +2314,14 @@ function renderDropWatchCard() {
       </div>
       <table class="kv-table">
         <thead><tr><th>Drop</th><th>Momentum</th><th>Fit</th></tr></thead>
-        <tbody id="drop-watch-body"><tr><td colspan="3" class="muted" style="padding:14px;text-align:center">Scraping /api/drop-watch…</td></tr></tbody>
+        <tbody id="drop-watch-body">
+          ${[1,2,3].map(() => `
+            <tr>
+              <td><span class="skel long"></span></td>
+              <td><span class="skel pill"></span></td>
+              <td><span class="skel short"></span></td>
+            </tr>`).join("")}
+        </tbody>
       </table>
       <div class="muted small" style="margin-top:8px">Aggregator-first feed: Steam · IGN · GameSpot · Polygon · Kotaku · Game Rant. Refreshed daily by Vercel Cron 07:00 UTC.</div>
     </div>`;
@@ -2034,7 +2354,7 @@ async function populateDropWatch() {
   const countEl = document.getElementById("drop-watch-count");
   if (!tbody) return;
   try {
-    const resp = await fetch("/api/drop-watch", { cache: "no-store" });
+    const resp = await fetchWithRetry("/api/drop-watch", { cache: "no-store" });
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const data = await resp.json();
     const articles = Array.isArray(data) ? data : (data.articles || []);
@@ -2336,7 +2656,7 @@ async function loadTikTokTrends(region) {
   renderMain();
   try {
     const r = region || state.tikTokLive.region || "MY";
-    const res = await fetch(`/api/tiktok/trends?region=${encodeURIComponent(r)}&limit=20`, {
+    const res = await fetchWithRetry(`/api/tiktok/trends?region=${encodeURIComponent(r)}&limit=20`, {
       headers: { "Accept": "application/json" }
     });
     if (!res.ok) throw new Error("HTTP " + res.status);
@@ -2389,6 +2709,19 @@ function renderTikTokLiveCard() {
         <div class="muted small" style="margin-bottom:10px">Discovery + Music + Creative · region ${tl.region || "MY"}</div>
         <button class="btn primary" style="width:100%" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
         <div class="muted small" style="margin-top:8px">Click to fetch live hashtags / sounds / top creatives.</div>
+      </div>`;
+  }
+  // Loading state — fresh fetch in flight, no prior data
+  if (tl.loading && !tl.fetched_at) {
+    return `
+      <div class="card" style="border-color:var(--accent)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span style="font-size:22px">🎵</span>
+          <strong style="color:white;flex:1">TikTok Live Signals</strong>
+          <span class="pill warn small">fetching…</span>
+        </div>
+        <div class="muted small" style="margin-bottom:10px">Pulling Discovery + Music + Creative…</div>
+        ${[1,2,3,4,5].map(() => `<div class="skel-row"><span class="skel short"></span><span class="skel long"></span><span class="skel pill"></span></div>`).join("")}
       </div>`;
   }
   // Error state
@@ -2521,6 +2854,7 @@ function shipBayRefreshBrief(slotCode, ideaId, platformId) {
   const key = shipBayVariantKey(slotCode, ideaId, platformId);
   state.shipBay.briefs[key] = buildShipBayBrief(slotCode, ideaId, platformId, /*reshuffle*/true);
   renderMain();
+  audit("brief.regenerated", { platform: platformId });
   toast("Brief regenerated · " + platformId.toUpperCase(), "ok");
 }
 /* ── BRIEF BUILDER — generates JSX-style brief per platform ───────────────── */
@@ -2778,6 +3112,7 @@ function shipBayShip(slotCode, ideaId, platformId) {
     shipBayFire(key, brief);
   }, 30000);
   state.shipBay.pendingShips[key] = timeoutId;
+  audit("ship.queued", { platform: brief.platform.label, briefKey: key });
   toast(`Queued · ${brief.platform.label} · 30s to cancel`, "ok");
   renderMain();
 }
@@ -2788,6 +3123,7 @@ function shipBayCancelShip(key) {
   delete state.shipBay.pendingShips[key];
   const entry = state.shipBay.shipLog.find(e => e.key === key && e.status === "queued");
   if (entry) entry.status = "cancelled";
+  audit("ship.cancelled", { key });
   toast("Ship cancelled · credits saved", "ok");
   renderMain();
 }
@@ -3183,7 +3519,7 @@ async function refreshShipBayLiveSignals() {
    touching the DOM. */
 async function fetchDropWatchCache() {
   try {
-    const resp = await fetch("/api/drop-watch", { cache: "no-store" });
+    const resp = await fetchWithRetry("/api/drop-watch", { cache: "no-store" });
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const data = await resp.json();
     const articles = Array.isArray(data) ? data : (data.articles || []);
@@ -3694,10 +4030,44 @@ function openVideoModal(id) {
   const hfBtn = document.getElementById("video-modal-higgsfield");
   hfBtn.textContent = state.higgsfieldJobs[id] ? `🎬 Already in Higgsfield queue ✓` : `🎬 Send to Higgsfield →`;
   hfBtn.disabled = !!state.higgsfieldJobs[id];
-  document.getElementById("video-modal").classList.add("open");
-  document.getElementById("video-modal").dataset.activeId = id;
+  const modal = document.getElementById("video-modal");
+  // Remember what was focused so we can restore on close
+  modal._returnFocusTo = document.activeElement;
+  modal.classList.add("open");
+  modal.dataset.activeId = id;
+  // Move focus to the close button so screen readers + keyboard users land inside the modal
+  setTimeout(() => {
+    const closeBtn = document.getElementById("video-modal-close");
+    if (closeBtn) closeBtn.focus();
+  }, 50);
 }
-function closeVideoModal() { document.getElementById("video-modal").classList.remove("open"); }
+function closeVideoModal() {
+  const modal = document.getElementById("video-modal");
+  modal.classList.remove("open");
+  // Restore focus to whatever opened the modal — critical for keyboard users
+  if (modal._returnFocusTo && typeof modal._returnFocusTo.focus === "function") {
+    try { modal._returnFocusTo.focus(); } catch (e) {}
+  }
+  modal._returnFocusTo = null;
+}
+// Focus trap inside the video modal — Tab cycles between focusable elements
+// without escaping to the page underneath.
+(function setupModalFocusTrap() {
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Tab") return;
+    const modal = document.getElementById("video-modal");
+    if (!modal || !modal.classList.contains("open")) return;
+    const focusables = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last  = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  });
+})();
 function sendToHiggsfield(briefId) {
   const prompt = state.videoPrompts[briefId];
   const brief = state.briefs[briefId];
@@ -3781,12 +4151,46 @@ function simulateHiggsfieldJob(briefId) {
     sendToHiggsfield(id);
   };
 })();
+/* Toast queue — caps visible toasts at MAX_VISIBLE, FIFO eviction.
+   Kinds: "" / "info" (default), "ok", "warn", "bad".
+   Aliases: "success" → "ok", "error" → "bad", "warning" → "warn".
+   Each toast auto-dismisses after 2400ms (3500ms for warn/bad so errors
+   don't blink past). */
+const TOAST_KINDS = { "": "info", info: "info", ok: "ok", success: "ok", warn: "warn", warning: "warn", bad: "bad", error: "bad" };
+const TOAST_ICONS = { info: "ℹ", ok: "✓", warn: "⚠", bad: "✕" };
+const TOAST_TTL   = { info: 2400, ok: 2400, warn: 3500, bad: 3500 };
+const TOAST_MAX_VISIBLE = 4;
 function toast(msg, kind = "") {
+  const k = TOAST_KINDS[kind] || "info";
+  const wrap = document.getElementById("toasts");
+  if (!wrap) return;
+  // Evict oldest if we're at the cap. Use fade-out for grace.
+  while (wrap.children.length >= TOAST_MAX_VISIBLE) {
+    const oldest = wrap.firstElementChild;
+    if (!oldest) break;
+    if (!oldest.classList.contains("fade-out")) {
+      oldest.classList.add("fade-out");
+      setTimeout(() => oldest.remove(), 250);
+    } else {
+      oldest.remove();
+    }
+  }
   const t = document.createElement("div");
-  t.className = `toast ${kind}`;
-  t.textContent = msg;
-  document.getElementById("toasts").appendChild(t);
-  setTimeout(() => t.remove(), 2400);
+  t.className = `toast ${k}`;
+  const icon = document.createElement("span");
+  icon.className = "toast-icon";
+  icon.textContent = TOAST_ICONS[k];
+  const body = document.createElement("span");
+  body.className = "toast-msg";
+  body.textContent = msg; // textContent — never trust msg as HTML
+  t.appendChild(icon);
+  t.appendChild(body);
+  wrap.appendChild(t);
+  setTimeout(() => {
+    if (!t.isConnected) return;
+    t.classList.add("fade-out");
+    setTimeout(() => t.remove(), 250);
+  }, TOAST_TTL[k]);
 }
 // Boot sequence:
 //   1. Restore saved state from localStorage (wrapped — corrupt blob can't brick).
@@ -3824,6 +4228,181 @@ renderMain();
 window.addEventListener("beforeunload", () => {
   try { persistState(); } catch (e) { /* nothing we can do this late */ }
 });
+// Offline detection — show a thin banner when navigator.onLine flips false.
+// One-shot toast on each transition so it's noticeable but not nagging.
+(function setupOfflineListener() {
+  const banner = document.getElementById("offline-banner");
+  function update() {
+    const offline = !navigator.onLine;
+    if (banner) banner.style.display = offline ? "flex" : "none";
+  }
+  window.addEventListener("offline", () => { update(); toast("You're offline — live data paused", "warn"); });
+  window.addEventListener("online",  () => { update(); toast("Back online — live data will refresh on next ping", "ok"); });
+  update(); // initial state on load
+})();
+/* ============================================================
+   EVENT DELEGATION ROUTER — data-action dispatcher
+   ─────────────────────────────────────────────────────────────
+   Coexists with existing inline onclick handlers. New buttons should
+   use data-action="actionName" + optional data-* args. The router
+   walks the action registry and calls the matching function with
+   the element + dataset as args.
+
+   Adding an action:
+     ACTION_HANDLERS["my.thing"] = (el, data) => { ... };
+   Then in HTML:
+     <button data-action="my.thing" data-foo="bar">Click</button>
+   The router auto-prevents default for <a> elements with data-action.
+
+   Why delegate? Future view rerenders don't need to re-attach handlers,
+   and there's no XSS risk in onclick="..." templates.
+   ============================================================ */
+const ACTION_HANDLERS = {
+  "nav": (_, d) => { if (d.layer) nav(d.layer); },
+  "brand.switch": (_, d) => { if (d.to && BRANDS_DATA[d.to]) loadBrand(d.to); },
+  "brand.toggle": () => loadBrand(CURRENT_BRAND === "g2g" ? "offgamers" : "g2g"),
+  "diagnostic.ping":      () => pingAllApis(),
+  "diagnostic.copy":      () => copyDiagnostics(),
+  "diagnostic.clearErr":  () => clearErrorLog(),
+  "diagnostic.clearAudit":() => clearAuditLog(),
+  "persist.reset":        () => resetPersistedState(),
+  "modal.close":          () => closeVideoModal(),
+  "help.open":            () => { const ev = new KeyboardEvent("keydown", { key: "?" }); document.dispatchEvent(ev); },
+};
+(function setupActionRouter() {
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-action]");
+    if (!el) return;
+    const action = el.dataset.action;
+    const handler = ACTION_HANDLERS[action];
+    if (!handler) return;
+    // <a data-action> shouldn't navigate — that's what the handler is for
+    if (el.tagName === "A") e.preventDefault();
+    try {
+      handler(el, el.dataset || {});
+    } catch (err) {
+      console.error("[action] " + action + " crashed:", err);
+      toast("Action failed — see diagnostics", "bad");
+    }
+  });
+})();
+/* Mobile sidebar toggle — hamburger button + scrim. On viewports ≥ 900px
+   the sidebar is statically docked and these handlers are inert. */
+(function setupMobileSidebar() {
+  const btn    = document.getElementById("mobile-menu-btn");
+  const sb     = document.getElementById("sidebar");
+  const scrim  = document.getElementById("sidebar-scrim");
+  if (!btn || !sb || !scrim) return;
+  function open()  { sb.classList.add("mobile-open"); scrim.classList.add("open"); btn.setAttribute("aria-expanded", "true");  }
+  function close() { sb.classList.remove("mobile-open"); scrim.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); }
+  btn.addEventListener("click", () => sb.classList.contains("mobile-open") ? close() : open());
+  scrim.addEventListener("click", close);
+  // Close after any nav click — the user wants the main view back
+  sb.addEventListener("click", (e) => {
+    const item = e.target.closest(".nav-item, .brand-switch-tab");
+    if (item && window.innerWidth <= 900) close();
+  });
+  // Reset when crossing the breakpoint upward
+  window.addEventListener("resize", () => { if (window.innerWidth > 900) close(); });
+})();
+/* ============================================================
+   KEYBOARD SHORTCUTS — global hotkeys
+   ─────────────────────────────────────────────────────────────
+   Single-key: ? → show help overlay · b → toggle brand · esc → close modal/help
+   Two-key sequences (vim style): g d → diagnostics · g s → ship bay
+                                  g p → performance pulse · g t → trend radar
+                                  g a → audience atlas
+   Shortcuts are suppressed when focus is in an input/textarea/contenteditable
+   so we don't intercept typing. ============================================================ */
+(function setupKeyboardShortcuts() {
+  let pendingPrefix = null;
+  let prefixTimer = null;
+  const PREFIX_TIMEOUT = 1200;
+  function clearPrefix() { pendingPrefix = null; clearTimeout(prefixTimer); }
+  function isTypingTarget(t) {
+    if (!t) return false;
+    if (t.isContentEditable) return true;
+    const tag = (t.tagName || "").toLowerCase();
+    return tag === "input" || tag === "textarea" || tag === "select";
+  }
+  function closeHelp() {
+    const h = document.getElementById("kbd-help");
+    if (h) h.style.display = "none";
+  }
+  function openHelp() {
+    let h = document.getElementById("kbd-help");
+    if (!h) {
+      h = document.createElement("div");
+      h.id = "kbd-help";
+      h.className = "kbd-help";
+      h.setAttribute("role", "dialog");
+      h.setAttribute("aria-label", "Keyboard shortcuts");
+      h.innerHTML = `
+        <div class="kbd-help-card">
+          <div class="row" style="align-items:center"><h3 style="margin:0">⌨ Keyboard shortcuts</h3><span class="spacer"></span>
+            <button class="btn small" onclick="document.getElementById('kbd-help').style.display='none'" aria-label="Close help">✕</button>
+          </div>
+          <table style="margin-top:14px">
+            <tbody>
+              <tr><td><kbd>?</kbd></td><td>Show this help</td></tr>
+              <tr><td><kbd>b</kbd></td><td>Toggle brand (G2G ↔ OffGamers)</td></tr>
+              <tr><td><kbd>g</kbd> <kbd>p</kbd></td><td>Go to Performance Pulse</td></tr>
+              <tr><td><kbd>g</kbd> <kbd>t</kbd></td><td>Go to Trend Radar</td></tr>
+              <tr><td><kbd>g</kbd> <kbd>a</kbd></td><td>Go to Audience Atlas</td></tr>
+              <tr><td><kbd>g</kbd> <kbd>s</kbd></td><td>Go to Ship Bay</td></tr>
+              <tr><td><kbd>g</kbd> <kbd>d</kbd></td><td>Go to Diagnostics</td></tr>
+              <tr><td><kbd>esc</kbd></td><td>Close modal / this help</td></tr>
+            </tbody>
+          </table>
+          <div class="muted small" style="margin-top:14px">Shortcuts are paused while typing in an input field.</div>
+        </div>`;
+      document.body.appendChild(h);
+    }
+    h.style.display = "flex";
+  }
+  const GOTO = { p: "l0a", t: "l0c", a: "l0d", s: "shipbay", d: "diagnostic" };
+  document.addEventListener("keydown", (e) => {
+    // Don't swallow when modifier keys are involved (ctrl/cmd shortcuts belong to the OS / browser)
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (isTypingTarget(e.target)) return;
+    // Escape — close help first, then video modal
+    if (e.key === "Escape") {
+      const h = document.getElementById("kbd-help");
+      if (h && h.style.display !== "none") { closeHelp(); e.preventDefault(); return; }
+      // Video modal escape is already handled in setupModalFocusTrap / wireVideoModal
+      return;
+    }
+    // Two-key sequence: "g" then [letter]
+    if (pendingPrefix === "g") {
+      const target = GOTO[e.key];
+      clearPrefix();
+      if (target) {
+        e.preventDefault();
+        if (_isNavigableLayer(target)) nav(target);
+        else toast(`Layer "${target}" is locked`, "warn");
+      }
+      return;
+    }
+    // Start a "g" prefix
+    if (e.key === "g") {
+      pendingPrefix = "g";
+      clearTimeout(prefixTimer);
+      prefixTimer = setTimeout(clearPrefix, PREFIX_TIMEOUT);
+      e.preventDefault();
+      return;
+    }
+    // Single-key shortcuts
+    if (e.key === "?") {
+      e.preventDefault(); openHelp(); return;
+    }
+    if (e.key === "b") {
+      e.preventDefault();
+      const next = CURRENT_BRAND === "g2g" ? "offgamers" : "g2g";
+      if (BRANDS_DATA[next]) loadBrand(next);
+      return;
+    }
+  });
+})();
 function regenerateBrief(briefId, reason) {
   const b = state.briefs[briefId];
   if (!b) return;
@@ -3911,7 +4490,8 @@ function scheduleViaVista(briefId) {
     publishAt: at,
     vistaJobId: 'vs-' + Math.random().toString(36).slice(2, 8),
   };
-  toast("Scheduled via Vista Social mock for " + at);
+  audit("schedule.created", { at });
+  toast("Scheduled via Vista Social mock for " + at, "ok");
   renderMain();
 }
 function scheduleAllViaVista() {
@@ -3922,12 +4502,14 @@ function simulatePost() {
   const next = Object.entries(state.scheduledPosts || {}).find(([id, s]) => s.state === 'scheduled');
   if (!next) { toast("Nothing scheduled to publish"); return; }
   state.scheduledPosts[next[0]].state = 'posted';
-  toast("Vista Social posted brief " + next[0]);
+  audit("schedule.published", { briefId: next[0] });
+  toast("Vista Social posted brief " + next[0], "ok");
   renderMain();
 }
 async function fetchVistaData() {
   try {
-    const res = await fetch('/api/vista');
+    const res = await fetchWithRetry('/api/vista');
+    if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
     if (!data.stats) return;
     const { stats, G2G_PROFILES, OFFGAMERS_PROFILES } = data;
