@@ -591,6 +591,17 @@
       In-site approvals canonical (v2.7)<br/>
       Cadence: D=Daily / W=Weekly / E=Event
     </div>
+    <div class="small muted" style="padding: 10px 8px 0; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+      <span id="persist-status" title="Auto-saved to localStorage">💾 <span id="persist-status-text">saved</span></span>
+      <button onclick="resetPersistedState()" title="Clear all saved state and reload"
+              style="background:none;border:1px solid rgba(255,255,255,.1);color:var(--text-2);padding:2px 8px;border-radius:4px;font-size:10px;cursor:pointer;margin-left:auto">
+        ⟲ reset
+      </button>
+    </div>
+    <div class="small muted" style="padding: 4px 8px 0; font-size:10px; opacity:.55;">
+      <span id="build-stamp">v2.7 · build —</span> · schema v1
+      &nbsp;·&nbsp;<a href="#/diagnostic" onclick="event.preventDefault(); nav('diagnostic')" style="color:var(--text-2); text-decoration:underline; text-decoration-style:dotted">diagnostics</a>
+    </div>
   </aside>
   <main class="main" id="main"></main>
 </div>
@@ -1218,44 +1229,38 @@ const BRANDS_DATA = {
     AUDIENCE: _AUDIENCE_OG, ANALYSIS: _ANALYSIS_OG, SLOTS: _SLOTS_OG, IDEAS: _IDEAS_OG,
   },
 };
-/* Restore last active brand from localStorage so refresh keeps the user on
-   the tab they were on (G2G or OffGamers). Falls back to g2g on first load
-   or if storage is blocked. */
+/* Active brand. Hydrated by restoreState() at boot if a saved session exists;
+   loadBrand() handles runtime switches. */
 let CURRENT_BRAND = "g2g";
-try {
-  const _savedBrand = localStorage.getItem("activeBrand");
-  if (_savedBrand && BRANDS_DATA[_savedBrand]) {
-    CURRENT_BRAND = _savedBrand;
-    const _d = BRANDS_DATA[_savedBrand];
-    PLATFORMS = _d.PLATFORMS; COMPETITORS = _d.COMPETITORS; TRENDS = _d.TRENDS;
-    AUDIENCE = _d.AUDIENCE;   ANALYSIS = _d.ANALYSIS;       SLOTS = _d.SLOTS;   IDEAS = _d.IDEAS;
-  }
-} catch (e) { /* localStorage blocked — stay on default */ }
 function brand() { return BRANDS_META[CURRENT_BRAND]; }
-function loadBrand(key) {
-  if (!BRANDS_DATA[key]) return;
-  // 1. snapshot current brand state
+/* Mirror current working state into the per-brand snapshot bucket.
+   Single source of persistent truth = state.brandStates[brand];
+   state.picks / state.briefs / etc. are just working copies for the active brand. */
+function snapshotActiveBrandToBrandStates() {
+  // Admin views (diagnostic) aren't part of the workflow — don't overwrite the
+  // brand's last workflow position with them. Fall back to the previously
+  // saved current, or the default landing page.
+  const ADMIN_VIEWS = new Set(["diagnostic"]);
+  const prev = state.brandStates[CURRENT_BRAND] || {};
+  const safeCurrent = ADMIN_VIEWS.has(state.current) ? (prev.current || "l0a") : state.current;
   state.brandStates[CURRENT_BRAND] = {
-    picks:            JSON.parse(JSON.stringify(state.picks)),
-    gate1Submitted:   state.gate1Submitted,
-    briefs:           JSON.parse(JSON.stringify(state.briefs)),
-    gate2:            JSON.parse(JSON.stringify(state.gate2)),
-    gate2Submitted:   state.gate2Submitted,
-    publishConfirms:  JSON.parse(JSON.stringify(state.publishConfirms)),
-    videoPrompts:     JSON.parse(JSON.stringify(state.videoPrompts)),
-    higgsfieldJobs:   JSON.parse(JSON.stringify(state.higgsfieldJobs)),
-    scheduledPosts:   JSON.parse(JSON.stringify(state.scheduledPosts || {})),
-    qaPass:           state.qaPass ? JSON.parse(JSON.stringify(state.qaPass)) : null,
-    current:          state.current,
+    picks:           JSON.parse(JSON.stringify(state.picks || {})),
+    gate1Submitted:  !!state.gate1Submitted,
+    briefs:          JSON.parse(JSON.stringify(state.briefs || {})),
+    gate2:           JSON.parse(JSON.stringify(state.gate2 || {})),
+    gate2Submitted:  !!state.gate2Submitted,
+    publishConfirms: JSON.parse(JSON.stringify(state.publishConfirms || {})),
+    videoPrompts:    JSON.parse(JSON.stringify(state.videoPrompts || {})),
+    higgsfieldJobs:  JSON.parse(JSON.stringify(state.higgsfieldJobs || {})),
+    scheduledPosts:  JSON.parse(JSON.stringify(state.scheduledPosts || {})),
+    qaPass:          state.qaPass ? JSON.parse(JSON.stringify(state.qaPass)) : null,
+    current:         safeCurrent,
   };
-  // 2. swap data
-  CURRENT_BRAND = key;
-  try { localStorage.setItem("activeBrand", key); } catch (e) { /* storage blocked */ }
-  const d = BRANDS_DATA[key];
-  PLATFORMS = d.PLATFORMS; COMPETITORS = d.COMPETITORS; TRENDS = d.TRENDS;
-  AUDIENCE = d.AUDIENCE;   ANALYSIS = d.ANALYSIS;       SLOTS = d.SLOTS;   IDEAS = d.IDEAS;
-  // 3. restore that brand's state (or fresh defaults)
-  const s = state.brandStates[key] || {};
+}
+/* Hydrate working state (state.picks, state.briefs, etc.) from the per-brand
+   snapshot bucket. Used by loadBrand() AND by restoreState() on boot. */
+function hydrateWorkingStateFromBrand() {
+  const s = state.brandStates[CURRENT_BRAND] || {};
   state.picks           = s.picks           || {};
   state.gate1Submitted  = !!s.gate1Submitted;
   state.briefs          = s.briefs          || {};
@@ -1267,18 +1272,33 @@ function loadBrand(key) {
   state.scheduledPosts  = s.scheduledPosts  || {};
   state.qaPass          = s.qaPass          || null;
   state.current         = s.current         || "l0a";
-  // 4. recompute layer statuses for this brand
-  setStatus("g1", state.gate1Submitted ? "done" : "progress");
-  setStatus("l3", state.gate1Submitted ? "done" : "locked");
-  setStatus("g2", state.gate2Submitted ? "done" : (state.gate1Submitted ? "progress" : "locked"));
-  setStatus("l4", state.gate2Submitted ? "done" : "locked");
-  setStatus("l4_5", state.gate2Submitted ? "progress" : "locked");
-  setStatus("l5", state.gate2Submitted ? "progress" : "locked");
-  setStatus("l6", "locked");
-  // 5. update chrome (title, sidebar brand block)
-  applyBrandChrome();
+  // Recompute layer statuses
+  setStatus("g1",  state.gate1Submitted ? "done" : "progress");
+  setStatus("l3",  state.gate1Submitted ? "done" : "locked");
+  setStatus("g2",  state.gate2Submitted ? "done" : (state.gate1Submitted ? "progress" : "locked"));
+  setStatus("l4",  state.gate2Submitted ? "done" : "locked");
+  setStatus("l4_5",state.gate2Submitted ? "progress" : "locked");
+  setStatus("l5",  state.gate2Submitted ? "progress" : "locked");
+  setStatus("l6",  "locked");
+}
+/* Swap the let-bound data references to the brand's BRANDS_DATA slice. */
+function applyBrandDataset() {
+  const d = BRANDS_DATA[CURRENT_BRAND];
+  PLATFORMS = d.PLATFORMS; COMPETITORS = d.COMPETITORS; TRENDS = d.TRENDS;
+  AUDIENCE = d.AUDIENCE;   ANALYSIS = d.ANALYSIS;       SLOTS = d.SLOTS;   IDEAS = d.IDEAS;
+}
+function loadBrand(key) {
+  if (!BRANDS_DATA[key]) return;
+  snapshotActiveBrandToBrandStates();   // 1. preserve outgoing brand's work
+  CURRENT_BRAND = key;                  // 2. flip pointer
+  applyBrandDataset();                  // 3. swap dataset references
+  hydrateWorkingStateFromBrand();       // 4. restore incoming brand's work
+  // 5. update URL — brand switch pushes a history entry so back works
+  try { history.pushState(null, "", `#/${CURRENT_BRAND}/${state.current}`); } catch (e) {}
+  applyBrandChrome();                   // 6. update title / sidebar chrome
   renderSidebar();
   renderMain();
+  schedulePersist();                    // 7. save the switch
   toast("Switched to " + brand().name);
 }
 function applyBrandChrome() {
@@ -1337,7 +1357,128 @@ const state = {
     shipLog: [],           // [{ts, day, platform, ideaId, title, status, brief}]
     pendingShips: {},      // { variantKey: timeoutId } — 30s cancel windows
   },
+  // ── Diagnostics ring buffer ───────────────────────────────────────────────
+  // Cap at 50 entries to keep memory bounded. Surfaced in #/diagnostic view.
+  errorLog: [],
+  // ── API health ping cache ─────────────────────────────────────────────────
+  // Populated by checkApiHealth() in the diagnostic view. Each entry:
+  //   { url, status: 'ok'|'fail'|'pending', code, latencyMs, checkedAt }
+  apiHealth: {},
 };
+/* Error ring buffer — wraps console.error/warn so the diagnostic panel can
+   surface crashes without needing the user to keep DevTools open. Caps at 50
+   entries; old entries fall off the front. */
+(function setupErrorRingBuffer() {
+  const MAX = 50;
+  const origErr = console.error.bind(console);
+  const origWarn = console.warn.bind(console);
+  function push(level, args) {
+    try {
+      const msg = Array.from(args).map(a => {
+        if (a instanceof Error) return (a.stack || a.message || String(a));
+        if (typeof a === "object") { try { return JSON.stringify(a); } catch (e) { return String(a); } }
+        return String(a);
+      }).join(" ");
+      state.errorLog.push({ at: Date.now(), level, msg });
+      if (state.errorLog.length > MAX) state.errorLog.splice(0, state.errorLog.length - MAX);
+    } catch (e) { /* never let logging itself crash the app */ }
+  }
+  console.error = function() { push("error", arguments); origErr.apply(console, arguments); };
+  console.warn  = function() { push("warn",  arguments); origWarn.apply(console, arguments); };
+  // Also catch uncaught errors & promise rejections
+  window.addEventListener("error", (e) => push("error", [e.message || "uncaught error", e.filename, e.lineno]));
+  window.addEventListener("unhandledrejection", (e) => push("error", ["unhandled rejection:", e.reason]));
+})();
+/* ============================================================
+   PERSISTENCE LAYER — localStorage-backed
+   ─────────────────────────────────────────────────────────────
+   Single source of truth on disk: state.brandStates[brand] for per-brand
+   work (briefs/picks/scheduled posts/etc) plus a small set of global keys
+   (curatorScans, tikTokLive, dropWatchCache). Working copies on state.* are
+   refreshed from state.brandStates on brand switch and on boot.
+
+   Saves are debounced (300ms) so rapid edits coalesce into one write.
+   Schema is versioned via _v so we can ship breaking changes cleanly.
+   TTL is 60 days — older snapshots get discarded as stale.
+   ============================================================ */
+const PERSIST_KEY = "dashboardState_v1";
+const PERSIST_TTL_MS = 60 * 24 * 60 * 60 * 1000;
+let _persistTimer = null;
+function schedulePersist() {
+  clearTimeout(_persistTimer);
+  _persistTimer = setTimeout(persistState, 300);
+}
+function persistState() {
+  try {
+    snapshotActiveBrandToBrandStates();
+    const payload = {
+      _v: 1,
+      _savedAt: Date.now(),
+      _brand: CURRENT_BRAND,
+      brandStates: state.brandStates,
+      curatorScans: state.curatorScans,
+      tikTokLive: state.tikTokLive ? { ...state.tikTokLive, loading: false } : null,
+      dropWatchCache: state.dropWatchCache || [],
+      dropWatchFetchedAt: state.dropWatchFetchedAt || null,
+    };
+    localStorage.setItem(PERSIST_KEY, JSON.stringify(payload));
+    updatePersistStatus("saved");
+  } catch (e) {
+    console.warn("[persist] save failed:", e);
+    updatePersistStatus("save failed", true);
+  }
+}
+function updatePersistStatus(label, isError) {
+  const el = document.getElementById("persist-status-text");
+  if (!el) return;
+  el.textContent = label;
+  el.style.color = isError ? "#ff8080" : "";
+  // Flash the saved indicator briefly so the user sees the heartbeat
+  const wrap = document.getElementById("persist-status");
+  if (wrap && !isError) {
+    wrap.style.opacity = "1";
+    clearTimeout(updatePersistStatus._t);
+    updatePersistStatus._t = setTimeout(() => { wrap.style.opacity = "0.5"; }, 600);
+  }
+}
+function restoreState() {
+  try {
+    const raw = localStorage.getItem(PERSIST_KEY);
+    if (!raw) return false;
+    const p = JSON.parse(raw);
+    if (!p || p._v !== 1) return false;
+    if (p._savedAt && (Date.now() - p._savedAt) > PERSIST_TTL_MS) {
+      console.info("[persist] cached state expired — discarding");
+      localStorage.removeItem(PERSIST_KEY);
+      return false;
+    }
+    // Brand
+    if (p._brand && BRANDS_DATA[p._brand]) {
+      CURRENT_BRAND = p._brand;
+      applyBrandDataset();
+    }
+    // Per-brand snapshots
+    if (p.brandStates && typeof p.brandStates === "object") {
+      state.brandStates = p.brandStates;
+    }
+    hydrateWorkingStateFromBrand();
+    // Global (non-brand-scoped) state
+    if (Array.isArray(p.curatorScans)) state.curatorScans = p.curatorScans;
+    if (p.tikTokLive) state.tikTokLive = { ...p.tikTokLive, loading: false };
+    if (Array.isArray(p.dropWatchCache)) state.dropWatchCache = p.dropWatchCache;
+    if (p.dropWatchFetchedAt) state.dropWatchFetchedAt = p.dropWatchFetchedAt;
+    return true;
+  } catch (e) {
+    console.warn("[persist] restore failed:", e);
+    return false;
+  }
+}
+function resetPersistedState() {
+  if (!confirm("Reset all saved state? This clears every brief, pick, schedule and approval across both brands. Cannot be undone.")) return;
+  try { localStorage.removeItem(PERSIST_KEY); } catch (e) {}
+  try { localStorage.removeItem("activeBrand"); } catch (e) {} // legacy key
+  location.reload();
+}
 /* ============================================================
    RENDER — sidebar + page router
    ============================================================ */
@@ -1349,6 +1490,64 @@ function setStatus(layerId, s) {
   const l = LAYERS.find(x => x.id === layerId);
   if (l) l.status = s;
 }
+/* ============================================================
+   HASH ROUTING — bookmarkable / shareable / back-button-friendly
+   ─────────────────────────────────────────────────────────────
+   URL format:  #/{brand}/{layer}     e.g.  #/offgamers/shipbay
+   - syncHash()    writes the current state to the URL via replaceState
+                   (replaceState does NOT fire hashchange, so no loops)
+   - applyHashToState()  reads the URL and updates CURRENT_BRAND + state.current
+   - hashchange listener  handles user-typed URLs and browser back/forward
+   Validation: invalid brand or layer is ignored; locked layers are not
+   navigated to (would dead-end the user).
+   ============================================================ */
+const _HASH_RE = /^#\/([a-z0-9_-]+)\/([a-z0-9_-]+)$/i;
+function _isNavigableLayer(layerId) {
+  // Special-case admin views that aren't part of the workflow LAYERS list
+  if (layerId === "diagnostic") return true;
+  const l = LAYERS.find(x => x.id === layerId);
+  return l && l.status !== "locked";
+}
+function parseHash() {
+  const m = (location.hash || "").match(_HASH_RE);
+  if (!m) return null;
+  return { brand: m[1], layer: m[2] };
+}
+function syncHash() {
+  const desired = `#/${CURRENT_BRAND}/${state.current}`;
+  if (location.hash !== desired) {
+    try { history.replaceState(null, "", desired); } catch (e) { /* about:blank or similar */ }
+  }
+}
+/* Returns true if the hash mutated state — caller should re-render. */
+function applyHashToState() {
+  const h = parseHash();
+  if (!h) return false;
+  let changed = false;
+  // Brand swap if URL specifies a different brand
+  if (h.brand && h.brand !== CURRENT_BRAND && BRANDS_DATA[h.brand]) {
+    snapshotActiveBrandToBrandStates();
+    CURRENT_BRAND = h.brand;
+    applyBrandDataset();
+    hydrateWorkingStateFromBrand();
+    changed = true;
+  }
+  // Layer switch if URL specifies one that's navigable
+  if (h.layer && h.layer !== state.current && _isNavigableLayer(h.layer)) {
+    state.current = h.layer;
+    changed = true;
+  }
+  return changed;
+}
+/* Handle user-typed URL changes, back/forward navigation, manual hash edits. */
+window.addEventListener("hashchange", () => {
+  if (applyHashToState()) {
+    applyBrandChrome();
+    renderSidebar();
+    renderMain();
+    window.scrollTo(0, 0);
+  }
+});
 function renderSidebar() {
   const groups = { l0: "nav-l0", l12: "nav-l12", prod: "nav-prod", loop: "nav-loop" };
   for (const g of Object.keys(groups)) document.getElementById(groups[g]).innerHTML = "";
@@ -1364,6 +1563,10 @@ function renderSidebar() {
 }
 function nav(id) {
   state.current = id;
+  // Push a history entry on explicit user clicks so browser back works.
+  // history.pushState (not location.hash =) — doesn't fire hashchange,
+  // which would cause a double-render via the listener above.
+  try { history.pushState(null, "", `#/${CURRENT_BRAND}/${id}`); } catch (e) {}
   renderSidebar();
   renderMain();
   window.scrollTo(0, 0);
@@ -1372,13 +1575,36 @@ function renderMain() {
   const m = document.getElementById("main");
   const view = views[state.current];
   if (!view) { m.innerHTML = `<div class="empty">View not found.</div>`; return; }
-  m.innerHTML = view();
-  if (state.current === "g1") attachGate1Handlers();
-  if (state.current === "g2") attachGate2Handlers();
-  if (state.current === "l4") attachL4Handlers();
-  if (state.current === "l0c") attachL0cHandlers();
-  if (state.current === "l5") attachL5Handlers();
-  if (state.current === "shipbay") primeShipBaySignalsIfStale();
+  // Error boundary — one crashing view shouldn't take down the whole dashboard.
+  // If view() throws, we show a recoverable error card so the user can navigate
+  // away or reset state without a hard reload.
+  try {
+    m.innerHTML = view();
+  } catch (err) {
+    console.error("[renderMain] view crashed:", state.current, err);
+    m.innerHTML = `<div class="card" style="border:1px solid rgba(255,80,80,0.4);padding:18px;background:rgba(255,80,80,0.05)">
+      <h3 style="color:#ff8080;margin:0 0 6px 0">⚠ This view crashed while rendering</h3>
+      <div class="muted small" style="margin-bottom:10px">View: <code>${escapeHtml(state.current)}</code> · ${escapeHtml(new Date().toLocaleString())}</div>
+      <pre style="background:rgba(0,0,0,0.45);padding:10px;border-radius:6px;overflow:auto;font-size:11px;max-height:240px;white-space:pre-wrap;word-break:break-word">${escapeHtml(err && (err.stack || err.message) || String(err))}</pre>
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn small" onclick="nav('l0a')">← Go to Performance Pulse</button>
+        <button class="btn small" onclick="renderMain()">↻ Retry this view</button>
+        <button class="btn small" style="border-color:rgba(255,80,80,0.5);color:#ff8080" onclick="resetPersistedState()">⨯ Reset all saved state</button>
+      </div>
+    </div>`;
+    return; // skip handler attachment for the crashed view
+  }
+  try {
+    if (state.current === "g1") attachGate1Handlers();
+    if (state.current === "g2") attachGate2Handlers();
+    if (state.current === "l4") attachL4Handlers();
+    if (state.current === "l0c") attachL0cHandlers();
+    if (state.current === "l5") attachL5Handlers();
+    if (state.current === "shipbay") primeShipBaySignalsIfStale();
+  } catch (err) {
+    console.error("[renderMain] handler crashed:", state.current, err);
+  }
+  schedulePersist(); // auto-save after every render
 }
 /* ============================================================
    PAGE HEADERS
@@ -1413,7 +1639,10 @@ views.l0a = () => {
   const wow = (n) => `<span class="${cesTierClass(n)}" style="font-size:11px">${n >= 0 ? '+' : ''}${n}% WoW</span>`;
   return pageHeader("Performance Pulse", `7-day rolling window · output: ${brand().rawDataFile}`) + `
     <div class="card" style="margin-bottom:14px;border-color:var(--accent-2)">
-      <div class="row"><strong>📊 Overall social media — 7-day aggregate</strong><span class="spacer"></span><span class="pill solid small">${PLATFORMS.length} platforms</span></div>
+      <div class="row"><strong>📊 Overall social media — 7-day aggregate</strong><span class="spacer"></span>
+        <span class="pill solid small">${PLATFORMS.length} platforms</span>
+        <span class="pill small" style="background:rgba(255,170,60,.12);border:1px solid rgba(255,170,60,.4);color:#ffd28a;margin-left:6px" title="These KPI values are placeholder fixture data baked into the dashboard. Real Vista Social wiring is still pending — when that lands, this badge will disappear automatically.">⚠ fixture · not live</span>
+      </div>
       <div class="grid grid-4" style="margin-top:10px">
         <div class="kpi"><div class="label">CES (avg)</div><div class="value">${overall.ces}</div>${wow(overall.cesWow)}</div>
         <div class="kpi"><div class="label">ER (avg)</div><div class="value">${overall.er}%</div>${wow(overall.engWow)}</div>
@@ -1422,7 +1651,9 @@ views.l0a = () => {
       </div>
     </div>
     <div class="card">
-      <h3>Per-platform KPI snapshot</h3>
+      <div class="row" style="align-items:center"><h3 style="margin:0">Per-platform KPI snapshot</h3><span class="spacer"></span>
+        <span class="pill small" style="background:rgba(255,170,60,.12);border:1px solid rgba(255,170,60,.4);color:#ffd28a" title="Placeholder fixture data. Will become live once Vista Social API key is wired.">⚠ fixture data</span>
+      </div>
       <div class="sub">Last 7 days · CES = composite engagement quality score (0-100%)</div>
       <table>
         <thead><tr><th>Platform</th><th>Handle</th><th>Posts</th><th>ER</th><th>CES</th><th>Impressions</th><th>Top format</th></tr></thead>
@@ -1443,7 +1674,10 @@ views.l0a = () => {
       <div class="muted small" style="margin-top:10px">📡 Live wiring: Vista Social API → auto-updates on every page load. Live data as of ${RUN_DATE}.</div>
     </div>
     <div class="card" style="margin-top:14px;border-color:var(--accent-3)">
-      <div class="row"><strong>⭐ Trustpilot daily summary</strong><span class="spacer"></span><span class="pill info small">Live scan of g2g.com + offgamers.com</span></div>
+      <div class="row"><strong>⭐ Trustpilot daily summary</strong><span class="spacer"></span>
+        <span class="pill info small">Live scan of g2g.com + offgamers.com</span>
+        <span class="pill small" style="background:rgba(255,170,60,.12);border:1px solid rgba(255,170,60,.4);color:#ffd28a;margin-left:6px" title="Numbers shown are fixture data. Real wiring goes through Trustpilot Business API + nightly Gmail summary scrape.">⚠ fixture</span>
+      </div>
       <div class="grid grid-2" style="margin-top:10px">
         <div>
           <div class="aud-label">G2G</div>
@@ -1459,6 +1693,183 @@ views.l0a = () => {
       <div class="muted small" style="margin-top:10px">🔌 Wiring: Trustpilot Business API + nightly scrape fallback. Replaces the old PPTX export step from v2.5.</div>`
 };
 // views.l0b removed — Competitor Watch section scrapped per Lina request
+/* ============================================================
+   DIAGNOSTIC VIEW — admin-only health panel at #/diagnostic
+   ─────────────────────────────────────────────────────────────
+   Shows API ping status, cache freshness, persistence size,
+   schema version, brand state summary, and the error ring buffer.
+   Reachable via the "diagnostics" link in the sidebar footer or
+   by typing #/<brand>/diagnostic in the URL.
+   ============================================================ */
+function _humanAgo(ts) {
+  if (!ts) return "never";
+  const ms = Date.now() - (typeof ts === "number" ? ts : new Date(ts).getTime());
+  if (!isFinite(ms) || ms < 0) return "—";
+  const s = Math.round(ms / 1000);
+  if (s < 60)   return s + "s ago";
+  const m = Math.round(s / 60);
+  if (m < 60)   return m + "m ago";
+  const h = Math.round(m / 60);
+  if (h < 48)   return h + "h ago";
+  return Math.round(h / 24) + "d ago";
+}
+function _bytesHuman(n) {
+  if (!n) return "0 B";
+  if (n < 1024) return n + " B";
+  if (n < 1024 * 1024) return (n / 1024).toFixed(1) + " KB";
+  return (n / 1024 / 1024).toFixed(2) + " MB";
+}
+function _persistSizeBytes() {
+  try {
+    const raw = localStorage.getItem(PERSIST_KEY);
+    return raw ? new Blob([raw]).size : 0;
+  } catch (e) { return 0; }
+}
+async function pingApi(label, url) {
+  state.apiHealth[label] = { url, status: "pending", checkedAt: Date.now() };
+  renderMain();
+  const t0 = performance.now();
+  try {
+    const resp = await fetch(url, { method: "GET", cache: "no-store" });
+    const latency = Math.round(performance.now() - t0);
+    state.apiHealth[label] = {
+      url, status: resp.ok ? "ok" : "fail", code: resp.status, latencyMs: latency, checkedAt: Date.now(),
+    };
+  } catch (err) {
+    state.apiHealth[label] = {
+      url, status: "fail", code: 0, latencyMs: Math.round(performance.now() - t0),
+      checkedAt: Date.now(), error: String(err && err.message || err),
+    };
+  }
+  if (state.current === "diagnostic") renderMain();
+}
+function pingAllApis() {
+  pingApi("Drop Watch",     "/api/drop-watch");
+  pingApi("TikTok Trends",  "/api/tiktok/trends?region=MY");
+}
+function copyDiagnostics() {
+  const dump = {
+    when: new Date().toISOString(),
+    build: document.getElementById("build-stamp") ? document.getElementById("build-stamp").textContent : "—",
+    brand: CURRENT_BRAND,
+    current: state.current,
+    schema: 1,
+    persistBytes: _persistSizeBytes(),
+    apiHealth: state.apiHealth,
+    dropWatchCount: (state.dropWatchCache || []).length,
+    dropWatchFetchedAt: state.dropWatchFetchedAt,
+    tikTokFetchedAt: state.tikTokLive && state.tikTokLive.fetched_at,
+    tikTokSignals: state.tikTokLive && state.tikTokLive.counts && state.tikTokLive.counts.total,
+    briefsByBrand: Object.fromEntries(Object.entries(state.brandStates || {}).map(([b, s]) => [b, Object.keys((s && s.briefs) || {}).length])),
+    errorLog: state.errorLog.slice(-20),
+  };
+  const text = JSON.stringify(dump, null, 2);
+  try {
+    navigator.clipboard.writeText(text);
+    toast("Diagnostic report copied to clipboard");
+  } catch (e) {
+    toast("Copy failed — see DevTools console", "warn");
+    console.log("[diagnostic dump]", text);
+  }
+}
+function clearErrorLog() {
+  state.errorLog = [];
+  toast("Error log cleared");
+  renderMain();
+}
+views.diagnostic = () => {
+  const persistBytes = _persistSizeBytes();
+  const persistPct = (persistBytes / (5 * 1024 * 1024)) * 100; // localStorage ~5MB quota
+  const dwCount = (state.dropWatchCache || []).length;
+  const dwFresh = state.dropWatchFetchedAt;
+  const tl = state.tikTokLive || {};
+  const tlFresh = tl.fetched_at;
+  const apis = Object.entries(state.apiHealth || {});
+  const statusPill = (s) => {
+    if (s === "ok")      return `<span class="pill solid small" style="background:rgba(80,200,120,.18);border-color:rgba(80,200,120,.45);color:#9be3b3">● ok</span>`;
+    if (s === "fail")    return `<span class="pill solid small" style="background:rgba(255,90,90,.18);border-color:rgba(255,90,90,.45);color:#ff9b9b">● fail</span>`;
+    if (s === "pending") return `<span class="pill small" style="background:rgba(255,170,60,.12);border-color:rgba(255,170,60,.4);color:#ffd28a">⏱ pinging…</span>`;
+    return `<span class="pill small muted">— not pinged</span>`;
+  };
+  const brandRows = Object.entries(state.brandStates || {}).map(([b, s]) => {
+    const briefs = Object.keys((s && s.briefs) || {}).length;
+    const picks  = Object.keys((s && s.picks)  || {}).length;
+    const sched  = Object.keys((s && s.scheduledPosts) || {}).length;
+    return `<tr><td><strong>${escapeHtml(b)}</strong></td><td class="num">${picks}</td><td class="num">${briefs}</td><td class="num">${sched}</td><td>${s && s.gate1Submitted ? "✓" : "—"}</td><td>${s && s.gate2Submitted ? "✓" : "—"}</td></tr>`;
+  }).join("");
+  const errors = (state.errorLog || []).slice(-30).reverse();
+  const errorRows = errors.length ? errors.map(e => {
+    const color = e.level === "error" ? "#ff9b9b" : "#ffd28a";
+    return `<tr><td class="muted small" style="white-space:nowrap">${_humanAgo(e.at)}</td><td style="color:${color}">${escapeHtml(e.level)}</td><td><code style="font-size:11px;white-space:pre-wrap;word-break:break-word">${escapeHtml(e.msg.length > 600 ? e.msg.slice(0, 600) + "…" : e.msg)}</code></td></tr>`;
+  }).join("") : `<tr><td colspan="3" class="muted" style="padding:18px;text-align:center">No errors captured this session 🎉</td></tr>`;
+  return pageHeader("🩺 Diagnostics", "Admin · API health, cache freshness, persistence, error log") + `
+    <div class="card" style="margin-bottom:14px;border-color:var(--accent-2)">
+      <div class="row" style="align-items:center"><strong>System summary</strong><span class="spacer"></span>
+        <button class="btn small" onclick="pingAllApis()">↻ Ping APIs</button>
+        <button class="btn small" onclick="copyDiagnostics()" style="margin-left:6px">📋 Copy report</button>
+      </div>
+      <div class="grid grid-4" style="margin-top:10px">
+        <div class="kpi"><div class="label">Active brand</div><div class="value" style="font-size:18px">${escapeHtml(CURRENT_BRAND)}</div><div class="muted small">view: ${escapeHtml(state.current)}</div></div>
+        <div class="kpi"><div class="label">Schema</div><div class="value" style="font-size:18px">v1</div><div class="muted small">TTL: 60 days</div></div>
+        <div class="kpi"><div class="label">Persistence</div><div class="value" style="font-size:18px">${_bytesHuman(persistBytes)}</div><div class="muted small">${persistPct.toFixed(2)}% of ~5 MB quota</div></div>
+        <div class="kpi"><div class="label">Errors this session</div><div class="value" style="font-size:18px;color:${(state.errorLog||[]).length ? '#ff9b9b' : 'inherit'}">${(state.errorLog||[]).length}</div><div class="muted small">${(state.errorLog||[]).length > 0 ? 'see log below' : 'clean'}</div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="row" style="align-items:center"><h3 style="margin:0">API endpoints</h3><span class="spacer"></span>
+        <span class="muted small">Click "Ping APIs" to test connectivity</span>
+      </div>
+      <table>
+        <thead><tr><th>Endpoint</th><th>Status</th><th>HTTP</th><th>Latency</th><th>Last check</th><th>URL</th></tr></thead>
+        <tbody>
+          ${["Drop Watch", "TikTok Trends"].map(label => {
+            const h = (state.apiHealth || {})[label] || {};
+            return `<tr>
+              <td><strong>${escapeHtml(label)}</strong></td>
+              <td>${statusPill(h.status)}</td>
+              <td class="num">${h.code != null ? h.code : "—"}</td>
+              <td class="num">${h.latencyMs != null ? h.latencyMs + " ms" : "—"}</td>
+              <td class="muted small">${h.checkedAt ? _humanAgo(h.checkedAt) : "never"}</td>
+              <td class="muted small"><code>${escapeHtml(label === "Drop Watch" ? "/api/drop-watch" : "/api/tiktok/trends?region=MY")}</code></td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h3 style="margin-top:0">Cache freshness</h3>
+      <table>
+        <thead><tr><th>Source</th><th>Items</th><th>Fetched</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Drop Watch</strong></td><td class="num">${dwCount}</td><td class="muted small">${_humanAgo(dwFresh)}</td><td class="muted small">Stale after 60 min → re-primed on Ship Bay open</td></tr>
+          <tr><td><strong>TikTok Live Signals</strong></td><td class="num">${(tl.counts && tl.counts.total) || 0}</td><td class="muted small">${_humanAgo(tlFresh)}</td><td class="muted small">Region: ${escapeHtml(tl.region || "—")}${tl.degraded ? ' · ⚠ degraded' : ''}${tl.error ? ' · err: ' + escapeHtml(tl.error) : ''}</td></tr>
+          <tr><td><strong>Curator scans</strong></td><td class="num">${(state.curatorScans || []).length}</td><td class="muted small">${_humanAgo((state.curatorScans || []).slice(-1)[0] && (state.curatorScans.slice(-1)[0].ts))}</td><td class="muted small">Manual IG monitoring log</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h3 style="margin-top:0">Brand state</h3>
+      <table>
+        <thead><tr><th>Brand</th><th>Picks</th><th>Briefs</th><th>Scheduled</th><th>Gate 1</th><th>Gate 2</th></tr></thead>
+        <tbody>${brandRows || `<tr><td colspan="6" class="muted" style="padding:14px;text-align:center">No persisted brand state yet</td></tr>`}</tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="row" style="align-items:center"><h3 style="margin:0">Error & warning log <span class="muted small" style="font-weight:400">(last ${errors.length} of ${(state.errorLog || []).length})</span></h3><span class="spacer"></span>
+        <button class="btn small" onclick="clearErrorLog()" ${errors.length ? '' : 'disabled style="opacity:.5"'}>🗑 Clear log</button>
+      </div>
+      <div class="muted small" style="margin-top:6px">Ring buffer of the last 50 console.error / console.warn / uncaught errors. Wraps automatically. Cleared on reset.</div>
+      <table style="margin-top:10px"><thead><tr><th style="width:90px">When</th><th style="width:60px">Level</th><th>Message</th></tr></thead><tbody>${errorRows}</tbody></table>
+    </div>
+    <div class="card" style="margin-top:14px;border-color:rgba(255,255,255,.05);background:rgba(255,255,255,.02)">
+      <div class="muted small">
+        <strong>How to read this page</strong> · Use this when something feels off (numbers stale, view crashed, button not responding).
+        Start with "Ping APIs" — if both come back green, the backend is fine and the issue is in saved state.
+        Then check the error log: if it's empty, the app is healthy; if it's flooded, copy the report and send it on.
+        "Copy report" puts a JSON dump on your clipboard you can paste into Slack or an email.
+      </div>
+    </div>`;
+};
 views.l0c = () => {
   return pageHeader("Trend Radar", `As of ${RUN_DATE} · 14-day look-ahead · gaming + social-platform trends`) + `
     <div class="grid grid-3" style="margin-bottom:14px;align-items:start">
@@ -2012,7 +2423,7 @@ function renderTikTokLiveCard() {
         <strong style="color:white;flex:1">TikTok Live Signals</strong>
         ${freshnessPill}
       </div>
-      <div class="muted small" style="margin-bottom:8px">${tl.counts.total} signals · ${tl.region} · ${when}${tl.degraded ? ' · partial' : ''}</div>
+      <div class="muted small" style="margin-bottom:8px">${escapeHtml(String(tl.counts.total))} signals · ${escapeHtml(tl.region)} · ${escapeHtml(when)}${tl.degraded ? ' · partial' : ''}</div>
       <button class="btn primary" style="width:100%" onclick="loadTikTokTrends()" ${btnDisabled}>${btnLabel}</button>
       ${renderBucket('Trending hashtags', '#️⃣', tl.by_type.hashtags, 5)}
       ${renderBucket('Trending sounds', '🔊', tl.by_type.audio, 4)}
@@ -2033,7 +2444,7 @@ function renderCuratorScanCard() {
         : `<span class="pill bad small">${Math.floor(minutesAgo/(24*60))}d · stale</span>`;
   const handlesHtml = state.curators.map(c => `
     <div class="curator-row" style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
-      <a href="${c.url}" target="_blank" rel="noopener" class="curator-handle" style="font-weight:600;font-size:12px">${escapeHtml(c.handle)}</a>
+      <a href="${escapeAttr(c.url)}" target="_blank" rel="noopener" class="curator-handle" style="font-weight:600;font-size:12px">${escapeHtml(c.handle)}</a>
       <div class="muted small" style="margin-top:2px">${escapeHtml(c.note)}</div>
     </div>`).join("");
   return `
@@ -3377,9 +3788,42 @@ function toast(msg, kind = "") {
   document.getElementById("toasts").appendChild(t);
   setTimeout(() => t.remove(), 2400);
 }
+// Boot sequence:
+//   1. Restore saved state from localStorage (wrapped — corrupt blob can't brick).
+//   2. Apply URL hash if present — URL wins over saved state.current so explicit
+//      deep links (e.g. #/offgamers/shipbay) always go where the user expects.
+//   3. Sync URL to current state — keeps the URL clean on first-load refreshes.
+//   4. Render.
+try {
+  restoreState();
+} catch (e) {
+  console.error("[boot] restoreState crashed — booting with defaults:", e);
+}
+try {
+  applyHashToState();
+} catch (e) {
+  console.error("[boot] applyHashToState crashed — ignoring URL hash:", e);
+}
+syncHash();
 applyBrandChrome();
 renderSidebar();
 renderMain();
+// Build stamp — frozen at load time so refreshes show when the dashboard was last deployed.
+// Updated automatically since this is a single-file app: each new index.html upload is a new "build".
+(function stampBuild() {
+  const el = document.getElementById("build-stamp");
+  if (!el) return;
+  const now = new Date();
+  const dd = now.toLocaleString("en-SG", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
+  el.textContent = `v2.7 · loaded ${dd}`;
+  el.title = `Session started ${now.toISOString()}`;
+})();
+// beforeunload save guard — fires a SYNCHRONOUS persist on tab close / refresh so we never
+// lose the last few seconds of edits to the 300ms debounce timer. Safe to call even if a
+// debounced save is already pending — it just writes the same payload a tick early.
+window.addEventListener("beforeunload", () => {
+  try { persistState(); } catch (e) { /* nothing we can do this late */ }
+});
 function regenerateBrief(briefId, reason) {
   const b = state.briefs[briefId];
   if (!b) return;
